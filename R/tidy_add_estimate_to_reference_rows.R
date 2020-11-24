@@ -39,7 +39,7 @@
 #'   ) %>%
 #'   tidy_and_attach(exponentiate = TRUE) %>%
 #'   tidy_add_reference_rows() %>%
-#'   tidy_add_estimate_to_reference_rows(exponentiate = TRUE)
+#'   tidy_add_estimate_to_reference_rows()
 #'
 #' if (requireNamespace("gtsummary")) {
 #'   glm(
@@ -56,11 +56,20 @@
 #'     tidy_add_reference_rows() %>%
 #'     tidy_add_estimate_to_reference_rows()
 #' }
-tidy_add_estimate_to_reference_rows <- function(x, exponentiate = FALSE, model = tidy_get_model(x),
-                                                quiet = FALSE) {
+tidy_add_estimate_to_reference_rows <- function(
+  x, exponentiate = attr(x, "exponentiate"),
+  model = tidy_get_model(x),
+  quiet = FALSE
+) {
+  if (is.null(exponentiate) | !is.logical(exponentiate))
+    stop("'exponentiate' is not provided. You need to pass it explicitely.")
+
   if (is.null(model)) {
     stop("'model' is not provided. You need to pass it or to use 'tidy_and_attach()'.")
   }
+
+  .attributes <- .save_attributes(x)
+  .attributes$exponentiate <- exponentiate
 
   if (!"reference_row" %in% names(x)) {
     x <- x %>% tidy_add_reference_rows(model = model)
@@ -91,32 +100,74 @@ tidy_add_estimate_to_reference_rows <- function(x, exponentiate = FALSE, model =
   }
 
   x %>%
-    tidy_attach_model(model = model) %>%
-    .order_tidy_columns()
+    tidy_attach_model(model = model, .attributes = .attributes)
 }
 
+
 .get_ref_row_estimate_contr_sum <- function(variable, model, exponentiate = FALSE,
-                                            quiet) {
-  # bug fix for character variables
-  if ("model" %in% names(model)) {
-    model$model <- model$model %>%
-      dplyr::mutate(dplyr::across(where(is.character), factor))
+                                            quiet = FALSE) {
+
+  if (inherits(model, "multinom")) {
+    dc <- NULL
+    if (!quiet)
+      usethis::ui_info(paste0(
+        "Sum contrasts are not supported for 'multinom' models.\n",
+        "Reference row of variable '", variable, "' remained unchanged."
+      ))
+  } else {
+    dc <- tryCatch(
+      suppressMessages(
+        emmeans::emmeans(model, specs = variable, contr = "eff")
+      ),
+      error = function(e) {
+        if (!quiet)
+          usethis::ui_info(paste0(
+            "No emmeans() method for this type of model.\n",
+            "Reference row of variable '", variable, "' remained unchanged."
+          ))
+        NULL
+      }
+    )
   }
 
-  dc <- tryCatch(
-    dplyr::last(stats::dummy.coef(model)[[variable]]),
-    error = function(e) {
-      if (!quiet)
-        usethis::ui_info(paste0(
-          "No dummy.coef() method for this type of model.\n",
-          "Reference row of variable '", variable, "' remained unchanged."
-        ))
-      NA
-    }
-  )
+  if (is.null(dc)) {
+    dc <- NA_real_
+  } else {
+    dc <- dc$contrasts %>%
+      as.data.frame() %>%
+      purrr::pluck("estimate") %>%
+      dplyr::last()
+  }
 
   if (exponentiate) {
     dc <- exp(dc)
   }
   dc
 }
+
+# Origiginal code using stats::dummy.coef
+# .get_ref_row_estimate_contr_sum <- function(variable, model, exponentiate = FALSE,
+#                                             quiet) {
+#   # bug fix for character variables
+#   if ("model" %in% names(model)) {
+#     model$model <- model$model %>%
+#       dplyr::mutate(dplyr::across(where(is.character), factor))
+#   }
+#
+#   dc <- tryCatch(
+#     dplyr::last(stats::dummy.coef(model)[[variable]]),
+#     error = function(e) {
+#       if (!quiet)
+#         usethis::ui_info(paste0(
+#           "No dummy.coef() method for this type of model.\n",
+#           "Reference row of variable '", variable, "' remained unchanged."
+#         ))
+#       NA
+#     }
+#   )
+#
+#   if (exponentiate) {
+#     dc <- exp(dc)
+#   }
+#   dc
+# }

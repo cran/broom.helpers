@@ -33,7 +33,11 @@
 #'   glm(Survived ~ Class * Age * Sex, data = ., weights = .$n, family = binomial) %>%
 #'   tidy_and_attach() %>%
 #'   tidy_add_variable_labels(
-#'     labels = list(Sex = "Gender", "Class:Age" = "Custom label")
+#'     labels = list(
+#'       "(Intercept)" = "Custom intercept",
+#'       Sex = "Gender",
+#'       "Class:Age" = "Custom label"
+#'     )
 #'   )
 tidy_add_variable_labels <- function(x,
                                      labels = NULL,
@@ -49,38 +53,29 @@ tidy_add_variable_labels <- function(x,
     stop("`tidy_add_variable_labels()` cannot be applied after `tidy_add_header_rows().`")
   }
 
+  .attributes <- .save_attributes(x)
+
   if ("var_label" %in% names(x)) {
     x <- x %>% dplyr::select(-.data$var_label)
-  }
-
-  if (is.list(labels)) {
-    labels <- unlist(labels)
   }
 
   if (!"variable" %in% names(x)) {
     x <- x %>% tidy_identify_variables(model = model)
   }
 
-  # start with the list of variables
-  variable_list <- model_list_variables(model)
-  var_labels <- variable_list$variable
+  labels <- .formula_list_to_named_list(labels, var_info = x, arg_name = "labels")
+  if (is.list(labels)) {
+    labels <- unlist(labels)
+  }
+
+  # start with the list of terms
+  var_labels <- unique(x$term)
   names(var_labels) <- var_labels
 
-  # identify terms with no variable
-  # (e.g. intercepts)
-  # use term name in that case
-
-  variable_is_na <- is.na(x$variable)
-  # temporarily copy term in variable
-  x$variable[variable_is_na] <- x$term[variable_is_na]
-  additional_labels <- unique(x$variable[variable_is_na])
-  names(additional_labels) <- additional_labels
-  var_labels <- var_labels %>%
-    .update_vector(additional_labels)
-
-  # table into account variable label attribute
-  additional_labels <- variable_list$label_attr[!is.na(variable_list$label_attr)]
-  names(additional_labels) <- variable_list$variable[!is.na(variable_list$label_attr)]
+  # add the list of variables
+  variable_list <- model_list_variables(model, labels = labels)
+  additional_labels <- variable_list$var_label
+  names(additional_labels) <- variable_list$variable
   var_labels <- var_labels %>%
     .update_vector(additional_labels)
 
@@ -101,6 +96,9 @@ tidy_add_variable_labels <- function(x,
 
   var_labels <- var_labels %>%
     .update_vector(labels)
+
+  # save custom labels
+  .attributes$variable_labels <- labels
 
   # management of interaction terms
   interaction_terms <- x$variable[!is.na(x$var_type) & x$var_type == "interaction"]
@@ -124,10 +122,5 @@ tidy_add_variable_labels <- function(x,
       ),
       by = "variable"
     ) %>%
-    # restore missing values in variable
-    dplyr::mutate(
-      variable = dplyr::if_else(variable_is_na, NA_character_, .data$variable)
-    ) %>%
-    tidy_attach_model(model = model) %>%
-    .order_tidy_columns()
+    tidy_attach_model(model = model, .attributes = .attributes)
 }

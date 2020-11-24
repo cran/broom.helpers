@@ -20,7 +20,9 @@
 #' [tidy_add_term_labels()] will be automatically applied.
 #' @param x a tidy tibble
 #' @param show_single_row a vector indicating the names of binary
-#' variables that should be displayed on a single row
+#' variables that should be displayed on a single row.
+#' Accepts [tidyselect][dplyr::select] syntax. Default is `NULL`.
+#' See also [all_dichotomous()]
 #' @param model the corresponding model, if not attached to `x`
 #' @inheritParams tidy_plus_plus
 #' @export
@@ -30,7 +32,7 @@
 #'   dplyr::as_tibble() %>%
 #'   dplyr::mutate(Survived = factor(Survived, c("No", "Yes")))
 #'
-#' df %>%
+#' res <- df %>%
 #'   glm(
 #'     Survived ~ Class + Age + Sex,
 #'     data = ., weights = .$n, family = binomial,
@@ -38,8 +40,9 @@
 #'   ) %>%
 #'   tidy_and_attach() %>%
 #'   tidy_add_variable_labels(labels = list(Class = "Custom label for Class")) %>%
-#'   tidy_add_reference_rows() %>%
-#'   tidy_add_header_rows()
+#'   tidy_add_reference_rows()
+#' res %>% tidy_add_header_rows()
+#' res %>% tidy_add_header_rows(show_single_row = all_dichotomous())
 #'
 #' if (requireNamespace("gtsummary")) {
 #'   glm(
@@ -71,6 +74,8 @@ tidy_add_header_rows <- function(x,
     return(x)
   }
 
+  .attributes <- .save_attributes(x)
+
   if (!"label" %in% names(x)) {
     x <- x %>% tidy_add_term_labels(model = model)
   }
@@ -78,14 +83,15 @@ tidy_add_header_rows <- function(x,
   # management of show_single_row --------------
   # if reference_rows have been defined, removal of reference row
   variables_to_simplify <- NULL
-  show_single_row <- stats::na.omit(unique(show_single_row))
+  # obtain character vector of selected variables
+  show_single_row <- .select_to_varnames({{ show_single_row }}, var_info = x, arg_name = "show_single_row")
 
   has_reference_row <- "reference_row" %in% names(x)
   if (!has_reference_row)
     x$reference_row <- FALSE
 
   xx <- x
-  if ("y.level" %in% names(x)) { # specific case for multinom
+  if ("y.level" %in% names(x)& inherits(model, "multinom")) { # specific case for multinom
     xx <- xx %>%
       dplyr::filter(.data$y.level == x$y.level[1])
   }
@@ -153,26 +159,32 @@ tidy_add_header_rows <- function(x,
       rank = 1:dplyr::n() # for sorting table at the end
     )
 
-  if ("y.level" %in% names(x)) { # specific case for nnet::multinom
+  if ("y.level" %in% names(x) & inherits(model, "multinom")) { # specific case for nnet::multinom
     header_rows <- x %>%
       dplyr::filter(!is.na(.data$variable) & !.data$variable %in% show_single_row)
 
     if (nrow(header_rows) > 0) {
       header_rows <- header_rows %>%
+        dplyr::mutate(term_cleaned = .clean_backticks(.data$term, .data$variable)) %>%
         dplyr::group_by(.data$variable, .data$y.level) %>%
         dplyr::summarise(
           var_class = dplyr::first(.data$var_class),
           var_type = dplyr::first(.data$var_type),
           var_label = dplyr::first(.data$var_label),
+          var_nlevels = dplyr::first(.data$var_nlevels),
           contrasts = dplyr::first(.data$contrasts),
+          contrasts_type = dplyr::first(.data$contrasts_type),
           var_nrow = dplyr::n(),
-          var_test = sum(.data$term != .data$variable),
+          var_test = sum(.data$term_cleaned != .data$variable),
           rank = min(.data$rank) - .25,
           .groups = "drop_last"
         ) %>%
         dplyr::filter(.data$var_nrow >= 2 | .data$var_test > 0) %>%
         dplyr::select(-.data$var_nrow, -.data$var_test) %>%
-        dplyr::mutate(header_row = TRUE)
+        dplyr::mutate(
+          header_row = TRUE,
+          label = .data$var_label
+        )
     }
   } else {
     header_rows <- x %>%
@@ -180,14 +192,17 @@ tidy_add_header_rows <- function(x,
 
     if (nrow(header_rows) > 0)
       header_rows <- header_rows %>%
+        dplyr::mutate(term_cleaned = .clean_backticks(.data$term, .data$variable)) %>%
         dplyr::group_by(.data$variable) %>%
         dplyr::summarise(
           var_class = dplyr::first(.data$var_class),
           var_type = dplyr::first(.data$var_type),
           var_label = dplyr::first(.data$var_label),
+          var_nlevels = dplyr::first(.data$var_nlevels),
           contrasts = dplyr::first(.data$contrasts),
+          contrasts_type = dplyr::first(.data$contrasts_type),
           var_nrow = dplyr::n(),
-          var_test = sum(.data$term != .data$variable),
+          var_test = sum(.data$term_cleaned != .data$variable), # for dichotomous variables with no reference row
           rank = min(.data$rank) - .25,
           .groups = "drop_last"
         ) %>%
@@ -208,6 +223,5 @@ tidy_add_header_rows <- function(x,
     dplyr::select(-.data$rank)
 
   x %>%
-    tidy_attach_model(model = model) %>%
-    .order_tidy_columns()
+    tidy_attach_model(model = model, .attributes = .attributes)
 }

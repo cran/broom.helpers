@@ -22,6 +22,21 @@ test_that("tidy_add_reference_rows() works as expected", {
       NA, NA
     )
   )
+  expect_equivalent(
+    res$var_class,
+    c(NA, "factor", "factor", "factor", "factor", "factor", "factor",
+      "factor", "character", "character", NA, NA)
+  )
+  expect_equivalent(
+    res$var_type,
+    c("intercept", "categorical", "categorical", "categorical", "categorical",
+      "categorical", "categorical", "categorical", "dichotomous", "dichotomous",
+      "interaction", "interaction")
+  )
+  expect_equivalent(
+    res$var_nlevels,
+    c(NA, 4L, 4L, 4L, 4L, 3L, 3L, 3L, 2L, 2L, NA, NA)
+  )
 
   # no reference row added if other contrasts are used
   mod <- glm(
@@ -43,6 +58,28 @@ test_that("tidy_add_reference_rows() works as expected", {
   expect_equivalent(
     res$reference_row,
     c(NA, NA, NA)
+  )
+
+  # no reference row if defined in no_reference_row
+  mod <- glm(
+    response ~ stage + grade * trt,
+    gtsummary::trial,
+    family = binomial,
+    contrasts = list(stage = contr.treatment, grade = contr.SAS, trt = contr.sum)
+  )
+  res <- mod %>%
+    tidy_and_attach() %>%
+    tidy_add_reference_rows(no_reference_row = c("stage", "grade"))
+  expect_equivalent(
+    res$term,
+    c(
+      "(Intercept)", "stage2", "stage3", "stage4", "grade1", "grade2",
+      "trt1", "trt2", "grade1:trt1", "grade2:trt1"
+    )
+  )
+  expect_equivalent(
+    res$reference_row,
+    c(NA, NA, NA, NA, NA, NA, FALSE, TRUE, NA, NA)
   )
 })
 
@@ -70,6 +107,11 @@ test_that("test tidy_add_reference_rows() checks", {
     mod %>% tidy_and_attach() %>%
       tidy_add_header_rows() %>%
       tidy_add_reference_rows()
+  )
+
+  # message or error if non existing variable in no_reference_row
+  expect_error(
+    mod %>% tidy_and_attach() %>% tidy_add_reference_rows(no_reference_row = "g")
   )
 })
 

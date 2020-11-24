@@ -11,11 +11,15 @@ tidy_plus_plus(
   exponentiate = FALSE,
   variable_labels = NULL,
   term_labels = NULL,
+  interaction_sep = " * ",
+  categorical_terms_pattern = "{level}",
   add_reference_rows = TRUE,
+  no_reference_row = NULL,
   add_estimate_to_reference_rows = TRUE,
   add_header_rows = FALSE,
   show_single_row = NULL,
   intercept = FALSE,
+  include = everything(),
   keep_model = FALSE,
   quiet = FALSE,
   strict = FALSE,
@@ -30,28 +34,42 @@ tidy_plus_plus(
 \item{conf.int}{should confidence intervals be computed? (see \code{\link[broom:reexports]{broom::tidy()}})}
 
 \item{exponentiate}{logical indicating whether or not to exponentiate the
-coefficient estimates. This is typical for logistic and multinomial regressions,
-but a bad idea if there is no log or logit link. Defaults to \code{FALSE}.}
+coefficient estimates. This is typical for logistic, Poisson and Cox models,
+but a bad idea if there is no log or logit link; defaults to \code{FALSE}.}
 
 \item{variable_labels}{a named list or a named vector of custom variable labels}
 
 \item{term_labels}{a named list or a named vector of custom term labels}
 
+\item{interaction_sep}{separator for interaction terms}
+
+\item{categorical_terms_pattern}{a \link[glue:glue]{glue pattern} for
+labels of categorical terms with treatment or sum contrasts
+(see \code{\link[=model_list_terms_levels]{model_list_terms_levels()}})}
+
 \item{add_reference_rows}{should reference rows be added?}
+
+\item{no_reference_row}{variables (accepts \link[dplyr:select]{tidyselect} notation)
+for those no reference row should be added, when \code{add_reference_rows = TRUE}}
 
 \item{add_estimate_to_reference_rows}{should an estimate value be added to reference rows?}
 
 \item{add_header_rows}{should header rows be added?}
 
-\item{show_single_row}{a vector indicating the names of binary
-variables that should be displayed on a single row, when
+\item{show_single_row}{variables that should be displayed
+on a single row (accepts \link[dplyr:select]{tidyselect} notation), when
 \code{add_header_rows} is \code{TRUE}}
 
 \item{intercept}{should the intercept(s) be included?}
 
+\item{include}{variables to include. Accepts \link[dplyr:select]{tidyselect}
+syntax. Use \code{-} to remove a variable. Default is \code{everything()}.
+See also \code{\link[=all_continuous]{all_continuous()}}, \code{\link[=all_categorical]{all_categorical()}}, \code{\link[=all_dichotomous]{all_dichotomous()}}
+and \code{\link[=all_interaction]{all_interaction()}}}
+
 \item{keep_model}{should the model be kept as an attribute of the final result?}
 
-\item{quiet}{logical argument whether broom.helpers should return an error
+\item{quiet}{logical argument whether broom.helpers should not return a message
 when requested output cannot be generated. Default is FALSE}
 
 \item{strict}{logical argument whether broom.helpers should return an error
@@ -71,6 +89,8 @@ This function will apply sequentially:
 \item \code{\link[=tidy_add_term_labels]{tidy_add_term_labels()}}
 \item \code{\link[=tidy_add_header_rows]{tidy_add_header_rows()}}
 \item \code{\link[=tidy_remove_intercept]{tidy_remove_intercept()}}
+\item \code{\link[=tidy_select_variables]{tidy_select_variables()}}
+\item \code{\link[=tidy_add_coefficients_type]{tidy_add_coefficients_type()}}
 \item \code{\link[=tidy_detach_model]{tidy_detach_model()}}
 }
 }
@@ -94,7 +114,11 @@ ex2 <- glm(
   data = df, weights = df$n,
   family = binomial
 ) \%>\%
-  tidy_plus_plus(exponentiate = TRUE)
+  tidy_plus_plus(
+    exponentiate = TRUE,
+    add_reference_rows = FALSE,
+    categorical_terms_pattern = "{level} / {reference_level}"
+  )
 ex2
 
 if (requireNamespace("gtsummary")) {
@@ -111,7 +135,7 @@ if (requireNamespace("gtsummary")) {
       exponentiate = TRUE,
       variable_labels = c(age = "Age (in years)"),
       add_header_rows = TRUE,
-      show_single_row = "trt",
+      show_single_row = all_dichotomous(),
       term_labels = c("poly(age, 3)3" = "Cubic age"),
       keep_model = TRUE
     )
@@ -120,6 +144,7 @@ if (requireNamespace("gtsummary")) {
 }
 \seealso{
 Other tidy_helpers: 
+\code{\link{tidy_add_coefficients_type}()},
 \code{\link{tidy_add_contrasts}()},
 \code{\link{tidy_add_estimate_to_reference_rows}()},
 \code{\link{tidy_add_header_rows}()},
@@ -128,6 +153,7 @@ Other tidy_helpers:
 \code{\link{tidy_add_variable_labels}()},
 \code{\link{tidy_attach_model}()},
 \code{\link{tidy_identify_variables}()},
-\code{\link{tidy_remove_intercept}()}
+\code{\link{tidy_remove_intercept}()},
+\code{\link{tidy_select_variables}()}
 }
 \concept{tidy_helpers}

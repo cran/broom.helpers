@@ -24,12 +24,16 @@ test_that("tidy_add_header_rows() works as expected", {
     c(NA, TRUE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, TRUE, FALSE,
       TRUE, FALSE, FALSE)
   )
+  expect_equivalent(
+    res$var_nlevels,
+    c(NA, 4L, 4L, 4L, 4L, 3L, 3L, 3L, 2L, 2L, NA, NA, NA)
+  )
 
   # show_single_row has an effect only on variables with one term (2 if a ref term)
   res <- mod %>%
     tidy_and_attach() %>%
     tidy_identify_variables() %>%
-    tidy_add_header_rows(show_single_row = .$variable, quiet = TRUE)
+    tidy_add_header_rows(show_single_row = everything(), quiet = TRUE)
   expect_equivalent(
     res$label,
     c("(Intercept)", "T Stage", "T2", "T3", "T4", "Grade", "I", "II",
@@ -80,34 +84,6 @@ test_that("tidy_add_header_rows() works as expected", {
     )
   )
 
-  res <- mod %>%
-    tidy_and_attach() %>%
-    tidy_add_reference_rows() %>%
-    tidy_add_header_rows(show_single_row = c("trt", "unexist", "stage"))
-  expect_equivalent(
-    res$label,
-    c(
-      "(Intercept)", "T Stage", "T1", "T2", "T3", "T4", "Grade",
-      "I", "II", "III", "Chemotherapy Treatment", "Grade * Chemotherapy Treatment",
-      "I * Drug A", "II * Drug A"
-    )
-  )
-  expect_equivalent(
-    res$term,
-    c(
-      "(Intercept)", NA, "stage1", "stage2", "stage3", "stage4",
-      NA, "grade1", "grade2", "grade3", "trt1", NA, "grade1:trt1",
-      "grade2:trt1"
-    )
-  )
-  expect_equivalent(
-    res$header_row,
-    c(
-      NA, TRUE, FALSE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE,
-      NA, TRUE, FALSE, FALSE
-    )
-  )
-
   # no warning with an intercept only model
   mod <- lm(mpg ~ 1, mtcars)
   expect_warning(
@@ -147,6 +123,26 @@ test_that("tidy_add_header_rows() works as expected", {
     c("(Intercept)", "factor(response)", "factor(response)", "factor(response)",
       "Marker Level (ng/mL)", "factor(response) * Marker Level (ng/mL)")
   )
+
+  # no standard name
+  mod <- lm(hp ~ `miles per gallon`,
+     mtcars %>% dplyr::rename(`miles per gallon` = mpg))
+  res <- mod %>%
+    tidy_and_attach() %>%
+    tidy_add_header_rows()
+  expect_equivalent(
+    res$header_row,
+    c(NA, NA)
+  )
+  mod <- lm(hp ~ `cyl as factor`,
+            mtcars %>% dplyr::mutate(`cyl as factor` = factor(cyl)))
+  res <- mod %>%
+    tidy_and_attach() %>%
+    tidy_add_header_rows()
+  expect_equivalent(
+    res$header_row,
+    c(NA, TRUE, FALSE, FALSE)
+  )
 })
 
 test_that("test tidy_add_header_rows() checks", {
@@ -176,15 +172,34 @@ test_that("tidy_add_header_rows() works with nnet::multinom", {
       FALSE
     )
   )
+  expect_equivalent(
+    res$label,
+    c(
+      "(Intercept)", "T Stage", "T1", "T2", "T3", "T4",
+      "Marker Level (ng/mL)", "Age", "Chemotherapy Treatment",
+      "Drug A", "Drug B", "(Intercept)", "T Stage", "T1", "T2",
+      "T3", "T4", "Marker Level (ng/mL)", "Age",
+      "Chemotherapy Treatment", "Drug A", "Drug B"
+    )
+  )
   res <- mod %>%
     tidy_and_attach() %>%
     tidy_add_reference_rows() %>%
-    tidy_add_header_rows(show_single_row = .$variable, quiet = TRUE)
+    tidy_add_header_rows(show_single_row = everything(), quiet = TRUE)
   expect_equivalent(
     res$header_row,
     c(
       NA, TRUE, FALSE, FALSE, FALSE, FALSE, NA, NA, NA, NA, TRUE,
       FALSE, FALSE, FALSE, FALSE, NA, NA, NA
+    )
+  )
+  expect_equivalent(
+    res$label,
+    c(
+      "(Intercept)", "T Stage", "T1", "T2", "T3", "T4",
+      "Marker Level (ng/mL)", "Age", "Chemotherapy Treatment",
+      "(Intercept)", "T Stage", "T1", "T2", "T3", "T4",
+      "Marker Level (ng/mL)", "Age", "Chemotherapy Treatment"
     )
   )
 })

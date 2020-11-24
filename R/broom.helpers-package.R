@@ -1,28 +1,14 @@
 ## usethis namespace: start
 #' @importFrom lifecycle deprecate_soft
-#' @importFrom dplyr .data
+#' @importFrom usethis ui_code
+#' @importFrom rlang .data .env
+#' @importFrom purrr %||%
 ## usethis namespace: end
 NULL
 
-#' @importFrom dplyr `%>%`
-#' @export
-dplyr::`%>%`
-
 # because `where` is not exported by tidyselect
 # cf. https://github.com/r-lib/tidyselect/issues/201
-utils::globalVariables("where")
-
-# remove backtips around variable names
-.clean_backtips <- function(x, variable_names = x) {
-  for (i in stats::na.omit(variable_names)) {
-    x <- stringr::str_replace_all(x, paste0("`", i, "`"), i)
-
-    if (stringr::str_detect(i, "^`.*`$")) {
-      x <- stringr::str_replace_all(x, i, stringr::str_sub(i, 2, -2))
-    }
-  }
-  x
-}
+utils::globalVariables(c(".", "where"))
 
 # update named vectors, y values overriding x values if common name
 .update_vector <- function(x, y) {
@@ -66,9 +52,23 @@ utils::globalVariables("where")
       dplyr::any_of(
         c(
           "y.level", "term", "variable", "var_label", "var_class", "var_type",
-          "header_row", "contrasts", "reference_row", "label"
+          "var_nlevels", "header_row", "contrasts", "contrasts_type", "reference_row", "label"
         )
       ),
       dplyr::everything()
     )
 }
+
+# attributes to be saved between tidy_* functions
+.save_attributes <- function(x) {
+  .attributes <- attributes(x)
+  .attributes_names <- intersect(
+    names(.attributes),
+    c(
+      "exponentiate", "coefficients_type", "coefficients_label",
+      "variable_labels", "term_labels"
+      )
+  )
+  .attributes[.attributes_names]
+}
+

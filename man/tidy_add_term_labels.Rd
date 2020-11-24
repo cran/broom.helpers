@@ -8,6 +8,7 @@ tidy_add_term_labels(
   x,
   labels = NULL,
   interaction_sep = " * ",
+  categorical_terms_pattern = "{level}",
   model = tidy_get_model(x),
   quiet = FALSE,
   strict = FALSE
@@ -21,9 +22,13 @@ custom term labels}
 
 \item{interaction_sep}{separator for interaction terms}
 
+\item{categorical_terms_pattern}{a \link[glue:glue]{glue pattern} for
+labels of categorical terms with treatment or sum contrasts
+(see examples and \code{\link[=model_list_terms_levels]{model_list_terms_levels()}})}
+
 \item{model}{the corresponding model, if not attached to \code{x}}
 
-\item{quiet}{logical argument whether broom.helpers should return an error
+\item{quiet}{logical argument whether broom.helpers should not return a message
 when requested output cannot be generated. Default is FALSE}
 
 \item{strict}{logical argument whether broom.helpers should return an error
@@ -34,7 +39,8 @@ Will add term labels in a \code{label} column, based on:
 \enumerate{
 \item labels provided in \code{labels} argument if provided;
 \item factor levels for categorical variables coded with
-treatment, SAS or sum contrasts;
+treatment, SAS or sum contrasts (the label could be
+customized with \code{categorical_terms_pattern} argument);
 \item variable labels when there is only one term per variable;
 \item term name otherwise.
 }
@@ -57,13 +63,21 @@ df <- Titanic \%>\%
     Sex = "Sex"
   )
 
-df \%>\%
-  glm(Survived ~ Class * Age * Sex, data = ., weights = .$n, family = binomial) \%>\%
+mod <- df \%>\%
+  glm(Survived ~ Class * Age * Sex, data = ., weights = .$n, family = binomial)
+mod \%>\%
   tidy_and_attach() \%>\%
   tidy_add_term_labels()
+mod \%>\%
+  tidy_and_attach() \%>\%
+  tidy_add_term_labels(
+    interaction_sep = " x ",
+    categorical_terms_pattern = "{level} / {reference_level}"
+  )
 }
 \seealso{
 Other tidy_helpers: 
+\code{\link{tidy_add_coefficients_type}()},
 \code{\link{tidy_add_contrasts}()},
 \code{\link{tidy_add_estimate_to_reference_rows}()},
 \code{\link{tidy_add_header_rows}()},
@@ -72,6 +86,7 @@ Other tidy_helpers:
 \code{\link{tidy_attach_model}()},
 \code{\link{tidy_identify_variables}()},
 \code{\link{tidy_plus_plus}()},
-\code{\link{tidy_remove_intercept}()}
+\code{\link{tidy_remove_intercept}()},
+\code{\link{tidy_select_variables}()}
 }
 \concept{tidy_helpers}

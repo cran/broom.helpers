@@ -16,7 +16,9 @@ model_list_contrasts(model)
 A tibble with three columns:
 \itemize{
 \item \code{variable}: variable name
-\item \code{contrasts}: type of contrasts
+\item \code{contrasts}: contrasts used
+\item \code{contrasts_type}: type of contrasts
+("treatment", "sum", "poly", "helmert" or "other")
 \item \code{reference}: for variables with treatment, SAS
 or sum contrasts, position of the reference level
 }
@@ -35,9 +37,12 @@ glm(
 }
 \seealso{
 Other model_helpers: 
+\code{\link{model_get_coefficients_type}()},
 \code{\link{model_get_contrasts}()},
 \code{\link{model_get_model_frame}()},
 \code{\link{model_get_model_matrix}()},
+\code{\link{model_get_model}()},
+\code{\link{model_get_nlevels}()},
 \code{\link{model_get_xlevels}()},
 \code{\link{model_identify_variables}()},
 \code{\link{model_list_terms_levels}()},

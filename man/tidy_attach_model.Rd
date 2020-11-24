@@ -7,9 +7,9 @@
 \alias{tidy_detach_model}
 \title{Attach a full model to the tibble of model terms}
 \usage{
-tidy_attach_model(x, model)
+tidy_attach_model(x, model, .attributes = NULL)
 
-tidy_and_attach(model, tidy_fun = broom::tidy, ...)
+tidy_and_attach(model, tidy_fun = broom::tidy, exponentiate = FALSE, ...)
 
 tidy_get_model(x)
 
@@ -20,7 +20,13 @@ tidy_detach_model(x)
 
 \item{model}{a model to be attached/tidied}
 
+\item{.attributes}{named list of additional attributes to be attached to \code{x}}
+
 \item{tidy_fun}{option to specify a custom tidier function}
+
+\item{exponentiate}{logical indicating whether or not to exponentiate the
+coefficient estimates. This is typical for logistic, Poisson and Cox models,
+but a bad idea if there is no log or logit link; defaults to \code{FALSE}}
 
 \item{...}{other arguments passed to \code{tidy_fun()}}
 }
@@ -45,6 +51,7 @@ tidy_get_model(tt)
 }
 \seealso{
 Other tidy_helpers: 
+\code{\link{tidy_add_coefficients_type}()},
 \code{\link{tidy_add_contrasts}()},
 \code{\link{tidy_add_estimate_to_reference_rows}()},
 \code{\link{tidy_add_header_rows}()},
@@ -53,6 +60,7 @@ Other tidy_helpers:
 \code{\link{tidy_add_variable_labels}()},
 \code{\link{tidy_identify_variables}()},
 \code{\link{tidy_plus_plus}()},
-\code{\link{tidy_remove_intercept}()}
+\code{\link{tidy_remove_intercept}()},
+\code{\link{tidy_select_variables}()}
 }
 \concept{tidy_helpers}

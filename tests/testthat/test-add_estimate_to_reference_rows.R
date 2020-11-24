@@ -10,7 +10,7 @@ test_that("tidy_add_estimate_to_reference_rows() works for basic models", {
 
   res <- mod %>%
     tidy_and_attach(exponentiate = TRUE) %>%
-    tidy_add_estimate_to_reference_rows(exponentiate = TRUE)
+    tidy_add_estimate_to_reference_rows()
   expect_equivalent(
     res$estimate[res$reference_row & !is.na(res$reference_row)],
     c(1, 1, 1)
@@ -30,7 +30,7 @@ test_that("tidy_add_estimate_to_reference_rows() works for basic models", {
 
   res <- mod %>%
     tidy_and_attach(exponentiate = TRUE) %>%
-    tidy_add_estimate_to_reference_rows(exponentiate = TRUE)
+    tidy_add_estimate_to_reference_rows()
   expect_equivalent(
     res$estimate[res$reference_row & !is.na(res$reference_row)],
     c(1, 1, 1)
@@ -59,7 +59,7 @@ test_that("tidy_add_estimate_to_reference_rows() works for basic models", {
 
   res2 <- mod %>%
     tidy_and_attach(exponentiate = TRUE) %>%
-    tidy_add_estimate_to_reference_rows(exponentiate = TRUE)
+    tidy_add_estimate_to_reference_rows()
   expect_equivalent(
     res2$estimate[res2$reference_row & res2$variable == "stage" & !is.na(res2$reference_row)],
     exp(sum(res$estimate[!res$reference_row & res$variable == "stage"], na.rm = TRUE) * -1)
@@ -72,13 +72,50 @@ test_that("tidy_add_estimate_to_reference_rows() works for basic models", {
     res2$estimate[res2$reference_row & res2$variable == "trt" & !is.na(res2$reference_row)],
     exp(sum(res$estimate[!res$reference_row & res$variable == "trt"], na.rm = TRUE) * -1)
   )
+
+  ## works also when there is an interaction term
+  mod <- glm(response ~ stage * grade * trt, gtsummary::trial,
+             family = binomial,
+             contrasts = list(stage = contr.sum, grade = contr.sum, trt = contr.sum)
+  )
+  res <- mod %>%
+    tidy_and_attach() %>%
+    tidy_add_estimate_to_reference_rows()
+  # should be -1 * sum of other coefficients when sum contrasts
+  expect_equivalent(
+    res$estimate[res$reference_row & res$variable == "stage" & !is.na(res$reference_row)],
+    sum(res$estimate[!res$reference_row & res$variable == "stage"], na.rm = TRUE) * -1
+  )
+  expect_equivalent(
+    res$estimate[res$reference_row & res$variable == "grade" & !is.na(res$reference_row)],
+    sum(res$estimate[!res$reference_row & res$variable == "grade"], na.rm = TRUE) * -1
+  )
+  expect_equivalent(
+    res$estimate[res$reference_row & res$variable == "trt" & !is.na(res$reference_row)],
+    sum(res$estimate[!res$reference_row & res$variable == "trt"], na.rm = TRUE) * -1
+  )
 })
 
 
 test_that("test tidy_add_estimate_to_reference_rows() checks", {
   mod <- glm(response ~ stage + grade + trt, gtsummary::trial, family = binomial)
   # expect an error if no model attached
-  expect_error(mod %>% broom::tidy() %>% tidy_add_estimate_to_reference_rows())
+  expect_error(mod %>% broom::tidy() %>% tidy_add_estimate_to_reference_rows(exponentiate = TRUE))
+
+  # expect an error if no value for exponentiate
+  expect_error(mod %>% tidy_and_attach() %>% tidy_add_estimate_to_reference_rows(exponentiate = NULL))
+  expect_error(mod %>% broom::tidy() %>% tidy_attach_model(mod) %>% tidy_add_estimate_to_reference_rows())
+
+  # expect a message if this is a model not covered by emmeans
+  mod <- glm(
+    response ~ stage + grade + trt, gtsummary::trial,
+    family = binomial, contrasts = list(grade = contr.sum)
+  )
+  res <- mod %>% tidy_and_attach() %>% tidy_add_reference_rows()
+  class(mod) <- "unknown"
+  expect_message(
+    res %>% tidy_add_estimate_to_reference_rows(model = mod)
+  )
 })
 
 test_that("tidy_add_estimate_to_reference_rows() works with character variables", {
@@ -129,20 +166,18 @@ test_that("tidy_add_estimate_to_reference_rows() works with character variables"
 
 
 test_that("tidy_add_estimate_to_reference_rows() handles variables having non standard name", {
-  # dummy.coef do not work with such variable
-  # a warning should have been displayed
-
   df <- gtsummary::trial %>% dplyr::mutate(`grade of kids` = grade)
   mod <- glm(response ~ stage + `grade of kids` + trt, df,
     family = binomial,
     contrasts = list(`grade of kids` = contr.sum)
   )
   expect_message(
-    res <- mod %>% tidy_and_attach() %>% tidy_add_estimate_to_reference_rows()
+    res <- mod %>% tidy_and_attach() %>% tidy_add_estimate_to_reference_rows(),
+    NA
   )
   expect_equivalent(
-    res$estimate[res$variable == "grade of kids" & res$reference_row & !is.na(res$variable)],
-    NA_real_
+    res$estimate[res$variable == "grade of kids" & !is.na(res$variable)] %>% sum(),
+    0
   )
 })
 
@@ -260,3 +295,4 @@ test_that("tidy_add_estimate_to_reference_rows() works with lavaan::lavaan", {
   )
   expect_error(mod %>% tidy_and_attach() %>% tidy_add_estimate_to_reference_rows(), NA)
 })
+

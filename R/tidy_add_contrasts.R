@@ -1,6 +1,8 @@
 #' Add contrasts type for categorical variables
 #'
-#' Add a `contrasts` column corresponding to the type of contrasts
+#' Add a `contrasts` column corresponding to contrasts used for a
+#' categorical variable and a `contrasts_type` column equal to
+#' "treatment", "sum", "poly", "helmert" or "other".
 #'
 #' @details
 #' If the `variable` column is not yet available in `x`,
@@ -28,6 +30,8 @@ tidy_add_contrasts <- function(x, model = tidy_get_model(x)) {
     stop("'model' is not provided. You need to pass it or to use 'tidy_and_attach()'.")
   }
 
+  .attributes <- .save_attributes(x)
+
   if ("contrasts" %in% names(x)) {
     x <- x %>% dplyr::select(-.data$contrasts)
   }
@@ -39,15 +43,15 @@ tidy_add_contrasts <- function(x, model = tidy_get_model(x)) {
   contrasts_list <- model_list_contrasts(model)
   if (is.null(contrasts_list)) {
     x$contrasts <- NA_character_
+    x$contrasts_type <- NA_character_
   } else {
     x <- x %>%
       dplyr::left_join(
         contrasts_list %>%
-          dplyr::select(.data$variable, .data$contrasts),
+          dplyr::select(.data$variable, .data$contrasts, .data$contrasts_type),
         by = "variable"
       )
   }
   x %>%
-    tidy_attach_model(model = model) %>%
-    .order_tidy_columns()
+    tidy_attach_model(model = model, .attributes = .attributes)
 }

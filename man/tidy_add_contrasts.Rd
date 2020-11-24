@@ -12,7 +12,9 @@ tidy_add_contrasts(x, model = tidy_get_model(x))
 \item{model}{the corresponding model, if not attached to \code{x}}
 }
 \description{
-Add a \code{contrasts} column corresponding to the type of contrasts
+Add a \code{contrasts} column corresponding to contrasts used for a
+categorical variable and a \code{contrasts_type} column equal to
+"treatment", "sum", "poly", "helmert" or "other".
 }
 \details{
 If the \code{variable} column is not yet available in \code{x},
@@ -34,6 +36,7 @@ df \%>\%
 }
 \seealso{
 Other tidy_helpers: 
+\code{\link{tidy_add_coefficients_type}()},
 \code{\link{tidy_add_estimate_to_reference_rows}()},
 \code{\link{tidy_add_header_rows}()},
 \code{\link{tidy_add_reference_rows}()},
@@ -42,6 +45,7 @@ Other tidy_helpers:
 \code{\link{tidy_attach_model}()},
 \code{\link{tidy_identify_variables}()},
 \code{\link{tidy_plus_plus}()},
-\code{\link{tidy_remove_intercept}()}
+\code{\link{tidy_remove_intercept}()},
+\code{\link{tidy_select_variables}()}
 }
 \concept{tidy_helpers}

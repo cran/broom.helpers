@@ -16,7 +16,7 @@ tidy_identify_variables(
 
 \item{model}{the corresponding model, if not attached to \code{x}}
 
-\item{quiet}{logical argument whether broom.helpers should return an error
+\item{quiet}{logical argument whether broom.helpers should not return a message
 when requested output cannot be generated. Default is FALSE}
 
 \item{strict}{logical argument whether broom.helpers should return an error
@@ -24,14 +24,24 @@ when requested output cannot be generated. Default is FALSE}
 }
 \description{
 \code{tidy_identify_variables()} will add to the tidy tibble
-three additional columns: \code{variable}, \code{var_class} and \code{var_type}.
+three additional columns: \code{variable}, \code{var_class}, \code{var_type} and \code{var_nlevels}.
 }
 \details{
 It will also identify interaction terms and intercept(s).
-\code{var_type} could be \code{"continuous"}, \code{"categorical"}, \code{"intercept"}
-or \code{"interaction"}. Will be equal to \code{"unknown"} in the rare cases
-where \code{tidy_identify_variables()} will fail to identify the list
-of variables.
+
+\code{var_type} could be:
+\itemize{
+\item \code{"continuous"},
+\item \code{"dichotomous"} (categorical variable with 2 levels),
+\item \code{"categorical"} (categorical variable with 3 levels or more),
+\item \code{"intercept"}
+\item \code{"interaction"}
+\item \code{"unknown"} in the rare cases where \code{tidy_identify_variables()}
+will fail to identify the list of variables
+}
+
+For dichotomous and categorical variables, \code{var_nlevels} corresponds to the number
+of original levels in the corresponding variables.
 }
 \examples{
 Titanic \%>\%
@@ -53,6 +63,7 @@ lm(
 \code{\link[=model_identify_variables]{model_identify_variables()}}
 
 Other tidy_helpers: 
+\code{\link{tidy_add_coefficients_type}()},
 \code{\link{tidy_add_contrasts}()},
 \code{\link{tidy_add_estimate_to_reference_rows}()},
 \code{\link{tidy_add_header_rows}()},
@@ -61,6 +72,7 @@ Other tidy_helpers:
 \code{\link{tidy_add_variable_labels}()},
 \code{\link{tidy_attach_model}()},
 \code{\link{tidy_plus_plus}()},
-\code{\link{tidy_remove_intercept}()}
+\code{\link{tidy_remove_intercept}()},
+\code{\link{tidy_select_variables}()}
 }
 \concept{tidy_helpers}

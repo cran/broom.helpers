@@ -23,7 +23,7 @@ tidy_forest <-
   # adding in the reference row for categorical variables
   tidy_add_reference_rows() %>%
   # adding a reference value to appear in plot
-  tidy_add_estimate_to_reference_rows(exponentiate = TRUE) %>%
+  tidy_add_estimate_to_reference_rows() %>%
   # adding the variable labels
   tidy_add_term_labels() %>%
   # removing intercept estimate from model
@@ -167,8 +167,10 @@ tibble::tribble(
   ~Column, ~Function, ~Description,
   'variable', '`tidy_identify_variables()`', 'String of variable names from the model. For categorical variables and polynomial terms defined with `stats::poly()`, terms belonging to the variable are identified.',
   'var_class', '`tidy_identify_variables()`', "Class of the variable.",
-  'var_type', '`tidy_identify_variables()`', "One of 'intercept', 'continuous', 'categorical', or 'interaction'",
-  'contrasts', '`tidy_add_contrasts()`', "Type of contrasts used for categorical variables.<br /><em>Require 'variable' column. If needed, will automatically apply `tidy_identify_variables()`.</em>",
+  'var_type', '`tidy_identify_variables()`', "One of 'intercept', 'continuous', 'dichotomous', 'categorical', or 'interaction'",
+  'var_nlevels', '`tidy_identify_variables()`', "Number of original levels for categorical variables",
+  'contrasts', '`tidy_add_contrasts()`', "Contrasts used for categorical variables.<br /><em>Require 'variable' column. If needed, will automatically apply `tidy_identify_variables()`.</em>",
+  'contrasts_type', '`tidy_add_contrasts()`', "Type of contrasts ('treatment', 'sum', 'poly', 'helmert' or 'other')",
   'reference_row', '`tidy_add_reference_rows()`', "Logical indicating if a row is a reference row for categorical variables using a treatment or a sum contrast. Is equal to `NA` for variables who do not have a reference row.<br /><em>Require 'contrasts' column. If needed, will automatically apply `tidy_add_contrasts()`.<br />`tidy_add_reference_rows()` will not populate the label of the reference term. It is therefore better to apply `tidy_add_term_labels()` after `tidy_add_reference_rows()` rather than before.</em>",
   'var_label', '`tidy_add_variable_labels()`', "String of variable labels from the model. Columns labelled with the `labelled` package are retained. It is possible to pass a custom label for an interaction term with the `labels` argument. <br /><em>Require 'variable' column. If needed, will automatically apply `tidy_identify_variables()`.",
   'label', '`tidy_add_term_labels()`', "String of term labels based on (1) labels provided in `labels` argument if provided; (2) factor levels for categorical variables coded with treatment, SAS or sum contrasts; (3) variable labels when there is only one term per variable; and (4) term name otherwise.<br /><em>Require 'variable_label' column. If needed, will automatically apply `tidy_add_variable_labels()`.<br />Require 'contrasts' column. If needed, will automatically apply `tidy_add_contrasts()`.</em>",
@@ -176,5 +178,44 @@ tibble::tribble(
   
   
 ) %>%
-  knitr::kable()
+    gt::gt() %>%
+  gt::fmt_markdown(columns = TRUE) %>%
+  gt::tab_options(
+    column_labels.font.weight = "bold",
+    
+  ) %>%
+  gt::opt_row_striping() %>%
+  gt::tab_style("vertical-align:top; font-size: 12px;", gt::cells_body())
+
+## ---- echo=FALSE--------------------------------------------------------------
+tibble::tribble(
+  ~Model, ~Notes,
+  '`stats::lm()`', '',
+  '`stats::glm()`', '',
+  '`stats::aov()`', 'Reference rows are not relevant for such models.',
+  '`ordinal::clm()`', 'Limited support for models with nominal predictors.',
+  '`ordinal::clmm()`', 'Limited support for models with nominal predictors.',
+  '`survival::coxph()`', '',
+  '`survival::survreg()`', '',
+  '`survival::clogit()`', '',
+  '`lme4::lmer()`', '`broom.mixed` package required',
+  '`lme4::glmer()`', '`broom.mixed` package required',
+  '`lme4::glmer.nb()`', '`broom.mixed` package required',
+  '`geepack::geeglm()`', '',
+  '`gam::gam()`', '',
+  '`nnet::multinom()`', '',
+  '`survey::svyglm()`', '',
+  '`survey::svycoxph()`', '',
+  '`survey::svyolr()`', '',
+  '`MASS::polr()`', '',
+  '`MASS::glm.nb()`', '',
+  '`mice::mira`', 'Limited support. If `mod` is a `mira` object, use `tidy_plus_plus(mod, tidy_fun = function(x, ...) mice::pool(x) %>% mice::tidy(...))`',
+  '`lavaan::lavaan()`', 'Limited support for categorical variables'
+) %>%
+  dplyr::arrange(Model) %>%
+  gt::gt() %>%
+  gt::fmt_markdown(columns = TRUE) %>%
+  gt::tab_options(column_labels.font.weight = "bold") %>%
+  gt::opt_row_striping() %>%
+  gt::tab_style("vertical-align:top; font-size: 12px;", gt::cells_body())
 

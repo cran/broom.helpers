@@ -4,14 +4,24 @@
 \alias{tidy_add_reference_rows}
 \title{Add references rows for categorical variables}
 \usage{
-tidy_add_reference_rows(x, model = tidy_get_model(x), quiet = FALSE)
+tidy_add_reference_rows(
+  x,
+  no_reference_row = NULL,
+  model = tidy_get_model(x),
+  quiet = FALSE
+)
 }
 \arguments{
 \item{x}{a tidy tibble}
 
+\item{no_reference_row}{a vector indicating the name of variables
+for those no reference row should be added.
+Accepts \link[dplyr:select]{tidyselect} syntax. Default is \code{NULL}.
+See also \code{\link[=all_categorical]{all_categorical()}} and \code{\link[=all_dichotomous]{all_dichotomous()}}}
+
 \item{model}{the corresponding model, if not attached to \code{x}}
 
-\item{quiet}{logical argument whether broom.helpers should return an error
+\item{quiet}{logical argument whether broom.helpers should not return a message
 when requested output cannot be generated. Default is FALSE}
 }
 \description{
@@ -40,14 +50,16 @@ df <- Titanic \%>\%
   dplyr::as_tibble() \%>\%
   dplyr::mutate(Survived = factor(Survived, c("No", "Yes")))
 
-df \%>\%
+res <- df \%>\%
   glm(
     Survived ~ Class + Age + Sex,
     data = ., weights = .$n, family = binomial,
     contrasts = list(Age = contr.sum, Class = "contr.SAS")
   ) \%>\%
-  tidy_and_attach() \%>\%
-  tidy_add_reference_rows()
+  tidy_and_attach()
+res \%>\% tidy_add_reference_rows()
+res \%>\% tidy_add_reference_rows(no_reference_row = all_dichotomous())
+res \%>\% tidy_add_reference_rows(no_reference_row = "Class")
 
 if (requireNamespace("gtsummary")) {
   glm(
@@ -66,6 +78,7 @@ if (requireNamespace("gtsummary")) {
 }
 \seealso{
 Other tidy_helpers: 
+\code{\link{tidy_add_coefficients_type}()},
 \code{\link{tidy_add_contrasts}()},
 \code{\link{tidy_add_estimate_to_reference_rows}()},
 \code{\link{tidy_add_header_rows}()},
@@ -74,6 +87,7 @@ Other tidy_helpers:
 \code{\link{tidy_attach_model}()},
 \code{\link{tidy_identify_variables}()},
 \code{\link{tidy_plus_plus}()},
-\code{\link{tidy_remove_intercept}()}
+\code{\link{tidy_remove_intercept}()},
+\code{\link{tidy_select_variables}()}
 }
 \concept{tidy_helpers}

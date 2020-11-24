@@ -18,6 +18,10 @@
 #' [tidy_add_term_labels()] after `tidy_add_reference_rows()`
 #' rather than before.
 #' @param x a tidy tibble
+#' @param no_reference_row a vector indicating the name of variables
+#' for those no reference row should be added.
+#' Accepts [tidyselect][dplyr::select] syntax. Default is `NULL`.
+#' See also [all_categorical()] and [all_dichotomous()]
 #' @param model the corresponding model, if not attached to `x`
 #' @inheritParams tidy_plus_plus
 #' @export
@@ -27,14 +31,16 @@
 #'   dplyr::as_tibble() %>%
 #'   dplyr::mutate(Survived = factor(Survived, c("No", "Yes")))
 #'
-#' df %>%
+#' res <- df %>%
 #'   glm(
 #'     Survived ~ Class + Age + Sex,
 #'     data = ., weights = .$n, family = binomial,
 #'     contrasts = list(Age = contr.sum, Class = "contr.SAS")
 #'   ) %>%
-#'   tidy_and_attach() %>%
-#'   tidy_add_reference_rows()
+#'   tidy_and_attach()
+#' res %>% tidy_add_reference_rows()
+#' res %>% tidy_add_reference_rows(no_reference_row = all_dichotomous())
+#' res %>% tidy_add_reference_rows(no_reference_row = "Class")
 #'
 #' if (requireNamespace("gtsummary")) {
 #'   glm(
@@ -50,9 +56,18 @@
 #'     tidy_and_attach() %>%
 #'     tidy_add_reference_rows()
 #' }
-tidy_add_reference_rows <- function(x, model = tidy_get_model(x), quiet = FALSE) {
+tidy_add_reference_rows <- function(
+  x, no_reference_row = NULL,
+  model = tidy_get_model(x),
+  quiet = FALSE
+) {
   if (is.null(model)) {
     stop("'model' is not provided. You need to pass it or to use 'tidy_and_attach()'.")
+  }
+
+  # adding reference rows is not meaningful for stats::aov
+  if (inherits(model, "aov")) {
+    return(x %>% dplyr::mutate(reference_row = NA))
   }
 
   if ("header_row" %in% names(x)) {
@@ -64,6 +79,8 @@ tidy_add_reference_rows <- function(x, model = tidy_get_model(x), quiet = FALSE)
       usethis::ui_oops("tidy_add_reference_rows() has already been applied. x has been returned unchanged.")
     return(x)
   }
+
+  .attributes <- .save_attributes(x)
 
   if ("label" %in% names(x)) {
     if (!quiet)
@@ -77,13 +94,20 @@ tidy_add_reference_rows <- function(x, model = tidy_get_model(x), quiet = FALSE)
     x <- x %>% tidy_add_contrasts(model = model)
   }
 
+  # obtain character vector of selected variables
+  no_reference_row <- .select_to_varnames({{ no_reference_row }}, var_info = x, arg_name = "no_reference_row")
+
   terms_levels <- model_list_terms_levels(model)
 
   if (!is.null(terms_levels))
     terms_levels <- terms_levels %>%
       # keep only terms corresponding to variable in x
       # (e.g. to exclude interaction only variables)
-      dplyr::filter(.data$variable %in% unique(stats::na.omit(x$variable)))
+      dplyr::filter(
+        .data$variable %in% unique(stats::na.omit(x$variable)) &
+          # and exclude variables in no_reference_row
+          !.data$variable %in% no_reference_row
+      )
 
   if (is.null(terms_levels) || nrow(terms_levels) == 0)
     return(
@@ -95,7 +119,6 @@ tidy_add_reference_rows <- function(x, model = tidy_get_model(x), quiet = FALSE)
   terms_levels <- terms_levels %>%
     dplyr::group_by(.data$variable) %>%
     dplyr::mutate(rank = 1:dplyr::n())
-
 
   has_var_label <- "var_label" %in% names(x)
   if (!has_var_label) {
@@ -112,7 +135,7 @@ tidy_add_reference_rows <- function(x, model = tidy_get_model(x), quiet = FALSE)
       rank = 1:dplyr::n() # for sorting table at the end
     )
 
-  if ("y.level" %in% names(x)) { # specific case for nnet::multinom
+  if ("y.level" %in% names(x) & inherits(model, "multinom")) { # specific case for nnet::multinom
     ref_rows <- terms_levels %>%
       dplyr::filter(.data$reference) %>%
       dplyr::mutate(reference_row = TRUE) %>%
@@ -127,7 +150,9 @@ tidy_add_reference_rows <- function(x, model = tidy_get_model(x), quiet = FALSE)
         var_class = dplyr::first(.data$var_class),
         var_type = dplyr::first(.data$var_type),
         var_label = dplyr::first(.data$var_label),
+        var_nlevels = dplyr::first(.data$var_nlevels),
         contrasts = dplyr::first(.data$contrasts),
+        contrasts_type = dplyr::first(.data$contrasts_type),
         var_min_rank = min(.data$rank),
         var_max_rank = min(.data$rank),
         .groups = "drop_last"
@@ -167,7 +192,9 @@ tidy_add_reference_rows <- function(x, model = tidy_get_model(x), quiet = FALSE)
         var_class = dplyr::first(.data$var_class),
         var_type = dplyr::first(.data$var_type),
         var_label = dplyr::first(.data$var_label),
+        var_nlevels = dplyr::first(.data$var_nlevels),
         contrasts = dplyr::first(.data$contrasts),
+        contrasts_type = dplyr::first(.data$contrasts_type),
         var_min_rank = min(.data$rank),
         var_max_rank = min(.data$rank),
         .groups = "drop_last"
@@ -200,6 +227,5 @@ tidy_add_reference_rows <- function(x, model = tidy_get_model(x), quiet = FALSE)
   x %>%
     dplyr::arrange(.data$rank) %>%
     dplyr::select(-.data$rank) %>%
-    tidy_attach_model(model = model) %>%
-    .order_tidy_columns()
+    tidy_attach_model(model = model, .attributes = .attributes)
 }
