@@ -7,6 +7,7 @@
 \alias{model_identify_variables.aov}
 \alias{model_identify_variables.clm}
 \alias{model_identify_variables.clmm}
+\alias{model_identify_variables.gam}
 \title{Identify for each coefficient of a model the corresponding variable}
 \usage{
 model_identify_variables(model)
@@ -20,6 +21,8 @@ model_identify_variables(model)
 \method{model_identify_variables}{clm}(model)
 
 \method{model_identify_variables}{clmm}(model)
+
+\method{model_identify_variables}{gam}(model)
 }
 \arguments{
 \item{model}{a model object}
@@ -62,12 +65,18 @@ iris \%>\%
 \code{\link[=tidy_identify_variables]{tidy_identify_variables()}}
 
 Other model_helpers: 
+\code{\link{model_compute_terms_contributions}()},
 \code{\link{model_get_coefficients_type}()},
 \code{\link{model_get_contrasts}()},
 \code{\link{model_get_model_frame}()},
 \code{\link{model_get_model_matrix}()},
 \code{\link{model_get_model}()},
 \code{\link{model_get_nlevels}()},
+\code{\link{model_get_n}()},
+\code{\link{model_get_offset}()},
+\code{\link{model_get_response}()},
+\code{\link{model_get_terms}()},
+\code{\link{model_get_weights}()},
 \code{\link{model_get_xlevels}()},
 \code{\link{model_list_contrasts}()},
 \code{\link{model_list_terms_levels}()},

@@ -167,6 +167,7 @@ test_that("select_helpers: tidy_plus_plus", {
     1L
   )
 
+  skip_if_not_installed("emmeans")
   expect_equal(
     tidy_plus_plus(mod2, include = all_contrasts("sum"))$variable %>%
       na.omit() %>%
@@ -187,6 +188,25 @@ test_that("select_helpers: tidy_plus_plus", {
       unique(),
     c("trt")
   )
+
+  mod3 <- lme4::lmer(age ~ stage + (stage|grade) + (1|grade), gtsummary::trial)
+  res <- mod3 %>% tidy_plus_plus(
+    tidy_fun = broom.mixed::tidy,
+    include = all_ran_pars()
+  )
+  expect_equal(
+    res$term,
+    c("grade.sd__(Intercept)", "grade.cor__(Intercept).stageT2",
+      "grade.cor__(Intercept).stageT3", "grade.cor__(Intercept).stageT4",
+      "grade.sd__stageT2", "grade.cor__stageT2.stageT3", "grade.cor__stageT2.stageT4",
+      "grade.sd__stageT3", "grade.cor__stageT3.stageT4", "grade.sd__stageT4",
+      "grade.1.sd__(Intercept)", "Residual.sd__Observation")
+  )
+  res <- mod3 %>% tidy_plus_plus(
+    tidy_fun = broom.mixed::tidy,
+    include = all_ran_vals()
+  )
+  expect_equal(res %>% nrow(), 0L)
 })
 
 test_that("select_helpers: tidy_add_header_rows", {

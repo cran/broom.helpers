@@ -5,6 +5,8 @@
 \alias{model_get_xlevels.default}
 \alias{model_get_xlevels.lmerMod}
 \alias{model_get_xlevels.glmerMod}
+\alias{model_get_xlevels.felm}
+\alias{model_get_xlevels.brmsfit}
 \title{Get xlevels used in the model}
 \usage{
 model_get_xlevels(model)
@@ -14,6 +16,10 @@ model_get_xlevels(model)
 \method{model_get_xlevels}{lmerMod}(model)
 
 \method{model_get_xlevels}{glmerMod}(model)
+
+\method{model_get_xlevels}{felm}(model)
+
+\method{model_get_xlevels}{brmsfit}(model)
 }
 \arguments{
 \item{model}{a model object}
@@ -27,12 +33,18 @@ lm(hp ~ mpg + factor(cyl), mtcars) \%>\%
 }
 \seealso{
 Other model_helpers: 
+\code{\link{model_compute_terms_contributions}()},
 \code{\link{model_get_coefficients_type}()},
 \code{\link{model_get_contrasts}()},
 \code{\link{model_get_model_frame}()},
 \code{\link{model_get_model_matrix}()},
 \code{\link{model_get_model}()},
 \code{\link{model_get_nlevels}()},
+\code{\link{model_get_n}()},
+\code{\link{model_get_offset}()},
+\code{\link{model_get_response}()},
+\code{\link{model_get_terms}()},
+\code{\link{model_get_weights}()},
 \code{\link{model_identify_variables}()},
 \code{\link{model_list_contrasts}()},
 \code{\link{model_list_terms_levels}()},

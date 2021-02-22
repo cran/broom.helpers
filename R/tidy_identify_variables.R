@@ -12,6 +12,8 @@
 #' * `"categorical"` (categorical variable with 3 levels or more),
 #' * `"intercept"`
 #' * `"interaction"`
+#' * `"ran_pars` (random-effect parameters for mixed models)
+#' * `"ran_vals"` (random-effect values for mixed models)
 #' * `"unknown"` in the rare cases where `tidy_identify_variables()`
 #'   will fail to identify the list of variables
 #'
@@ -39,7 +41,7 @@
 #'   tidy_and_attach(conf.int = TRUE) %>%
 #'   tidy_identify_variables()
 tidy_identify_variables <- function(x, model = tidy_get_model(x),
-                                    quiet = FALSE, strict = FALSE) {
+                                    quiet = FALSE) {
   if (is.null(model)) {
     stop("'model' is not provided. You need to pass it or to use 'tidy_and_attach()'.")
   }
@@ -59,16 +61,30 @@ tidy_identify_variables <- function(x, model = tidy_get_model(x),
   variables_list <- model_identify_variables(model)
 
   if (nrow(variables_list) > 0) {
+    x <- x %>%
+      dplyr::left_join(variables_list, by = "term")
+
+    # management of random parameters (mixed models)
+    if ("effect" %in% names(x)) {
+      x <- x %>%
+        dplyr::mutate(
+          var_type = dplyr::if_else(
+            .data$effect %in% c("ran_pars", "ran_vals"),
+            .data$effect,
+            .data$var_type
+          )
+        )
+    }
+
     x %>%
-      dplyr::left_join(variables_list, by = "term") %>%
       dplyr::mutate(
         var_type = dplyr::if_else(
-          is.na(.data$variable),
+          is.na(.data$var_type),
           "intercept",
           .data$var_type
         ),
         variable = dplyr::if_else(
-          .data$var_type == "intercept",
+          is.na(.data$variable),
           .data$term,
           .data$variable
         )
@@ -76,16 +92,16 @@ tidy_identify_variables <- function(x, model = tidy_get_model(x),
       tidy_attach_model(model = model, .attributes = .attributes)
   } else {
     if (!quiet)
-      usethis::ui_oops(paste0(
+      cli_alert_danger(paste0(
         "Unable to identify the list of variables.\n\n",
-        "This is usually due to an error calling {usethis::ui_code('stats::model.frame(x)')}",
-        "or {usethis::ui_code('stats::model.matrix(x)')}.\n",
+        "This is usually due to an error calling {.code stats::model.frame(x)}",
+        "or {.code stats::model.matrix(x)}.\n",
         "It could be the case if that type of model does not implement these methods.\n",
         "Rarely, this error may occur if the model object was created within\na ",
-        "functional programming framework (e.g. using {usethis::ui_code('lappy()')}, ",
-        "{usethis::ui_code('purrr::map()')}, etc.)."
+        "functional programming framework (e.g. using {.code lappy()}, ",
+        "{.code purrr::map()}, etc.)."
       ))
-    if (strict) stop("Cannot identify variables. Quitting execution.", call. = FALSE)
+
     x %>%
       dplyr::mutate(
         variable = .data$term,

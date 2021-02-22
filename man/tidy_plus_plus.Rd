@@ -13,11 +13,14 @@ tidy_plus_plus(
   term_labels = NULL,
   interaction_sep = " * ",
   categorical_terms_pattern = "{level}",
+  disambiguate_terms = TRUE,
+  disambiguate_sep = ".",
   add_reference_rows = TRUE,
   no_reference_row = NULL,
   add_estimate_to_reference_rows = TRUE,
   add_header_rows = FALSE,
   show_single_row = NULL,
+  add_n = TRUE,
   intercept = FALSE,
   include = everything(),
   keep_model = FALSE,
@@ -47,6 +50,11 @@ but a bad idea if there is no log or logit link; defaults to \code{FALSE}.}
 labels of categorical terms with treatment or sum contrasts
 (see \code{\link[=model_list_terms_levels]{model_list_terms_levels()}})}
 
+\item{disambiguate_terms}{should terms be disambiguated with
+\code{\link[=tidy_disambiguate_terms]{tidy_disambiguate_terms()}}? (default \code{TRUE})}
+
+\item{disambiguate_sep}{separator for \code{\link[=tidy_disambiguate_terms]{tidy_disambiguate_terms()}}}
+
 \item{add_reference_rows}{should reference rows be added?}
 
 \item{no_reference_row}{variables (accepts \link[dplyr:select]{tidyselect} notation)
@@ -59,6 +67,8 @@ for those no reference row should be added, when \code{add_reference_rows = TRUE
 \item{show_single_row}{variables that should be displayed
 on a single row (accepts \link[dplyr:select]{tidyselect} notation), when
 \code{add_header_rows} is \code{TRUE}}
+
+\item{add_n}{should the number of observations be added?}
 
 \item{intercept}{should the intercept(s) be included?}
 
@@ -81,6 +91,7 @@ when requested output cannot be generated. Default is FALSE}
 This function will apply sequentially:
 \itemize{
 \item \code{\link[=tidy_and_attach]{tidy_and_attach()}}
+\item \code{\link[=tidy_disambiguate_terms]{tidy_disambiguate_terms()}}
 \item \code{\link[=tidy_identify_variables]{tidy_identify_variables()}}
 \item \code{\link[=tidy_add_contrasts]{tidy_add_contrasts()}}
 \item \code{\link[=tidy_add_reference_rows]{tidy_add_reference_rows()}}
@@ -88,6 +99,7 @@ This function will apply sequentially:
 \item \code{\link[=tidy_add_variable_labels]{tidy_add_variable_labels()}}
 \item \code{\link[=tidy_add_term_labels]{tidy_add_term_labels()}}
 \item \code{\link[=tidy_add_header_rows]{tidy_add_header_rows()}}
+\item \code{\link[=tidy_add_n]{tidy_add_n()}}
 \item \code{\link[=tidy_remove_intercept]{tidy_remove_intercept()}}
 \item \code{\link[=tidy_select_variables]{tidy_select_variables()}}
 \item \code{\link[=tidy_add_coefficients_type]{tidy_add_coefficients_type()}}
@@ -117,7 +129,8 @@ ex2 <- glm(
   tidy_plus_plus(
     exponentiate = TRUE,
     add_reference_rows = FALSE,
-    categorical_terms_pattern = "{level} / {reference_level}"
+    categorical_terms_pattern = "{level} / {reference_level}",
+    add_n = TRUE
   )
 ex2
 
@@ -148,10 +161,12 @@ Other tidy_helpers:
 \code{\link{tidy_add_contrasts}()},
 \code{\link{tidy_add_estimate_to_reference_rows}()},
 \code{\link{tidy_add_header_rows}()},
+\code{\link{tidy_add_n}()},
 \code{\link{tidy_add_reference_rows}()},
 \code{\link{tidy_add_term_labels}()},
 \code{\link{tidy_add_variable_labels}()},
 \code{\link{tidy_attach_model}()},
+\code{\link{tidy_disambiguate_terms}()},
 \code{\link{tidy_identify_variables}()},
 \code{\link{tidy_remove_intercept}()},
 \code{\link{tidy_select_variables}()}

@@ -20,8 +20,9 @@ coefficient estimates. It should be consistent with the original call to
 \item{model}{the corresponding model, if not attached to \code{x}}
 }
 \description{
-Add the type of coefficients ("generic", "logistic", "poisson" or "prop_hazard")
-and the corresponding coefficient labels, as attributes to \code{x} (respectively
+Add the type of coefficients ("generic", "logistic", "poisson",
+"relative_risk" or "prop_hazard") and the corresponding coefficient labels,
+as attributes to \code{x} (respectively
 named \code{coefficients_type} and \code{coefficients_label}).
 }
 \examples{
@@ -45,10 +46,12 @@ Other tidy_helpers:
 \code{\link{tidy_add_contrasts}()},
 \code{\link{tidy_add_estimate_to_reference_rows}()},
 \code{\link{tidy_add_header_rows}()},
+\code{\link{tidy_add_n}()},
 \code{\link{tidy_add_reference_rows}()},
 \code{\link{tidy_add_term_labels}()},
 \code{\link{tidy_add_variable_labels}()},
 \code{\link{tidy_attach_model}()},
+\code{\link{tidy_disambiguate_terms}()},
 \code{\link{tidy_identify_variables}()},
 \code{\link{tidy_plus_plus}()},
 \code{\link{tidy_remove_intercept}()},

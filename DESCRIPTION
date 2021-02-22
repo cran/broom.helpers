@@ -1,6 +1,6 @@
 Package: broom.helpers
 Title: Helpers for Model Coefficients Tibbles
-Version: 1.1.0
+Version: 1.2.0
 Authors@R: 
     c(person(given = "Joseph",
              family = "Larmarange",
@@ -19,10 +19,11 @@ Description: Provides suite of functions to work with regression
 License: GPL-3
 URL: https://larmarange.github.io/broom.helpers/
 BugReports: https://github.com/larmarange/broom.helpers/issues
-Imports: broom, dplyr, emmeans, labelled, lifecycle, purrr, rlang,
-        stats, stringr, tibble, tidyr, usethis
-Suggests: broom.mixed, covr, datasets, forcats, gam, gee, geepack,
-        ggplot2, gt, gtsummary, knitr, lavaan, lme4, MASS, mice, nnet,
+Imports: broom, cli, dplyr, labelled, lifecycle, purrr, rlang, stats,
+        stringr, tibble, tidyr
+Suggests: brms (>= 2.13.0), broom.mixed, cmprsk, covr, datasets,
+        emmeans, lfe, forcats, gam, gee, geepack, ggplot2, gt,
+        gtsummary, knitr, lavaan, lme4, MASS, mgcv, mice, nnet,
         ordinal, rmarkdown, survey, survival, testthat, spelling
 VignetteBuilder: knitr
 RdMacros: lifecycle
@@ -31,9 +32,9 @@ LazyData: true
 RoxygenNote: 7.1.1
 Language: en-US
 NeedsCompilation: no
-Packaged: 2020-11-24 07:36:51 UTC; josep
+Packaged: 2021-02-22 11:46:36 UTC; josep
 Author: Joseph Larmarange [aut, cre] (<https://orcid.org/0000-0001-7097-700X>),
   Daniel D. Sjoberg [aut] (<https://orcid.org/0000-0003-0862-2018>)
 Maintainer: Joseph Larmarange <joseph@larmarange.net>
 Repository: CRAN
-Date/Publication: 2020-11-24 08:00:02 UTC
+Date/Publication: 2021-02-22 16:20:11 UTC

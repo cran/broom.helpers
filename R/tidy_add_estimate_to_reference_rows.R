@@ -8,7 +8,8 @@
 #' For categorical variables with a sum contrast ([stats::contr.sum()]),
 #' the estimate value of the reference row will be equal to the sum of
 #' all other coefficients multiplied by `-1` (eventually exponentiated if
-#' `exponentiate = TRUE`), and obtained with [stats::dummy.coef()].
+#' `exponentiate = TRUE`), and obtained with [emmeans::emmeans()].
+#' The `emmeans` package should therefore be installed.
 #' For sum contrasts, the model coefficient corresponds
 #' to the difference of each level with the grand mean.
 #'
@@ -110,18 +111,25 @@ tidy_add_estimate_to_reference_rows <- function(
   if (inherits(model, "multinom")) {
     dc <- NULL
     if (!quiet)
-      usethis::ui_info(paste0(
+      cli_alert_info(paste0(
         "Sum contrasts are not supported for 'multinom' models.\n",
         "Reference row of variable '", variable, "' remained unchanged."
       ))
   } else {
+    if (!requireNamespace("emmeans")) {
+      stop( # nocov start
+        "'emmeans' package is required to add an estimate to reference rows ",
+        "of categorical variables coded with sum contrasts. ",
+        "Please install 'emmeans'."
+      ) # nocov end
+    }
     dc <- tryCatch(
       suppressMessages(
         emmeans::emmeans(model, specs = variable, contr = "eff")
       ),
       error = function(e) {
         if (!quiet)
-          usethis::ui_info(paste0(
+          cli_alert_info(paste0(
             "No emmeans() method for this type of model.\n",
             "Reference row of variable '", variable, "' remained unchanged."
           ))
@@ -158,7 +166,7 @@ tidy_add_estimate_to_reference_rows <- function(
 #     dplyr::last(stats::dummy.coef(model)[[variable]]),
 #     error = function(e) {
 #       if (!quiet)
-#         usethis::ui_info(paste0(
+#         cli_alert_info(paste0(
 #           "No dummy.coef() method for this type of model.\n",
 #           "Reference row of variable '", variable, "' remained unchanged."
 #         ))

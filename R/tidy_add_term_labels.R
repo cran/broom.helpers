@@ -93,8 +93,7 @@ tidy_add_term_labels <- function(x,
   names(term_labels) <- term_labels
 
   # add categorical terms levels
-  terms_levels <- model_list_terms_levels(
-    model,
+  terms_levels <- model %>% model_list_terms_levels(
     label_pattern = categorical_terms_pattern,
     variable_labels = .attributes$variable_labels
   )
@@ -106,18 +105,28 @@ tidy_add_term_labels <- function(x,
   # add variable labels
   # first variable list (for interaction only terms)
   # then current variable labels in x
-  variables_list <- model_list_variables(model) %>%
-    dplyr::mutate(
-      label = dplyr::if_else(
-        is.na(.data$label_attr),
-        .data$variable,
-        as.character(.data$label_attr)
+  variables_list <- model_list_variables(model)
+  if (!is.null(variables_list)) {
+    variables_list <- variables_list %>%
+      dplyr::mutate(
+        label = dplyr::if_else(
+          is.na(.data$label_attr),
+          .data$variable,
+          as.character(.data$label_attr)
+        ),
       )
+    additional_term_labels <- variables_list$label
+    names(additional_term_labels) <- variables_list$variable
+    term_labels <- term_labels %>%
+      .update_vector(additional_term_labels)
+    # add version with backtips for variables with non standard names
+    names(additional_term_labels) <- paste0(
+      "`", names(additional_term_labels), "`"
     )
-  additional_term_labels <- variables_list$label
-  names(additional_term_labels) <- variables_list$variable
-  term_labels <- term_labels %>%
-    .update_vector(additional_term_labels)
+    term_labels <- term_labels %>%
+      .update_vector(additional_term_labels)
+
+  }
 
   x_var_labels <- xx %>%
     dplyr::mutate(
@@ -136,18 +145,19 @@ tidy_add_term_labels <- function(x,
   names(additional_term_labels) <- x_var_labels$variable
   term_labels <- term_labels %>%
     .update_vector(additional_term_labels)
+  # add version with backtips for variables with non standard names
+  names(additional_term_labels) <- paste0(
+    "`", names(additional_term_labels), "`"
+  )
+  term_labels <- term_labels %>%
+    .update_vector(additional_term_labels)
 
 
   # check if all elements of labels are in x
   # show a message otherwise
   not_found <- setdiff(names(labels), names(term_labels))
   if (length(not_found) > 0 && !quiet) {
-    usethis::ui_oops(paste0(
-      usethis::ui_code(not_found),
-      " terms have not been found in ",
-      usethis::ui_code("x"),
-      "."
-    ))
+    cli_alert_danger("{.code {not_found}} terms have not been found in {.code x}.")
   }
   if (length(not_found) > 0 && strict) {
     stop("Incorrect call with `labels=`. Quitting execution.", call. = FALSE)

@@ -72,7 +72,13 @@ tidy_add_variable_labels <- function(x,
   var_labels <- unique(x$term)
   names(var_labels) <- var_labels
 
-  # add the list of variables
+  # add the list of variables from x
+  additional_labels <- x$variable[!is.na(x$variable)] %>% unique()
+  names(additional_labels) <- additional_labels
+  var_labels <- var_labels %>%
+    .update_vector(additional_labels)
+
+  # add the list of variables from model_list_variables
   variable_list <- model_list_variables(model, labels = labels)
   additional_labels <- variable_list$var_label
   names(additional_labels) <- variable_list$variable
@@ -83,12 +89,7 @@ tidy_add_variable_labels <- function(x,
   # show a message otherwise
   not_found <- setdiff(names(labels), names(var_labels))
   if (length(not_found) > 0 && !quiet) {
-    usethis::ui_oops(paste0(
-      usethis::ui_code(not_found),
-      " terms have not been found in ",
-      usethis::ui_code("x"),
-      "."
-    ))
+    cli_alert_danger("{.code {not_found}} terms have not been found in {.code x}.")
   }
   if (length(not_found) > 0 && strict) {
     stop("Incorrect call with `labels=`. Quitting execution.", call. = FALSE)

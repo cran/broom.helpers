@@ -16,7 +16,8 @@
 #' `tidy_add_reference_rows()` will not populate the label
 #' of the reference term. It is therefore better to apply
 #' [tidy_add_term_labels()] after `tidy_add_reference_rows()`
-#' rather than before.
+#' rather than before. Similarly, it is better to apply
+#' `tidy_add_reference_rows()` before [tidy_add_n()].
 #' @param x a tidy tibble
 #' @param no_reference_row a vector indicating the name of variables
 #' for those no reference row should be added.
@@ -76,7 +77,7 @@ tidy_add_reference_rows <- function(
 
   if ("reference_row" %in% names(x)) {
     if (!quiet)
-      usethis::ui_oops("tidy_add_reference_rows() has already been applied. x has been returned unchanged.")
+      cli_alert_danger("{.code tidy_add_reference_rows()} has already been applied. x has been returned unchanged.")
     return(x)
   }
 
@@ -84,9 +85,17 @@ tidy_add_reference_rows <- function(
 
   if ("label" %in% names(x)) {
     if (!quiet)
-      usethis::ui_info(paste0(
+      cli_alert_info(paste0(
         "tidy_add_reference_rows() has been applied after tidy_add_term_labels().\n",
         "You should consider applying tidy_add_reference_rows() first."
+      ))
+  }
+
+  if ("n_obs" %in% names(x)) {
+    if (!quiet)
+      cli_alert_info(paste0(
+        "{.code tidy_add_reference_rows()} has been applied after {.code tidy_add_n()}.\n",
+        "You should consider applying {.code tidy_add_reference_rows()} first."
       ))
   }
 

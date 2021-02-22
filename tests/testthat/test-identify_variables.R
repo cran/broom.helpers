@@ -30,6 +30,11 @@ test_that("model_list_variables() tests", {
     res$var_label,
     c("MARKER", "RESPONSE")
   )
+
+  expect_equal(
+    .MFclass2(as.Date("2000-01-01")),
+    "other"
+  )
 })
 
 test_that("tidy_identify_variables() works for common models", {
@@ -223,6 +228,21 @@ test_that("model_identify_variables() works with lme4::lmer", {
     c(NA, "Days")
   )
   expect_error(mod %>% tidy_and_attach(tidy_fun = broom.mixed::tidy) %>% tidy_identify_variables(), NA)
+
+  mod <- lme4::lmer(
+    age ~ stage + (stage|grade) + (1|grade),
+    gtsummary::trial
+  )
+  res <- mod %>%
+    tidy_and_attach(tidy_fun = broom.mixed::tidy) %>%
+    tidy_identify_variables()
+  expect_equal(
+    res %>%
+      dplyr::filter(effect == "ran_pars") %>%
+      purrr::pluck("var_type") %>%
+      unique(),
+    "ran_pars"
+  )
 })
 
 
@@ -412,6 +432,8 @@ test_that("model_identify_variables() works with MASS::polr", {
 
 
 test_that("model_identify_variables() works with geepack::geeglm", {
+  skip_if(packageVersion("geepack") < 1.3)
+
   df <- geepack::dietox
   df$Cu <- as.factor(df$Cu)
   mf <- formula(Weight ~ Cu * Time)
@@ -468,9 +490,12 @@ test_that("model_identify_variables() works with lavaan::lavaan", {
     mod@ParTable$lhs
   )
   expect_error(mod %>% tidy_and_attach() %>% tidy_identify_variables(), NA)
+  expect_vector(
+    mod %>% model_list_variables(only_variable = TRUE)
+  )
 })
 
-test_that("model_identify_variables() strict argument", {
+test_that("model_identify_variables() message when failure", {
   df_models <-
     tibble::tibble(grade = c("I", "II", "III")) %>%
     dplyr::mutate(df_model = purrr::map(grade, ~trial %>% dplyr::filter(grade == ..1))) %>%
@@ -483,13 +508,13 @@ test_that("model_identify_variables() strict argument", {
           ~ coxph(..1, data = ..2)
         )
     )
-  expect_error(
+  expect_message(
     df_models %>%
       dplyr::mutate(
         mv_tbl_form =
           purrr::map(
             mv_model_form,
-            ~tidy_and_attach(.x) %>% tidy_identify_variables(strict = TRUE)
+            ~tidy_and_attach(.x) %>% tidy_identify_variables(quiet = FALSE)
           )
       )
   )

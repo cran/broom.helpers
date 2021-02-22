@@ -4,12 +4,7 @@
 \alias{tidy_identify_variables}
 \title{Identify the variable corresponding to each model coefficient}
 \usage{
-tidy_identify_variables(
-  x,
-  model = tidy_get_model(x),
-  quiet = FALSE,
-  strict = FALSE
-)
+tidy_identify_variables(x, model = tidy_get_model(x), quiet = FALSE)
 }
 \arguments{
 \item{x}{a tidy tibble}
@@ -17,9 +12,6 @@ tidy_identify_variables(
 \item{model}{the corresponding model, if not attached to \code{x}}
 
 \item{quiet}{logical argument whether broom.helpers should not return a message
-when requested output cannot be generated. Default is FALSE}
-
-\item{strict}{logical argument whether broom.helpers should return an error
 when requested output cannot be generated. Default is FALSE}
 }
 \description{
@@ -36,6 +28,8 @@ It will also identify interaction terms and intercept(s).
 \item \code{"categorical"} (categorical variable with 3 levels or more),
 \item \code{"intercept"}
 \item \code{"interaction"}
+\item \verb{"ran_pars} (random-effect parameters for mixed models)
+\item \code{"ran_vals"} (random-effect values for mixed models)
 \item \code{"unknown"} in the rare cases where \code{tidy_identify_variables()}
 will fail to identify the list of variables
 }
@@ -67,10 +61,12 @@ Other tidy_helpers:
 \code{\link{tidy_add_contrasts}()},
 \code{\link{tidy_add_estimate_to_reference_rows}()},
 \code{\link{tidy_add_header_rows}()},
+\code{\link{tidy_add_n}()},
 \code{\link{tidy_add_reference_rows}()},
 \code{\link{tidy_add_term_labels}()},
 \code{\link{tidy_add_variable_labels}()},
 \code{\link{tidy_attach_model}()},
+\code{\link{tidy_disambiguate_terms}()},
 \code{\link{tidy_plus_plus}()},
 \code{\link{tidy_remove_intercept}()},
 \code{\link{tidy_select_variables}()}

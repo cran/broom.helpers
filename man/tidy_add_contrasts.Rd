@@ -4,17 +4,19 @@
 \alias{tidy_add_contrasts}
 \title{Add contrasts type for categorical variables}
 \usage{
-tidy_add_contrasts(x, model = tidy_get_model(x))
+tidy_add_contrasts(x, model = tidy_get_model(x), quiet = FALSE)
 }
 \arguments{
 \item{x}{a tidy tibble}
 
 \item{model}{the corresponding model, if not attached to \code{x}}
+
+\item{quiet}{logical argument whether broom.helpers should not return a message when \code{tidy_disambiguate_terms()} was already applied}
 }
 \description{
 Add a \code{contrasts} column corresponding to contrasts used for a
 categorical variable and a \code{contrasts_type} column equal to
-"treatment", "sum", "poly", "helmert" or "other".
+"treatment", "sum", "poly", "helmert", "other" or "no.contrast".
 }
 \details{
 If the \code{variable} column is not yet available in \code{x},
@@ -39,10 +41,12 @@ Other tidy_helpers:
 \code{\link{tidy_add_coefficients_type}()},
 \code{\link{tidy_add_estimate_to_reference_rows}()},
 \code{\link{tidy_add_header_rows}()},
+\code{\link{tidy_add_n}()},
 \code{\link{tidy_add_reference_rows}()},
 \code{\link{tidy_add_term_labels}()},
 \code{\link{tidy_add_variable_labels}()},
 \code{\link{tidy_attach_model}()},
+\code{\link{tidy_disambiguate_terms}()},
 \code{\link{tidy_identify_variables}()},
 \code{\link{tidy_plus_plus}()},
 \code{\link{tidy_remove_intercept}()},

@@ -33,7 +33,8 @@ to the reference row.
 For categorical variables with a sum contrast (\code{\link[stats:contrast]{stats::contr.sum()}}),
 the estimate value of the reference row will be equal to the sum of
 all other coefficients multiplied by \code{-1} (eventually exponentiated if
-\code{exponentiate = TRUE}), and obtained with \code{\link[stats:dummy.coef]{stats::dummy.coef()}}.
+\code{exponentiate = TRUE}), and obtained with \code{\link[emmeans:emmeans]{emmeans::emmeans()}}.
+The \code{emmeans} package should therefore be installed.
 For sum contrasts, the model coefficient corresponds
 to the difference of each level with the grand mean.
 
@@ -78,10 +79,12 @@ Other tidy_helpers:
 \code{\link{tidy_add_coefficients_type}()},
 \code{\link{tidy_add_contrasts}()},
 \code{\link{tidy_add_header_rows}()},
+\code{\link{tidy_add_n}()},
 \code{\link{tidy_add_reference_rows}()},
 \code{\link{tidy_add_term_labels}()},
 \code{\link{tidy_add_variable_labels}()},
 \code{\link{tidy_attach_model}()},
+\code{\link{tidy_disambiguate_terms}()},
 \code{\link{tidy_identify_variables}()},
 \code{\link{tidy_plus_plus}()},
 \code{\link{tidy_remove_intercept}()},

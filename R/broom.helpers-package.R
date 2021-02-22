@@ -1,6 +1,6 @@
 ## usethis namespace: start
 #' @importFrom lifecycle deprecate_soft
-#' @importFrom usethis ui_code
+#' @importFrom cli cli_alert_info cli_alert_info cli_alert_danger cli_code cli_ul
 #' @importFrom rlang .data .env
 #' @importFrom purrr %||%
 ## usethis namespace: end
@@ -51,8 +51,9 @@ utils::globalVariables(c(".", "where"))
     dplyr::select(
       dplyr::any_of(
         c(
-          "y.level", "term", "variable", "var_label", "var_class", "var_type",
-          "var_nlevels", "header_row", "contrasts", "contrasts_type", "reference_row", "label"
+          "y.level", "term", "original_term", "variable", "var_label", "var_class", "var_type",
+          "var_nlevels", "header_row", "contrasts", "contrasts_type",
+          "reference_row", "label", "n_obs", "n_event", "exposure"
         )
       ),
       dplyr::everything()
@@ -66,7 +67,7 @@ utils::globalVariables(c(".", "where"))
     names(.attributes),
     c(
       "exponentiate", "coefficients_type", "coefficients_label",
-      "variable_labels", "term_labels"
+      "variable_labels", "term_labels", "N_obs", "N_event", "Exposure"
       )
   )
   .attributes[.attributes_names]

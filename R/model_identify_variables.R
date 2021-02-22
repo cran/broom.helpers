@@ -40,8 +40,23 @@ model_identify_variables <- function(model) {
 #' @export
 model_identify_variables.default <- function(model) {
   model_matrix <- model_get_model_matrix(model)
+  get_assign <- purrr::attr_getter("assign")
 
-  if (is.null(model_matrix)) {
+  assign <- model_matrix %>% get_assign()
+
+  if (is.null(assign)) {
+    # an alternative generic way to compute assign
+    # (e.g. for felm models)
+    model_matrix <- tryCatch(
+      stats::model.matrix(stats::terms(model), stats::model.frame(model)),
+      error = function(e) {
+        NULL # nocov
+      }
+    )
+    assign <- model_matrix %>% get_assign()
+  }
+
+  if (is.null(model_matrix) | is.null(assign)) {
     # return an empty tibble
     return(
       dplyr::tibble(
@@ -54,9 +69,8 @@ model_identify_variables.default <- function(model) {
     )
   }
 
-  assign <- attr(model_matrix, "assign")
   assign[assign == 0] <- NA
-  model_terms <- stats::terms(model)
+  model_terms <- model_get_terms(model)
   variable_names <- model %>% model_list_variables(only_variable = TRUE)
   variables <- attr(model_terms, "term.labels") %>%
     .clean_backticks(variable_names = variable_names)
@@ -158,6 +172,19 @@ model_identify_variables.clm <- function(model) {
 #' @rdname model_identify_variables
 #' @export
 model_identify_variables.clmm <- model_identify_variables.clm
+
+#' @rdname model_identify_variables
+#' @export
+model_identify_variables.gam <- function(model) {
+  model_identify_variables.default(model) %>%
+    dplyr::bind_rows(
+      broom::tidy(model, parametric = FALSE) %>%
+        dplyr::bind_rows(tibble::tibble(term = character(0))) %>%
+        dplyr::select(.data$term) %>%
+        dplyr::mutate(variable = .data$term, var_type = "continuous")
+    )
+}
+
 
 ## model_identify_variables() helpers --------------------------
 
