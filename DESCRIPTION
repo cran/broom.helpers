@@ -1,6 +1,6 @@
 Package: broom.helpers
 Title: Helpers for Model Coefficients Tibbles
-Version: 1.2.0
+Version: 1.2.1
 Authors@R: 
     c(person(given = "Joseph",
              family = "Larmarange",
@@ -22,7 +22,7 @@ BugReports: https://github.com/larmarange/broom.helpers/issues
 Imports: broom, cli, dplyr, labelled, lifecycle, purrr, rlang, stats,
         stringr, tibble, tidyr
 Suggests: brms (>= 2.13.0), broom.mixed, cmprsk, covr, datasets,
-        emmeans, lfe, forcats, gam, gee, geepack, ggplot2, gt,
+        emmeans, lfe, forcats, gam, gee, geepack, ggplot2, glue, gt,
         gtsummary, knitr, lavaan, lme4, MASS, mgcv, mice, nnet,
         ordinal, rmarkdown, survey, survival, testthat, spelling
 VignetteBuilder: knitr
@@ -32,9 +32,9 @@ LazyData: true
 RoxygenNote: 7.1.1
 Language: en-US
 NeedsCompilation: no
-Packaged: 2021-02-22 11:46:36 UTC; josep
+Packaged: 2021-02-26 17:27:30 UTC; josep
 Author: Joseph Larmarange [aut, cre] (<https://orcid.org/0000-0001-7097-700X>),
   Daniel D. Sjoberg [aut] (<https://orcid.org/0000-0003-0862-2018>)
 Maintainer: Joseph Larmarange <joseph@larmarange.net>
 Repository: CRAN
-Date/Publication: 2021-02-22 16:20:11 UTC
+Date/Publication: 2021-02-26 22:10:03 UTC

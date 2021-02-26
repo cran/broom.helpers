@@ -97,10 +97,35 @@ tidy_add_term_labels <- function(x,
     label_pattern = categorical_terms_pattern,
     variable_labels = .attributes$variable_labels
   )
-  additional_term_labels <- terms_levels$label
-  names(additional_term_labels) <- terms_levels$term
-  term_labels <- term_labels %>%
-    .update_vector(additional_term_labels)
+  if (!is.null(terms_levels)) {
+    additional_term_labels <- terms_levels$label
+    names(additional_term_labels) <- terms_levels$term
+    term_labels <- term_labels %>%
+      .update_vector(additional_term_labels)
+
+    # also consider "variablelevel" notation
+    # when not already used (e.g. for sum contrasts)
+    terms_levels2 <- terms_levels %>%
+      dplyr::mutate(term2 = paste0(.data$variable, .data$level)) %>%
+      dplyr::filter(.data$term2 != .data$term)
+    if (nrow(terms_levels2) > 0) {
+      additional_term_labels <- terms_levels2$label
+      names(additional_term_labels) <- terms_levels2$term2
+      term_labels <- term_labels %>%
+        .update_vector(additional_term_labels)
+    }
+    # also consider "variablelevel_rank" notation
+    # for no intercept model (because type of interaction unknown)
+    terms_levels3 <- terms_levels %>%
+      dplyr::mutate(term3 = paste0(.data$variable, .data$level_rank)) %>%
+      dplyr::filter(.data$term3 != .data$term & .data$contrasts_type == "no.contrast")
+    if (nrow(terms_levels3) > 0) {
+      additional_term_labels <- terms_levels3$label
+      names(additional_term_labels) <- terms_levels3$term3
+      term_labels <- term_labels %>%
+        .update_vector(additional_term_labels)
+    }
+  }
 
   # add variable labels
   # first variable list (for interaction only terms)

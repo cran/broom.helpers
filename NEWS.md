@@ -1,3 +1,13 @@
+# broom.helpers 1.2.1
+
+**Bug fixes**
+
+- Better identification of term labels for interaction terms using sum 
+  contrasts (#108)
+- Now `tidy_add_n()` works with multinomial models when `y` is not coded as
+  a factor (#109)
+- `glue` added to Suggests
+
 # broom.helpers 1.2.0
 
 **New features**

@@ -1,4 +1,10 @@
 test_that("tidy_add_term_labels() works for basic models", {
+  mod <- lm(Petal.Length ~ Petal.Width, iris)
+  expect_error(
+    mod %>% tidy_and_attach() %>% tidy_add_term_labels(),
+    NA
+  )
+
   df <- gtsummary::trial
   mod <- glm(response ~ age + grade + trt, df, family = binomial)
   res <- mod %>%
@@ -127,6 +133,39 @@ test_that("tidy_add_term_labels() correctly manages interaction terms", {
       "III:::Drug B", "Age:::II:::Drug B", "Age:::III:::Drug B"
     )
   )
+
+  # case with sum contrasts
+  mod <- lm(
+    marker ~ stage:ttdeath + stage,
+    data = gtsummary::trial,
+    contrasts = list(stage = "contr.sum")
+  )
+  res <- mod %>%
+    tidy_and_attach() %>%
+    tidy_add_reference_rows() %>%
+    tidy_add_term_labels()
+  expect_equivalent(
+    res$label,
+    c("(Intercept)", "T1", "T2", "T3", "T4", "T1 * Months to Death/Censor",
+      "T2 * Months to Death/Censor", "T3 * Months to Death/Censor",
+      "T4 * Months to Death/Censor")
+  )
+
+  # complex case: model with no intercept and sum contrasts
+  mod <- lm(
+    Petal.Length ~ Species * Petal.Width - 1,
+    data = iris,
+    contrasts = list(Species = contr.sum)
+  )
+  res <- mod %>%
+    tidy_and_attach() %>%
+    tidy_add_reference_rows() %>%
+    tidy_add_term_labels()
+  expect_equivalent(
+    res$label,
+    c("setosa", "versicolor", "virginica", "Petal.Width",
+      "setosa * Petal.Width", "versicolor * Petal.Width")
+  )
 })
 
 test_that("tidy_add_term_labels() works with poly or helmert contrasts", {
@@ -167,7 +206,7 @@ test_that("tidy_add_term_labels() works with variables having non standard name"
   )
 
   res <- gtsummary::trial %>%
-    select(response, `age at dx` = age, `drug type` = trt) %>%
+    dplyr::select(response, `age at dx` = age, `drug type` = trt) %>%
     lm(
       response ~ `age at dx` + `drug type`,
       data = .
@@ -197,14 +236,17 @@ test_that("tidy_add_term_labels() works with stats::poly()", {
   )
 })
 
+skip_on_cran()
 
 test_that("tidy_add_term_labels() works with lme4::lmer", {
+  skip_on_cran()
   mod <- lme4::lmer(Reaction ~ Days + (Days | Subject), lme4::sleepstudy)
   expect_error(mod %>% tidy_and_attach(tidy_fun = broom.mixed::tidy) %>% tidy_add_term_labels(), NA)
 })
 
 
 test_that("tidy_add_term_labels() works with lme4::glmer", {
+  skip_on_cran()
   mod <- lme4::glmer(cbind(incidence, size - incidence) ~ period + (1 | herd),
     family = binomial, data = lme4::cbpp
   )
@@ -295,3 +337,4 @@ test_that("tidy_add_term_labels() works with lavaan::lavaan", {
   )
   expect_error(mod %>% tidy_and_attach() %>% tidy_add_term_labels(), NA)
 })
+

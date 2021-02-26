@@ -198,8 +198,10 @@ test_that("tidy_add_estimate_to_reference_rows() preserve estimates of continuou
   expect_equivalent(res1$estimate, res2$estimate)
 })
 
+skip_on_cran()
 
 test_that("tidy_add_estimate_to_reference_rows() works with lme4::lmer", {
+  skip_on_cran()
   df <- gtsummary::trial
   df$stage <- as.character(df$stage)
   df$group <- rep.int(1:2, 100)
@@ -209,6 +211,7 @@ test_that("tidy_add_estimate_to_reference_rows() works with lme4::lmer", {
 
 
 test_that("tidy_add_estimate_to_reference_rows() works with lme4::glmer", {
+  skip_on_cran()
   df <- gtsummary::trial
   df$stage <- as.character(df$stage)
   df$group <- rep.int(1:2, 100)
