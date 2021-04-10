@@ -2,15 +2,9 @@
 % Please edit documentation in R/model_get_contrasts.R
 \name{model_get_contrasts}
 \alias{model_get_contrasts}
-\alias{model_get_contrasts.default}
-\alias{model_get_contrasts.felm}
 \title{Get contrasts used in the model}
 \usage{
 model_get_contrasts(model)
-
-\method{model_get_contrasts}{default}(model)
-
-\method{model_get_contrasts}{felm}(model)
 }
 \arguments{
 \item{model}{a model object}
@@ -30,6 +24,7 @@ glm(
 \seealso{
 Other model_helpers: 
 \code{\link{model_compute_terms_contributions}()},
+\code{\link{model_get_assign}()},
 \code{\link{model_get_coefficients_type}()},
 \code{\link{model_get_model_frame}()},
 \code{\link{model_get_model_matrix}()},

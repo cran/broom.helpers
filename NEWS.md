@@ -1,3 +1,19 @@
+# broom.helpers 1.3.0
+
+**New supported models**
+
+- Support of `rstanarm::stan_glm()` models
+- Basic support for `VGAM::vglm()` models (#105)
+
+**New features**
+
+- Custom tieder `tidy_parameters()` based on `parameters::model_parameters()`
+  (#104)
+- Custom tieder `tidy_with_broom_or_parameters()` (#104)
+- By default, `tidy_plus_plus()` now uses `tidy_with_broom_or_parameters()`
+- `model_get_coefficients_type()` now returns "prop_hazard" for cloglog-binomial
+  models (#106)
+
 # broom.helpers 1.2.1
 
 **Bug fixes**

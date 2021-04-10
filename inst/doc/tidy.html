@@ -28,7 +28,14 @@
     </style>
 
 
-<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
 <style type="text/css" data-origin="pandoc">
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
@@ -179,13 +186,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy_remove_intercept</span>()</span>
 <span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>tidy_forest</span>
 <span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 5 x 16</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   term  variable var_label var_class var_type var_nlevels contrasts</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt;     &lt;chr&gt;     &lt;chr&gt;          &lt;int&gt; &lt;chr&gt;    </span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 trtD~ trt      Chemothe~ character dichoto~           2 contr.tr~</span></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 trtD~ trt      Chemothe~ character dichoto~           2 contr.tr~</span></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 grad~ grade    Grade     factor    categor~           3 contr.tr~</span></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 grad~ grade    Grade     factor    categor~           3 contr.tr~</span></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 grad~ grade    Grade     factor    categor~           3 contr.tr~</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   term    variable var_label        var_class var_type  var_nlevels contrasts   </span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;   &lt;chr&gt;    &lt;chr&gt;            &lt;chr&gt;     &lt;chr&gt;           &lt;int&gt; &lt;chr&gt;       </span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 trtDru~ trt      Chemotherapy Tr~ character dichotom~           2 contr.treat~</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 trtDru~ trt      Chemotherapy Tr~ character dichotom~           2 contr.treat~</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 gradeI  grade    Grade            factor    categori~           3 contr.treat~</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 gradeII grade    Grade            factor    categori~           3 contr.treat~</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 gradeI~ grade    Grade            factor    categori~           3 contr.treat~</span></span>
 <span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ... with 9 more variables: contrasts_type &lt;chr&gt;, reference_row &lt;lgl&gt;,</span></span>
 <span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   label &lt;chr&gt;, estimate &lt;dbl&gt;, std.error &lt;dbl&gt;, statistic &lt;dbl&gt;,</span></span>
 <span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   p.value &lt;dbl&gt;, conf.low &lt;dbl&gt;, conf.high &lt;dbl&gt;</span></span></code></pre></div>
@@ -247,13 +254,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>model_logit <span class="sc">%&gt;%</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy_plus_plus</span>(<span class="at">exponentiate =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 5 x 18</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   term  variable var_label var_class var_type var_nlevels contrasts</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt;     &lt;chr&gt;     &lt;chr&gt;          &lt;int&gt; &lt;chr&gt;    </span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 trtD~ trt      Chemothe~ character dichoto~           2 contr.tr~</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 trtD~ trt      Chemothe~ character dichoto~           2 contr.tr~</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 grad~ grade    Grade     factor    categor~           3 contr.tr~</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 grad~ grade    Grade     factor    categor~           3 contr.tr~</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 grad~ grade    Grade     factor    categor~           3 contr.tr~</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   term    variable var_label        var_class var_type  var_nlevels contrasts   </span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;   &lt;chr&gt;    &lt;chr&gt;            &lt;chr&gt;     &lt;chr&gt;           &lt;int&gt; &lt;chr&gt;       </span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 trtDru~ trt      Chemotherapy Tr~ character dichotom~           2 contr.treat~</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 trtDru~ trt      Chemotherapy Tr~ character dichotom~           2 contr.treat~</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 gradeI  grade    Grade            factor    categori~           3 contr.treat~</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 gradeII grade    Grade            factor    categori~           3 contr.treat~</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 gradeI~ grade    Grade            factor    categori~           3 contr.treat~</span></span>
 <span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ... with 11 more variables: contrasts_type &lt;chr&gt;, reference_row &lt;lgl&gt;,</span></span>
 <span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   label &lt;chr&gt;, n_obs &lt;dbl&gt;, n_event &lt;dbl&gt;, estimate &lt;dbl&gt;, std.error &lt;dbl&gt;,</span></span>
 <span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   statistic &lt;dbl&gt;, p.value &lt;dbl&gt;, conf.low &lt;dbl&gt;, conf.high &lt;dbl&gt;</span></span></code></pre></div>
@@ -305,7 +312,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print_table</span>()</span></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["variable"],"name":[2],"type":["chr"],"align":["left"]},{"label":["var_label"],"name":[3],"type":["chr"],"align":["left"]},{"label":["var_class"],"name":[4],"type":["chr"],"align":["left"]},{"label":["var_type"],"name":[5],"type":["chr"],"align":["left"]},{"label":["var_nlevels"],"name":[6],"type":["int"],"align":["right"]},{"label":["contrasts"],"name":[7],"type":["chr"],"align":["left"]},{"label":["contrasts_type"],"name":[8],"type":["chr"],"align":["left"]},{"label":["reference_row"],"name":[9],"type":["lgl"],"align":["right"]},{"label":["label"],"name":[10],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[13],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[14],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"(Intercept)","3":"(Intercept)","4":"NA","5":"intercept","6":"NA","7":"NA","8":"NA","9":"NA","10":"(Intercept)","11":"0.3390697","12":"0.4895787","13":"-2.20914307","14":"0.02716469","_row":"(Intercept)"},{"1":"stageT1","2":"stage","3":"T Stage","4":"factor","5":"categorical","6":"4","7":"contr.treatment","8":"treatment","9":"TRUE","10":"T1","11":"1.0000000","12":"NA","13":"NA","14":"NA","_row":"stageT1"},{"1":"stageT2","2":"stage","3":"T Stage","4":"factor","5":"categorical","6":"4","7":"contr.treatment","8":"treatment","9":"FALSE","10":"T2","11":"0.5711409","12":"0.4467837","13":"-1.25367016","14":"0.20996192","_row":"stageT2"},{"1":"stageT3","2":"stage","3":"T Stage","4":"factor","5":"categorical","6":"4","7":"contr.treatment","8":"treatment","9":"FALSE","10":"T3","11":"1.1479106","12":"0.4552943","13":"0.30297648","14":"0.76190779","_row":"stageT3"},{"1":"stageT4","2":"stage","3":"T Stage","4":"factor","5":"categorical","6":"4","7":"contr.treatment","8":"treatment","9":"FALSE","10":"T4","11":"0.7341427","12":"0.4424990","13":"-0.69842376","14":"0.48491222","_row":"stageT4"},{"1":"gradeI","2":"grade","3":"Grade","4":"factor","5":"categorical","6":"3","7":"contr.treatment","8":"treatment","9":"TRUE","10":"I","11":"1.0000000","12":"NA","13":"NA","14":"NA","_row":"gradeI"},{"1":"gradeII","2":"grade","3":"Grade","4":"factor","5":"categorical","6":"3","7":"contr.treatment","8":"treatment","9":"FALSE","10":"II","11":"1.0391945","12":"0.6033177","13":"0.06372417","14":"0.94918986","_row":"gradeII"},{"1":"gradeIII","2":"grade","3":"Grade","4":"factor","5":"categorical","6":"3","7":"contr.treatment","8":"treatment","9":"FALSE","10":"III","11":"2.8780642","12":"0.5562107","13":"1.90057107","14":"0.05735822","_row":"gradeIII"},{"1":"trtDrug A","2":"trt","3":"Chemotherapy Treatment","4":"character","5":"dichotomous","6":"2","7":"contr.treatment","8":"treatment","9":"TRUE","10":"Drug A","11":"1.0000000","12":"NA","13":"NA","14":"NA","_row":"trtDrug A"},{"1":"trtDrug B","2":"trt","3":"Chemotherapy Treatment","4":"character","5":"dichotomous","6":"2","7":"contr.treatment","8":"treatment","9":"FALSE","10":"Drug B","11":"2.4343417","12":"0.5466956","13":"1.62737050","14":"0.10365843","_row":"trtDrug B"},{"1":"gradeII:trtDrug B","2":"grade:trt","3":"Grade * Chemotherapy Treatment","4":"NA","5":"interaction","6":"NA","7":"NA","8":"NA","9":"NA","10":"II * Drug B","11":"0.8352000","12":"0.7941115","13":"-0.22677430","14":"0.82059925","_row":"gradeII:trtDrug B"},{"1":"gradeIII:trtDrug B","2":"grade:trt","3":"Grade * Chemotherapy Treatment","4":"NA","5":"interaction","6":"NA","7":"NA","8":"NA","9":"NA","10":"III * Drug B","11":"0.1630675","12":"0.7817367","13":"-2.31995133","14":"0.02034351","_row":"gradeIII:trtDrug B"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[25],"max":[25]},"pages":{}}}
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["variable"],"name":[2],"type":["chr"],"align":["left"]},{"label":["var_label"],"name":[3],"type":["chr"],"align":["left"]},{"label":["var_class"],"name":[4],"type":["chr"],"align":["left"]},{"label":["var_type"],"name":[5],"type":["chr"],"align":["left"]},{"label":["var_nlevels"],"name":[6],"type":["int"],"align":["right"]},{"label":["contrasts"],"name":[7],"type":["chr"],"align":["left"]},{"label":["contrasts_type"],"name":[8],"type":["chr"],"align":["left"]},{"label":["reference_row"],"name":[9],"type":["lgl"],"align":["right"]},{"label":["label"],"name":[10],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[13],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[14],"type":["dbl"],"align":["right"]},{"label":["conf.low"],"name":[15],"type":["dbl"],"align":["right"]},{"label":["conf.high"],"name":[16],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"(Intercept)","3":"(Intercept)","4":"NA","5":"intercept","6":"NA","7":"NA","8":"NA","9":"NA","10":"(Intercept)","11":"0.3390697","12":"0.4895787","13":"-2.20914307","14":"0.02716469","15":"0.12268986","16":"0.8521510","_row":"(Intercept)"},{"1":"stageT1","2":"stage","3":"T Stage","4":"factor","5":"categorical","6":"4","7":"contr.treatment","8":"treatment","9":"TRUE","10":"T1","11":"1.0000000","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","_row":"stageT1"},{"1":"stageT2","2":"stage","3":"T Stage","4":"factor","5":"categorical","6":"4","7":"contr.treatment","8":"treatment","9":"FALSE","10":"T2","11":"0.5711409","12":"0.4467837","13":"-1.25367016","14":"0.20996192","15":"0.23380842","16":"1.3607135","_row":"stageT2"},{"1":"stageT3","2":"stage","3":"T Stage","4":"factor","5":"categorical","6":"4","7":"contr.treatment","8":"treatment","9":"FALSE","10":"T3","11":"1.1479106","12":"0.4552943","13":"0.30297648","14":"0.76190779","15":"0.46762420","16":"2.8108558","_row":"stageT3"},{"1":"stageT4","2":"stage","3":"T Stage","4":"factor","5":"categorical","6":"4","7":"contr.treatment","8":"treatment","9":"FALSE","10":"T4","11":"0.7341427","12":"0.4424990","13":"-0.69842376","14":"0.48491222","15":"0.30477787","16":"1.7420427","_row":"stageT4"},{"1":"gradeI","2":"grade","3":"Grade","4":"factor","5":"categorical","6":"3","7":"contr.treatment","8":"treatment","9":"TRUE","10":"I","11":"1.0000000","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","_row":"gradeI"},{"1":"gradeII","2":"grade","3":"Grade","4":"factor","5":"categorical","6":"3","7":"contr.treatment","8":"treatment","9":"FALSE","10":"II","11":"1.0391945","12":"0.6033177","13":"0.06372417","14":"0.94918986","15":"0.31139021","16":"3.4157424","_row":"gradeII"},{"1":"gradeIII","2":"grade","3":"Grade","4":"factor","5":"categorical","6":"3","7":"contr.treatment","8":"treatment","9":"FALSE","10":"III","11":"2.8780642","12":"0.5562107","13":"1.90057107","14":"0.05735822","15":"0.98607534","16":"8.8842750","_row":"gradeIII"},{"1":"trtDrug A","2":"trt","3":"Chemotherapy Treatment","4":"character","5":"dichotomous","6":"2","7":"contr.treatment","8":"treatment","9":"TRUE","10":"Drug A","11":"1.0000000","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","_row":"trtDrug A"},{"1":"trtDrug B","2":"trt","3":"Chemotherapy Treatment","4":"character","5":"dichotomous","6":"2","7":"contr.treatment","8":"treatment","9":"FALSE","10":"Drug B","11":"2.4343417","12":"0.5466956","13":"1.62737050","14":"0.10365843","15":"0.84778575","16":"7.3628321","_row":"trtDrug B"},{"1":"gradeII:trtDrug B","2":"grade:trt","3":"Grade * Chemotherapy Treatment","4":"NA","5":"interaction","6":"NA","7":"NA","8":"NA","9":"NA","10":"II * Drug B","11":"0.8352000","12":"0.7941115","13":"-0.22677430","14":"0.82059925","15":"0.17523374","16":"4.0083714","_row":"gradeII:trtDrug B"},{"1":"gradeIII:trtDrug B","2":"grade:trt","3":"Grade * Chemotherapy Treatment","4":"NA","5":"interaction","6":"NA","7":"NA","8":"NA","9":"NA","10":"III * Drug B","11":"0.1630675","12":"0.7817367","13":"-2.31995133","14":"0.02034351","15":"0.03403763","16":"0.7390355","_row":"gradeIII:trtDrug B"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[25],"max":[25]},"pages":{}}}
   </script>
 </div>
 <p>Using <code>stats::contr.treatment()</code>, it is possible to defined alternative reference rows. It will be properly managed by <code>broom.helpers</code>.</p>
@@ -328,7 +335,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print_table</span>()</span></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["variable"],"name":[2],"type":["chr"],"align":["left"]},{"label":["var_label"],"name":[3],"type":["chr"],"align":["left"]},{"label":["var_class"],"name":[4],"type":["chr"],"align":["left"]},{"label":["var_type"],"name":[5],"type":["chr"],"align":["left"]},{"label":["var_nlevels"],"name":[6],"type":["int"],"align":["right"]},{"label":["contrasts"],"name":[7],"type":["chr"],"align":["left"]},{"label":["contrasts_type"],"name":[8],"type":["chr"],"align":["left"]},{"label":["reference_row"],"name":[9],"type":["lgl"],"align":["right"]},{"label":["label"],"name":[10],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[13],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[14],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"(Intercept)","3":"(Intercept)","4":"NA","5":"intercept","6":"NA","7":"NA","8":"NA","9":"NA","10":"(Intercept)","11":"0.8223675","12":"0.4869667","13":"-0.4016042","14":"0.68797535","_row":"(Intercept)"},{"1":"stage1","2":"stage","3":"T Stage","4":"factor","5":"categorical","6":"4","7":"contr.treatment(base=3)","8":"treatment","9":"FALSE","10":"T1","11":"0.8711480","12":"0.4552943","13":"-0.3029765","14":"0.76190779","_row":"stage1"},{"1":"stage2","2":"stage","3":"T Stage","4":"factor","5":"categorical","6":"4","7":"contr.treatment(base=3)","8":"treatment","9":"FALSE","10":"T2","11":"0.4975482","12":"0.4712001","13":"-1.4814574","14":"0.13848473","_row":"stage2"},{"1":"stage3","2":"stage","3":"T Stage","4":"factor","5":"categorical","6":"4","7":"contr.treatment(base=3)","8":"treatment","9":"TRUE","10":"T3","11":"1.0000000","12":"NA","13":"NA","14":"NA","_row":"stage3"},{"1":"stage4","2":"stage","3":"T Stage","4":"factor","5":"categorical","6":"4","7":"contr.treatment(base=3)","8":"treatment","9":"FALSE","10":"T4","11":"0.6395470","12":"0.4661781","13":"-0.9588507","14":"0.33763395","_row":"stage4"},{"1":"grade1","2":"grade","3":"Grade","4":"factor","5":"categorical","6":"3","7":"contr.treatment(base=2)","8":"treatment","9":"FALSE","10":"I","11":"1.1521597","12":"0.5164934","13":"0.2742304","14":"0.78390760","_row":"grade1"},{"1":"grade2","2":"grade","3":"Grade","4":"factor","5":"categorical","6":"3","7":"contr.treatment(base=2)","8":"treatment","9":"TRUE","10":"II","11":"1.0000000","12":"NA","13":"NA","14":"NA","_row":"grade2"},{"1":"grade3","2":"grade","3":"Grade","4":"factor","5":"categorical","6":"3","7":"contr.treatment(base=2)","8":"treatment","9":"FALSE","10":"III","11":"0.5407301","12":"0.5504584","13":"-1.1169507","14":"0.26401539","_row":"grade3"},{"1":"trt1","2":"trt","3":"Chemotherapy Treatment","4":"character","5":"dichotomous","6":"2","7":"contr.SAS","8":"treatment","9":"FALSE","10":"Drug A","11":"0.4918447","12":"0.5750633","13":"-1.2339378","14":"0.21722610","_row":"trt1"},{"1":"trt2","2":"trt","3":"Chemotherapy Treatment","4":"character","5":"dichotomous","6":"2","7":"contr.SAS","8":"treatment","9":"TRUE","10":"Drug B","11":"1.0000000","12":"NA","13":"NA","14":"NA","_row":"trt2"},{"1":"grade1:trt1","2":"grade:trt","3":"Grade * Chemotherapy Treatment","4":"NA","5":"interaction","6":"NA","7":"NA","8":"NA","9":"NA","10":"I * Drug A","11":"0.8352000","12":"0.7941115","13":"-0.2267743","14":"0.82059925","_row":"grade1:trt1"},{"1":"grade3:trt1","2":"grade:trt","3":"Grade * Chemotherapy Treatment","4":"NA","5":"interaction","6":"NA","7":"NA","8":"NA","9":"NA","10":"III * Drug A","11":"5.1218052","12":"0.8026895","13":"2.0350421","14":"0.04184663","_row":"grade3:trt1"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[25],"max":[25]},"pages":{}}}
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["variable"],"name":[2],"type":["chr"],"align":["left"]},{"label":["var_label"],"name":[3],"type":["chr"],"align":["left"]},{"label":["var_class"],"name":[4],"type":["chr"],"align":["left"]},{"label":["var_type"],"name":[5],"type":["chr"],"align":["left"]},{"label":["var_nlevels"],"name":[6],"type":["int"],"align":["right"]},{"label":["contrasts"],"name":[7],"type":["chr"],"align":["left"]},{"label":["contrasts_type"],"name":[8],"type":["chr"],"align":["left"]},{"label":["reference_row"],"name":[9],"type":["lgl"],"align":["right"]},{"label":["label"],"name":[10],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[13],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[14],"type":["dbl"],"align":["right"]},{"label":["conf.low"],"name":[15],"type":["dbl"],"align":["right"]},{"label":["conf.high"],"name":[16],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"(Intercept)","3":"(Intercept)","4":"NA","5":"intercept","6":"NA","7":"NA","8":"NA","9":"NA","10":"(Intercept)","11":"0.8223675","12":"0.4869667","13":"-0.4016042","14":"0.68797535","15":"0.3098506","16":"2.122271","_row":"(Intercept)"},{"1":"stage1","2":"stage","3":"T Stage","4":"factor","5":"categorical","6":"4","7":"contr.treatment(base=3)","8":"treatment","9":"FALSE","10":"T1","11":"0.8711480","12":"0.4552943","13":"-0.3029765","14":"0.76190779","15":"0.3557635","16":"2.138469","_row":"stage1"},{"1":"stage2","2":"stage","3":"T Stage","4":"factor","5":"categorical","6":"4","7":"contr.treatment(base=3)","8":"treatment","9":"FALSE","10":"T2","11":"0.4975482","12":"0.4712001","13":"-1.4814574","14":"0.13848473","15":"0.1945369","16":"1.247111","_row":"stage2"},{"1":"stage3","2":"stage","3":"T Stage","4":"factor","5":"categorical","6":"4","7":"contr.treatment(base=3)","8":"treatment","9":"TRUE","10":"T3","11":"1.0000000","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","_row":"stage3"},{"1":"stage4","2":"stage","3":"T Stage","4":"factor","5":"categorical","6":"4","7":"contr.treatment(base=3)","8":"treatment","9":"FALSE","10":"T4","11":"0.6395470","12":"0.4661781","13":"-0.9588507","14":"0.33763395","15":"0.2537235","16":"1.593204","_row":"stage4"},{"1":"grade1","2":"grade","3":"Grade","4":"factor","5":"categorical","6":"3","7":"contr.treatment(base=2)","8":"treatment","9":"FALSE","10":"I","11":"1.1521597","12":"0.5164934","13":"0.2742304","14":"0.78390760","15":"0.4173106","16":"3.199642","_row":"grade1"},{"1":"grade2","2":"grade","3":"Grade","4":"factor","5":"categorical","6":"3","7":"contr.treatment(base=2)","8":"treatment","9":"TRUE","10":"II","11":"1.0000000","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","_row":"grade2"},{"1":"grade3","2":"grade","3":"Grade","4":"factor","5":"categorical","6":"3","7":"contr.treatment(base=2)","8":"treatment","9":"FALSE","10":"III","11":"0.5407301","12":"0.5504584","13":"-1.1169507","14":"0.26401539","15":"0.1781855","16":"1.572186","_row":"grade3"},{"1":"trt1","2":"trt","3":"Chemotherapy Treatment","4":"character","5":"dichotomous","6":"2","7":"contr.SAS","8":"treatment","9":"FALSE","10":"Drug A","11":"0.4918447","12":"0.5750633","13":"-1.2339378","14":"0.21722610","15":"0.1529088","16":"1.490341","_row":"trt1"},{"1":"trt2","2":"trt","3":"Chemotherapy Treatment","4":"character","5":"dichotomous","6":"2","7":"contr.SAS","8":"treatment","9":"TRUE","10":"Drug B","11":"1.0000000","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","_row":"trt2"},{"1":"grade1:trt1","2":"grade:trt","3":"Grade * Chemotherapy Treatment","4":"NA","5":"interaction","6":"NA","7":"NA","8":"NA","9":"NA","10":"I * Drug A","11":"0.8352000","12":"0.7941115","13":"-0.2267743","14":"0.82059925","15":"0.1752337","16":"4.008371","_row":"grade1:trt1"},{"1":"grade3:trt1","2":"grade:trt","3":"Grade * Chemotherapy Treatment","4":"NA","5":"interaction","6":"NA","7":"NA","8":"NA","9":"NA","10":"III * Drug A","11":"5.1218052","12":"0.8026895","13":"2.0350421","14":"0.04184663","15":"1.0857885","16":"25.631149","_row":"grade3:trt1"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[25],"max":[25]},"pages":{}}}
   </script>
 </div>
 <p>You can also use sum contrasts (cf. <code>stats::contr.sum()</code>). In that case, each model coefficient corresponds to the difference of that modality with the grand mean. A variable with 4 modalities will be coded with 3 terms. However, a value could be computed (using <code>emmeans::emmeans()</code>) for the last modality, corresponding to the difference of that modality with the grand mean and equal to sum of all other coefficients multiplied by -1. <code>broom.helpers</code> will identify categorical variables coded with sum contrasts and could retrieve an estimate value for the reference term.</p>
@@ -352,7 +359,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Loading required namespace: emmeans</span></span></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["variable"],"name":[2],"type":["chr"],"align":["left"]},{"label":["var_label"],"name":[3],"type":["chr"],"align":["left"]},{"label":["var_class"],"name":[4],"type":["chr"],"align":["left"]},{"label":["var_type"],"name":[5],"type":["chr"],"align":["left"]},{"label":["var_nlevels"],"name":[6],"type":["int"],"align":["right"]},{"label":["contrasts"],"name":[7],"type":["chr"],"align":["left"]},{"label":["contrasts_type"],"name":[8],"type":["chr"],"align":["left"]},{"label":["reference_row"],"name":[9],"type":["lgl"],"align":["right"]},{"label":["label"],"name":[10],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[13],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[14],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"(Intercept)","3":"(Intercept)","4":"NA","5":"intercept","6":"NA","7":"NA","8":"NA","9":"NA","10":"(Intercept)","11":"0.4553862","12":"0.1608512","13":"-4.8902924","14":"1.006863e-06","_row":"(Intercept)"},{"1":"stage1","2":"stage","3":"T Stage","4":"factor","5":"categorical","6":"4","7":"contr.sum","8":"sum","9":"FALSE","10":"T1","11":"1.2005826","12":"0.2695134","13":"0.6782852","14":"4.975909e-01","_row":"stage1"},{"1":"stage2","2":"stage","3":"T Stage","4":"factor","5":"categorical","6":"4","7":"contr.sum","8":"sum","9":"FALSE","10":"T2","11":"0.6857018","12":"0.2811013","13":"-1.3422651","14":"1.795101e-01","_row":"stage2"},{"1":"stage3","2":"stage","3":"T Stage","4":"factor","5":"categorical","6":"4","7":"contr.sum","8":"sum","9":"FALSE","10":"T3","11":"1.3781615","12":"0.2891714","13":"1.1092050","14":"2.673417e-01","_row":"stage3"},{"1":"stage4","2":"stage","3":"T Stage","4":"factor","5":"categorical","6":"4","7":"contr.sum","8":"sum","9":"TRUE","10":"T4","11":"0.8813990","12":"NA","13":"NA","14":"NA","_row":"stage4"},{"1":"grade1","2":"grade","3":"Grade","4":"factor","5":"categorical","6":"3","7":"contr.sum","8":"sum","9":"FALSE","10":"I","11":"0.9676268","12":"0.2258518","13":"-0.1457095","14":"8.841507e-01","_row":"grade1"},{"1":"grade2","2":"grade","3":"Grade","4":"factor","5":"categorical","6":"3","7":"contr.sum","8":"sum","9":"FALSE","10":"II","11":"0.9189672","12":"0.2318470","13":"-0.3644856","14":"7.154954e-01","_row":"grade2"},{"1":"grade3","2":"grade","3":"Grade","4":"factor","5":"categorical","6":"3","7":"contr.sum","8":"sum","9":"TRUE","10":"III","11":"1.1245845","12":"NA","13":"NA","14":"NA","_row":"grade3"},{"1":"trt1","2":"trt","3":"Chemotherapy Treatment","4":"character","5":"dichotomous","6":"2","7":"contr.sum","8":"sum","9":"FALSE","10":"Drug A","11":"0.8935446","12":"0.1604902","13":"-0.7013449","14":"4.830878e-01","_row":"trt1"},{"1":"trt2","2":"trt","3":"Chemotherapy Treatment","4":"character","5":"dichotomous","6":"2","7":"contr.sum","8":"sum","9":"TRUE","10":"Drug B","11":"1.1191383","12":"NA","13":"NA","14":"NA","_row":"trt2"},{"1":"grade1:trt1","2":"grade:trt","3":"Grade * Chemotherapy Treatment","4":"NA","5":"interaction","6":"NA","7":"NA","8":"NA","9":"NA","10":"I * Drug A","11":"0.7172870","12":"0.2260248","13":"-1.4701003","14":"1.415346e-01","_row":"grade1:trt1"},{"1":"grade2:trt1","2":"grade:trt","3":"Grade * Chemotherapy Treatment","4":"NA","5":"interaction","6":"NA","7":"NA","8":"NA","9":"NA","10":"II * Drug A","11":"0.7848700","12":"0.2320641","13":"-1.0438372","14":"2.965607e-01","_row":"grade2:trt1"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[25],"max":[25]},"pages":{}}}
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["variable"],"name":[2],"type":["chr"],"align":["left"]},{"label":["var_label"],"name":[3],"type":["chr"],"align":["left"]},{"label":["var_class"],"name":[4],"type":["chr"],"align":["left"]},{"label":["var_type"],"name":[5],"type":["chr"],"align":["left"]},{"label":["var_nlevels"],"name":[6],"type":["int"],"align":["right"]},{"label":["contrasts"],"name":[7],"type":["chr"],"align":["left"]},{"label":["contrasts_type"],"name":[8],"type":["chr"],"align":["left"]},{"label":["reference_row"],"name":[9],"type":["lgl"],"align":["right"]},{"label":["label"],"name":[10],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[13],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[14],"type":["dbl"],"align":["right"]},{"label":["conf.low"],"name":[15],"type":["dbl"],"align":["right"]},{"label":["conf.high"],"name":[16],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"(Intercept)","3":"(Intercept)","4":"NA","5":"intercept","6":"NA","7":"NA","8":"NA","9":"NA","10":"(Intercept)","11":"0.4553862","12":"0.1608512","13":"-4.8902924","14":"1.006863e-06","15":"0.3296951","16":"0.6204266","_row":"(Intercept)"},{"1":"stage1","2":"stage","3":"T Stage","4":"factor","5":"categorical","6":"4","7":"contr.sum","8":"sum","9":"FALSE","10":"T1","11":"1.2005826","12":"0.2695134","13":"0.6782852","14":"4.975909e-01","15":"0.7024512","16":"2.0305502","_row":"stage1"},{"1":"stage2","2":"stage","3":"T Stage","4":"factor","5":"categorical","6":"4","7":"contr.sum","8":"sum","9":"FALSE","10":"T2","11":"0.6857018","12":"0.2811013","13":"-1.3422651","14":"1.795101e-01","15":"0.3867939","16":"1.1721378","_row":"stage2"},{"1":"stage3","2":"stage","3":"T Stage","4":"factor","5":"categorical","6":"4","7":"contr.sum","8":"sum","9":"FALSE","10":"T3","11":"1.3781615","12":"0.2891714","13":"1.1092050","14":"2.673417e-01","15":"0.7746566","16":"2.4233463","_row":"stage3"},{"1":"stage4","2":"stage","3":"T Stage","4":"factor","5":"categorical","6":"4","7":"contr.sum","8":"sum","9":"TRUE","10":"T4","11":"0.8813990","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","_row":"stage4"},{"1":"grade1","2":"grade","3":"Grade","4":"factor","5":"categorical","6":"3","7":"contr.sum","8":"sum","9":"FALSE","10":"I","11":"0.9676268","12":"0.2258518","13":"-0.1457095","14":"8.841507e-01","15":"0.6162218","16":"1.4995855","_row":"grade1"},{"1":"grade2","2":"grade","3":"Grade","4":"factor","5":"categorical","6":"3","7":"contr.sum","8":"sum","9":"FALSE","10":"II","11":"0.9189672","12":"0.2318470","13":"-0.3644856","14":"7.154954e-01","15":"0.5769227","16":"1.4384652","_row":"grade2"},{"1":"grade3","2":"grade","3":"Grade","4":"factor","5":"categorical","6":"3","7":"contr.sum","8":"sum","9":"TRUE","10":"III","11":"1.1245845","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","_row":"grade3"},{"1":"trt1","2":"trt","3":"Chemotherapy Treatment","4":"character","5":"dichotomous","6":"2","7":"contr.sum","8":"sum","9":"FALSE","10":"Drug A","11":"0.8935446","12":"0.1604902","13":"-0.7013449","14":"4.830878e-01","15":"0.6504679","16":"1.2229322","_row":"trt1"},{"1":"trt2","2":"trt","3":"Chemotherapy Treatment","4":"character","5":"dichotomous","6":"2","7":"contr.sum","8":"sum","9":"TRUE","10":"Drug B","11":"1.1191383","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","_row":"trt2"},{"1":"grade1:trt1","2":"grade:trt","3":"Grade * Chemotherapy Treatment","4":"NA","5":"interaction","6":"NA","7":"NA","8":"NA","9":"NA","10":"I * Drug A","11":"0.7172870","12":"0.2260248","13":"-1.4701003","14":"1.415346e-01","15":"0.4570034","16":"1.1130409","_row":"grade1:trt1"},{"1":"grade2:trt1","2":"grade:trt","3":"Grade * Chemotherapy Treatment","4":"NA","5":"interaction","6":"NA","7":"NA","8":"NA","9":"NA","10":"II * Drug A","11":"0.7848700","12":"0.2320641","13":"-1.0438372","14":"2.965607e-01","15":"0.4932810","16":"1.2312797","_row":"grade2:trt1"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[25],"max":[25]},"pages":{}}}
   </script>
 </div>
 <p>Other types of contrasts exist, like Helmert (<code>contr.helmert()</code>) or polynomial (<code>contr.poly()</code>). They are more complex as a modality will be coded with a combination of terms. Therefore, for such contrasts, it will not be possible to associate a specific model term with a level of the original factor. <code>broom.helpers</code> will not add a reference term in such case.</p>
@@ -375,7 +382,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print_table</span>()</span></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["variable"],"name":[2],"type":["chr"],"align":["left"]},{"label":["var_label"],"name":[3],"type":["chr"],"align":["left"]},{"label":["var_class"],"name":[4],"type":["chr"],"align":["left"]},{"label":["var_type"],"name":[5],"type":["chr"],"align":["left"]},{"label":["var_nlevels"],"name":[6],"type":["int"],"align":["right"]},{"label":["contrasts"],"name":[7],"type":["chr"],"align":["left"]},{"label":["contrasts_type"],"name":[8],"type":["chr"],"align":["left"]},{"label":["reference_row"],"name":[9],"type":["lgl"],"align":["right"]},{"label":["label"],"name":[10],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[13],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[14],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"(Intercept)","3":"(Intercept)","4":"NA","5":"intercept","6":"NA","7":"NA","8":"NA","9":"NA","10":"(Intercept)","11":"0.4553862","12":"0.1608512","13":"-4.8902924","14":"1.006863e-06","_row":"(Intercept)"},{"1":"stage.L","2":"stage","3":"T Stage","4":"factor","5":"categorical","6":"4","7":"contr.poly","8":"poly","9":"NA","10":"stage.L","11":"0.9500633","12":"0.3142542","13":"-0.1630102","14":"8.705104e-01","_row":"stage.L"},{"1":"stage.Q","2":"stage","3":"T Stage","4":"factor","5":"categorical","6":"4","7":"contr.poly","8":"poly","9":"NA","10":"stage.Q","11":"1.0581923","12":"0.3213201","13":"0.1760303","14":"8.602701e-01","_row":"stage.Q"},{"1":"stage.C","2":"stage","3":"T Stage","4":"factor","5":"categorical","6":"4","7":"contr.poly","8":"poly","9":"NA","10":"stage.C","11":"0.5842765","12":"0.3319062","13":"-1.6190747","14":"1.054312e-01","_row":"stage.C"},{"1":"grade1","2":"grade","3":"Grade","4":"factor","5":"categorical","6":"3","7":"contr.helmert","8":"helmert","9":"NA","10":"grade1","11":"0.9745319","12":"0.1985734","13":"-0.1299170","14":"8.966321e-01","_row":"grade1"},{"1":"grade2","2":"grade","3":"Grade","4":"factor","5":"categorical","6":"3","7":"contr.helmert","8":"helmert","9":"NA","10":"grade2","11":"1.0604643","12":"0.1137965","13":"0.5158930","14":"6.059292e-01","_row":"grade2"},{"1":"trt.L","2":"trt","3":"Chemotherapy Treatment","4":"character","5":"dichotomous","6":"2","7":"contr.poly","8":"poly","9":"NA","10":"trt.L","11":"1.1725519","12":"0.2269674","13":"0.7013449","14":"4.830878e-01","_row":"trt.L"},{"1":"grade1:trt.L","2":"grade:trt","3":"Grade * Chemotherapy Treatment","4":"NA","5":"interaction","6":"NA","7":"NA","8":"NA","9":"NA","10":"grade1 * trt.L","11":"0.9383152","12":"0.2807608","13":"-0.2267743","14":"8.205992e-01","_row":"grade1:trt.L"},{"1":"grade2:trt.L","2":"grade:trt","3":"Grade * Chemotherapy Treatment","4":"NA","5":"interaction","6":"NA","7":"NA","8":"NA","9":"NA","10":"grade2 * trt.L","11":"0.6661473","12":"0.1615993","13":"-2.5138994","14":"1.194045e-02","_row":"grade2:trt.L"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[25],"max":[25]},"pages":{}}}
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["variable"],"name":[2],"type":["chr"],"align":["left"]},{"label":["var_label"],"name":[3],"type":["chr"],"align":["left"]},{"label":["var_class"],"name":[4],"type":["chr"],"align":["left"]},{"label":["var_type"],"name":[5],"type":["chr"],"align":["left"]},{"label":["var_nlevels"],"name":[6],"type":["int"],"align":["right"]},{"label":["contrasts"],"name":[7],"type":["chr"],"align":["left"]},{"label":["contrasts_type"],"name":[8],"type":["chr"],"align":["left"]},{"label":["reference_row"],"name":[9],"type":["lgl"],"align":["right"]},{"label":["label"],"name":[10],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[13],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[14],"type":["dbl"],"align":["right"]},{"label":["conf.low"],"name":[15],"type":["dbl"],"align":["right"]},{"label":["conf.high"],"name":[16],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"(Intercept)","3":"(Intercept)","4":"NA","5":"intercept","6":"NA","7":"NA","8":"NA","9":"NA","10":"(Intercept)","11":"0.4553862","12":"0.1608512","13":"-4.8902924","14":"1.006863e-06","15":"0.3296951","16":"0.6204266","_row":"(Intercept)"},{"1":"stage.L","2":"stage","3":"T Stage","4":"factor","5":"categorical","6":"4","7":"contr.poly","8":"poly","9":"NA","10":"stage.L","11":"0.9500633","12":"0.3142542","13":"-0.1630102","14":"8.705104e-01","15":"0.5099505","16":"1.7567778","_row":"stage.L"},{"1":"stage.Q","2":"stage","3":"T Stage","4":"factor","5":"categorical","6":"4","7":"contr.poly","8":"poly","9":"NA","10":"stage.Q","11":"1.0581923","12":"0.3213201","13":"0.1760303","14":"8.602701e-01","15":"0.5633860","16":"1.9929503","_row":"stage.Q"},{"1":"stage.C","2":"stage","3":"T Stage","4":"factor","5":"categorical","6":"4","7":"contr.poly","8":"poly","9":"NA","10":"stage.C","11":"0.5842765","12":"0.3319062","13":"-1.6190747","14":"1.054312e-01","15":"0.3017102","16":"1.1155816","_row":"stage.C"},{"1":"grade1","2":"grade","3":"Grade","4":"factor","5":"categorical","6":"3","7":"contr.helmert","8":"helmert","9":"NA","10":"grade1","11":"0.9745319","12":"0.1985734","13":"-0.1299170","14":"8.966321e-01","15":"0.6580991","16":"1.4395005","_row":"grade1"},{"1":"grade2","2":"grade","3":"Grade","4":"factor","5":"categorical","6":"3","7":"contr.helmert","8":"helmert","9":"NA","10":"grade2","11":"1.0604643","12":"0.1137965","13":"0.5158930","14":"6.059292e-01","15":"0.8455759","16":"1.3236930","_row":"grade2"},{"1":"trt.L","2":"trt","3":"Chemotherapy Treatment","4":"character","5":"dichotomous","6":"2","7":"contr.poly","8":"poly","9":"NA","10":"trt.L","11":"1.1725519","12":"0.2269674","13":"0.7013449","14":"4.830878e-01","15":"0.7523057","16":"1.8371240","_row":"trt.L"},{"1":"grade1:trt.L","2":"grade:trt","3":"Grade * Chemotherapy Treatment","4":"NA","5":"interaction","6":"NA","7":"NA","8":"NA","9":"NA","10":"grade1 * trt.L","11":"0.9383152","12":"0.2807608","13":"-0.2267743","14":"8.205992e-01","15":"0.5402297","16":"1.6337341","_row":"grade1:trt.L"},{"1":"grade2:trt.L","2":"grade:trt","3":"Grade * Chemotherapy Treatment","4":"NA","5":"interaction","6":"NA","7":"NA","8":"NA","9":"NA","10":"grade2 * trt.L","11":"0.6661473","12":"0.1615993","13":"-2.5138994","14":"1.194045e-02","15":"0.4818858","16":"0.9104706","_row":"grade2:trt.L"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[25],"max":[25]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -391,7 +398,7 @@ td {vertical-align: top;}
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#qzihvzmxko .gt_table {
+#wnhesunedf .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -416,7 +423,7 @@ td {vertical-align: top;}
   border-left-color: #D3D3D3;
 }
 
-#qzihvzmxko .gt_heading {
+#wnhesunedf .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -428,7 +435,7 @@ td {vertical-align: top;}
   border-right-color: #D3D3D3;
 }
 
-#qzihvzmxko .gt_title {
+#wnhesunedf .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -438,7 +445,7 @@ td {vertical-align: top;}
   border-bottom-width: 0;
 }
 
-#qzihvzmxko .gt_subtitle {
+#wnhesunedf .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -448,13 +455,13 @@ td {vertical-align: top;}
   border-top-width: 0;
 }
 
-#qzihvzmxko .gt_bottom_border {
+#wnhesunedf .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#qzihvzmxko .gt_col_headings {
+#wnhesunedf .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -469,7 +476,7 @@ td {vertical-align: top;}
   border-right-color: #D3D3D3;
 }
 
-#qzihvzmxko .gt_col_heading {
+#wnhesunedf .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -489,7 +496,7 @@ td {vertical-align: top;}
   overflow-x: hidden;
 }
 
-#qzihvzmxko .gt_column_spanner_outer {
+#wnhesunedf .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -501,15 +508,15 @@ td {vertical-align: top;}
   padding-right: 4px;
 }
 
-#qzihvzmxko .gt_column_spanner_outer:first-child {
+#wnhesunedf .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#qzihvzmxko .gt_column_spanner_outer:last-child {
+#wnhesunedf .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#qzihvzmxko .gt_column_spanner {
+#wnhesunedf .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -521,7 +528,7 @@ td {vertical-align: top;}
   width: 100%;
 }
 
-#qzihvzmxko .gt_group_heading {
+#wnhesunedf .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -543,7 +550,7 @@ td {vertical-align: top;}
   vertical-align: middle;
 }
 
-#qzihvzmxko .gt_empty_group_heading {
+#wnhesunedf .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -558,15 +565,15 @@ td {vertical-align: top;}
   vertical-align: middle;
 }
 
-#qzihvzmxko .gt_from_md > :first-child {
+#wnhesunedf .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#qzihvzmxko .gt_from_md > :last-child {
+#wnhesunedf .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#qzihvzmxko .gt_row {
+#wnhesunedf .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -585,7 +592,7 @@ td {vertical-align: top;}
   overflow-x: hidden;
 }
 
-#qzihvzmxko .gt_stub {
+#wnhesunedf .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -597,7 +604,7 @@ td {vertical-align: top;}
   padding-left: 12px;
 }
 
-#qzihvzmxko .gt_summary_row {
+#wnhesunedf .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -607,7 +614,7 @@ td {vertical-align: top;}
   padding-right: 5px;
 }
 
-#qzihvzmxko .gt_first_summary_row {
+#wnhesunedf .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -617,7 +624,7 @@ td {vertical-align: top;}
   border-top-color: #D3D3D3;
 }
 
-#qzihvzmxko .gt_grand_summary_row {
+#wnhesunedf .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -627,7 +634,7 @@ td {vertical-align: top;}
   padding-right: 5px;
 }
 
-#qzihvzmxko .gt_first_grand_summary_row {
+#wnhesunedf .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -637,11 +644,11 @@ td {vertical-align: top;}
   border-top-color: #D3D3D3;
 }
 
-#qzihvzmxko .gt_striped {
+#wnhesunedf .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#qzihvzmxko .gt_table_body {
+#wnhesunedf .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -650,7 +657,7 @@ td {vertical-align: top;}
   border-bottom-color: #D3D3D3;
 }
 
-#qzihvzmxko .gt_footnotes {
+#wnhesunedf .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -664,13 +671,13 @@ td {vertical-align: top;}
   border-right-color: #D3D3D3;
 }
 
-#qzihvzmxko .gt_footnote {
+#wnhesunedf .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#qzihvzmxko .gt_sourcenotes {
+#wnhesunedf .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -684,46 +691,46 @@ td {vertical-align: top;}
   border-right-color: #D3D3D3;
 }
 
-#qzihvzmxko .gt_sourcenote {
+#wnhesunedf .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#qzihvzmxko .gt_left {
+#wnhesunedf .gt_left {
   text-align: left;
 }
 
-#qzihvzmxko .gt_center {
+#wnhesunedf .gt_center {
   text-align: center;
 }
 
-#qzihvzmxko .gt_right {
+#wnhesunedf .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#qzihvzmxko .gt_font_normal {
+#wnhesunedf .gt_font_normal {
   font-weight: normal;
 }
 
-#qzihvzmxko .gt_font_bold {
+#wnhesunedf .gt_font_bold {
   font-weight: bold;
 }
 
-#qzihvzmxko .gt_font_italic {
+#wnhesunedf .gt_font_italic {
   font-style: italic;
 }
 
-#qzihvzmxko .gt_super {
+#wnhesunedf .gt_super {
   font-size: 65%;
 }
 
-#qzihvzmxko .gt_footnote_marks {
+#wnhesunedf .gt_footnote_marks {
   font-style: italic;
   font-size: 65%;
 }
 </style>
-<div id="qzihvzmxko" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+<div id="wnhesunedf" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
   
   <thead class="gt_col_headings">
     <tr>
@@ -861,7 +868,7 @@ td {vertical-align: top;}
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#nwepqvtwvt .gt_table {
+#lcmyxxiqcm .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -886,7 +893,7 @@ td {vertical-align: top;}
   border-left-color: #D3D3D3;
 }
 
-#nwepqvtwvt .gt_heading {
+#lcmyxxiqcm .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -898,7 +905,7 @@ td {vertical-align: top;}
   border-right-color: #D3D3D3;
 }
 
-#nwepqvtwvt .gt_title {
+#lcmyxxiqcm .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -908,7 +915,7 @@ td {vertical-align: top;}
   border-bottom-width: 0;
 }
 
-#nwepqvtwvt .gt_subtitle {
+#lcmyxxiqcm .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -918,13 +925,13 @@ td {vertical-align: top;}
   border-top-width: 0;
 }
 
-#nwepqvtwvt .gt_bottom_border {
+#lcmyxxiqcm .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#nwepqvtwvt .gt_col_headings {
+#lcmyxxiqcm .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -939,7 +946,7 @@ td {vertical-align: top;}
   border-right-color: #D3D3D3;
 }
 
-#nwepqvtwvt .gt_col_heading {
+#lcmyxxiqcm .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -959,7 +966,7 @@ td {vertical-align: top;}
   overflow-x: hidden;
 }
 
-#nwepqvtwvt .gt_column_spanner_outer {
+#lcmyxxiqcm .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -971,15 +978,15 @@ td {vertical-align: top;}
   padding-right: 4px;
 }
 
-#nwepqvtwvt .gt_column_spanner_outer:first-child {
+#lcmyxxiqcm .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#nwepqvtwvt .gt_column_spanner_outer:last-child {
+#lcmyxxiqcm .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#nwepqvtwvt .gt_column_spanner {
+#lcmyxxiqcm .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -991,7 +998,7 @@ td {vertical-align: top;}
   width: 100%;
 }
 
-#nwepqvtwvt .gt_group_heading {
+#lcmyxxiqcm .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1013,7 +1020,7 @@ td {vertical-align: top;}
   vertical-align: middle;
 }
 
-#nwepqvtwvt .gt_empty_group_heading {
+#lcmyxxiqcm .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1028,15 +1035,15 @@ td {vertical-align: top;}
   vertical-align: middle;
 }
 
-#nwepqvtwvt .gt_from_md > :first-child {
+#lcmyxxiqcm .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#nwepqvtwvt .gt_from_md > :last-child {
+#lcmyxxiqcm .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#nwepqvtwvt .gt_row {
+#lcmyxxiqcm .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1055,7 +1062,7 @@ td {vertical-align: top;}
   overflow-x: hidden;
 }
 
-#nwepqvtwvt .gt_stub {
+#lcmyxxiqcm .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1067,7 +1074,7 @@ td {vertical-align: top;}
   padding-left: 12px;
 }
 
-#nwepqvtwvt .gt_summary_row {
+#lcmyxxiqcm .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1077,7 +1084,7 @@ td {vertical-align: top;}
   padding-right: 5px;
 }
 
-#nwepqvtwvt .gt_first_summary_row {
+#lcmyxxiqcm .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1087,7 +1094,7 @@ td {vertical-align: top;}
   border-top-color: #D3D3D3;
 }
 
-#nwepqvtwvt .gt_grand_summary_row {
+#lcmyxxiqcm .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1097,7 +1104,7 @@ td {vertical-align: top;}
   padding-right: 5px;
 }
 
-#nwepqvtwvt .gt_first_grand_summary_row {
+#lcmyxxiqcm .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1107,11 +1114,11 @@ td {vertical-align: top;}
   border-top-color: #D3D3D3;
 }
 
-#nwepqvtwvt .gt_striped {
+#lcmyxxiqcm .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#nwepqvtwvt .gt_table_body {
+#lcmyxxiqcm .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1120,7 +1127,7 @@ td {vertical-align: top;}
   border-bottom-color: #D3D3D3;
 }
 
-#nwepqvtwvt .gt_footnotes {
+#lcmyxxiqcm .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1134,13 +1141,13 @@ td {vertical-align: top;}
   border-right-color: #D3D3D3;
 }
 
-#nwepqvtwvt .gt_footnote {
+#lcmyxxiqcm .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#nwepqvtwvt .gt_sourcenotes {
+#lcmyxxiqcm .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1154,46 +1161,46 @@ td {vertical-align: top;}
   border-right-color: #D3D3D3;
 }
 
-#nwepqvtwvt .gt_sourcenote {
+#lcmyxxiqcm .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#nwepqvtwvt .gt_left {
+#lcmyxxiqcm .gt_left {
   text-align: left;
 }
 
-#nwepqvtwvt .gt_center {
+#lcmyxxiqcm .gt_center {
   text-align: center;
 }
 
-#nwepqvtwvt .gt_right {
+#lcmyxxiqcm .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#nwepqvtwvt .gt_font_normal {
+#lcmyxxiqcm .gt_font_normal {
   font-weight: normal;
 }
 
-#nwepqvtwvt .gt_font_bold {
+#lcmyxxiqcm .gt_font_bold {
   font-weight: bold;
 }
 
-#nwepqvtwvt .gt_font_italic {
+#lcmyxxiqcm .gt_font_italic {
   font-style: italic;
 }
 
-#nwepqvtwvt .gt_super {
+#lcmyxxiqcm .gt_super {
   font-size: 65%;
 }
 
-#nwepqvtwvt .gt_footnote_marks {
+#lcmyxxiqcm .gt_footnote_marks {
   font-style: italic;
   font-size: 65%;
 }
 </style>
-<div id="nwepqvtwvt" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+<div id="lcmyxxiqcm" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
   
   <thead class="gt_col_headings">
     <tr>
@@ -1278,7 +1285,7 @@ td {vertical-align: top;}
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#smtslcdlnf .gt_table {
+#tdywwdfscg .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -1303,7 +1310,7 @@ td {vertical-align: top;}
   border-left-color: #D3D3D3;
 }
 
-#smtslcdlnf .gt_heading {
+#tdywwdfscg .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1315,7 +1322,7 @@ td {vertical-align: top;}
   border-right-color: #D3D3D3;
 }
 
-#smtslcdlnf .gt_title {
+#tdywwdfscg .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1325,7 +1332,7 @@ td {vertical-align: top;}
   border-bottom-width: 0;
 }
 
-#smtslcdlnf .gt_subtitle {
+#tdywwdfscg .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1335,13 +1342,13 @@ td {vertical-align: top;}
   border-top-width: 0;
 }
 
-#smtslcdlnf .gt_bottom_border {
+#tdywwdfscg .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#smtslcdlnf .gt_col_headings {
+#tdywwdfscg .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1356,7 +1363,7 @@ td {vertical-align: top;}
   border-right-color: #D3D3D3;
 }
 
-#smtslcdlnf .gt_col_heading {
+#tdywwdfscg .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1376,7 +1383,7 @@ td {vertical-align: top;}
   overflow-x: hidden;
 }
 
-#smtslcdlnf .gt_column_spanner_outer {
+#tdywwdfscg .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1388,15 +1395,15 @@ td {vertical-align: top;}
   padding-right: 4px;
 }
 
-#smtslcdlnf .gt_column_spanner_outer:first-child {
+#tdywwdfscg .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#smtslcdlnf .gt_column_spanner_outer:last-child {
+#tdywwdfscg .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#smtslcdlnf .gt_column_spanner {
+#tdywwdfscg .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1408,7 +1415,7 @@ td {vertical-align: top;}
   width: 100%;
 }
 
-#smtslcdlnf .gt_group_heading {
+#tdywwdfscg .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1430,7 +1437,7 @@ td {vertical-align: top;}
   vertical-align: middle;
 }
 
-#smtslcdlnf .gt_empty_group_heading {
+#tdywwdfscg .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1445,15 +1452,15 @@ td {vertical-align: top;}
   vertical-align: middle;
 }
 
-#smtslcdlnf .gt_from_md > :first-child {
+#tdywwdfscg .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#smtslcdlnf .gt_from_md > :last-child {
+#tdywwdfscg .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#smtslcdlnf .gt_row {
+#tdywwdfscg .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1472,7 +1479,7 @@ td {vertical-align: top;}
   overflow-x: hidden;
 }
 
-#smtslcdlnf .gt_stub {
+#tdywwdfscg .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1484,7 +1491,7 @@ td {vertical-align: top;}
   padding-left: 12px;
 }
 
-#smtslcdlnf .gt_summary_row {
+#tdywwdfscg .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1494,7 +1501,7 @@ td {vertical-align: top;}
   padding-right: 5px;
 }
 
-#smtslcdlnf .gt_first_summary_row {
+#tdywwdfscg .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1504,7 +1511,7 @@ td {vertical-align: top;}
   border-top-color: #D3D3D3;
 }
 
-#smtslcdlnf .gt_grand_summary_row {
+#tdywwdfscg .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1514,7 +1521,7 @@ td {vertical-align: top;}
   padding-right: 5px;
 }
 
-#smtslcdlnf .gt_first_grand_summary_row {
+#tdywwdfscg .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1524,11 +1531,11 @@ td {vertical-align: top;}
   border-top-color: #D3D3D3;
 }
 
-#smtslcdlnf .gt_striped {
+#tdywwdfscg .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#smtslcdlnf .gt_table_body {
+#tdywwdfscg .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1537,7 +1544,7 @@ td {vertical-align: top;}
   border-bottom-color: #D3D3D3;
 }
 
-#smtslcdlnf .gt_footnotes {
+#tdywwdfscg .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1551,13 +1558,13 @@ td {vertical-align: top;}
   border-right-color: #D3D3D3;
 }
 
-#smtslcdlnf .gt_footnote {
+#tdywwdfscg .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#smtslcdlnf .gt_sourcenotes {
+#tdywwdfscg .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1571,46 +1578,46 @@ td {vertical-align: top;}
   border-right-color: #D3D3D3;
 }
 
-#smtslcdlnf .gt_sourcenote {
+#tdywwdfscg .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#smtslcdlnf .gt_left {
+#tdywwdfscg .gt_left {
   text-align: left;
 }
 
-#smtslcdlnf .gt_center {
+#tdywwdfscg .gt_center {
   text-align: center;
 }
 
-#smtslcdlnf .gt_right {
+#tdywwdfscg .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#smtslcdlnf .gt_font_normal {
+#tdywwdfscg .gt_font_normal {
   font-weight: normal;
 }
 
-#smtslcdlnf .gt_font_bold {
+#tdywwdfscg .gt_font_bold {
   font-weight: bold;
 }
 
-#smtslcdlnf .gt_font_italic {
+#tdywwdfscg .gt_font_italic {
   font-style: italic;
 }
 
-#smtslcdlnf .gt_super {
+#tdywwdfscg .gt_super {
   font-size: 65%;
 }
 
-#smtslcdlnf .gt_footnote_marks {
+#tdywwdfscg .gt_footnote_marks {
   font-style: italic;
   font-size: 65%;
 }
 </style>
-<div id="smtslcdlnf" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+<div id="tdywwdfscg" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
   
   <thead class="gt_col_headings">
     <tr>
@@ -1630,83 +1637,95 @@ td {vertical-align: top;}
       <td class="gt_row gt_left gt_striped" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"></div></td>
     </tr>
     <tr>
-      <td class="gt_row gt_left" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"><p><code>brms::brm()</code></p>
+      <td class="gt_row gt_left" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"><p><code>VGAM::vglm()</code></p>
 </div></td>
-      <td class="gt_row gt_left" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"><p><code>broom.mixed</code> package required</p>
-</div></td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left gt_striped" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"><p><code>cmprsk::crr()</code></p>
-</div></td>
-      <td class="gt_row gt_left gt_striped" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"><p>Limited support</p>
+      <td class="gt_row gt_left" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"><p>Limited support. It is recommanded to use <code>tidy_parameters()</code> as <code>tidy_fun</code>.</p>
 </div></td>
     </tr>
     <tr>
-      <td class="gt_row gt_left" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"><p><code>gam::gam()</code></p>
-</div></td>
-      <td class="gt_row gt_left" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"></div></td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left gt_striped" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"><p><code>geepack::geeglm()</code></p>
-</div></td>
-      <td class="gt_row gt_left gt_striped" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"></div></td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"><p><code>lavaan::lavaan()</code></p>
-</div></td>
-      <td class="gt_row gt_left" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"><p>Limited support for categorical variables</p>
-</div></td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left gt_striped" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"><p><code>lfe::felm()</code></p>
-</div></td>
-      <td class="gt_row gt_left gt_striped" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"></div></td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"><p><code>lme4::glmer()</code></p>
-</div></td>
-      <td class="gt_row gt_left" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"><p><code>broom.mixed</code> package required</p>
-</div></td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left gt_striped" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"><p><code>lme4::glmer.nb()</code></p>
+      <td class="gt_row gt_left gt_striped" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"><p><code>brms::brm()</code></p>
 </div></td>
       <td class="gt_row gt_left gt_striped" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"><p><code>broom.mixed</code> package required</p>
 </div></td>
     </tr>
     <tr>
-      <td class="gt_row gt_left" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"><p><code>lme4::lmer()</code></p>
+      <td class="gt_row gt_left" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"><p><code>cmprsk::crr()</code></p>
+</div></td>
+      <td class="gt_row gt_left" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"><p>Limited support</p>
+</div></td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_striped" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"><p><code>gam::gam()</code></p>
+</div></td>
+      <td class="gt_row gt_left gt_striped" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"></div></td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"><p><code>geepack::geeglm()</code></p>
+</div></td>
+      <td class="gt_row gt_left" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"></div></td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_striped" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"><p><code>lavaan::lavaan()</code></p>
+</div></td>
+      <td class="gt_row gt_left gt_striped" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"><p>Limited support for categorical variables</p>
+</div></td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"><p><code>lfe::felm()</code></p>
+</div></td>
+      <td class="gt_row gt_left" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"></div></td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_striped" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"><p><code>lme4::glmer()</code></p>
+</div></td>
+      <td class="gt_row gt_left gt_striped" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"><p><code>broom.mixed</code> package required</p>
+</div></td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"><p><code>lme4::glmer.nb()</code></p>
 </div></td>
       <td class="gt_row gt_left" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"><p><code>broom.mixed</code> package required</p>
 </div></td>
     </tr>
     <tr>
-      <td class="gt_row gt_left gt_striped" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"><p><code>mgcv::gam()</code></p>
+      <td class="gt_row gt_left gt_striped" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"><p><code>lme4::lmer()</code></p>
 </div></td>
-      <td class="gt_row gt_left gt_striped" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"><p>Use default tidier <code>broom::tidy()</code> for smooth terms only, or <code>gtsummary::tidy_gam()</code> to include parametric terms</p>
-</div></td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"><p><code>mice::mira</code></p>
-</div></td>
-      <td class="gt_row gt_left" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"><p>Limited support. If <code>mod</code> is a <code>mira</code> object, use <code>tidy_plus_plus(mod, tidy_fun = function(x, ...) mice::pool(x) %&gt;% mice::tidy(...))</code></p>
+      <td class="gt_row gt_left gt_striped" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"><p><code>broom.mixed</code> package required</p>
 </div></td>
     </tr>
     <tr>
-      <td class="gt_row gt_left gt_striped" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"><p><code>nnet::multinom()</code></p>
+      <td class="gt_row gt_left" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"><p><code>mgcv::gam()</code></p>
 </div></td>
-      <td class="gt_row gt_left gt_striped" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"></div></td>
+      <td class="gt_row gt_left" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"><p>Use default tidier <code>broom::tidy()</code> for smooth terms only, or <code>gtsummary::tidy_gam()</code> to include parametric terms</p>
+</div></td>
     </tr>
     <tr>
-      <td class="gt_row gt_left" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"><p><code>ordinal::clm()</code></p>
+      <td class="gt_row gt_left gt_striped" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"><p><code>mice::mira</code></p>
+</div></td>
+      <td class="gt_row gt_left gt_striped" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"><p>Limited support. If <code>mod</code> is a <code>mira</code> object, use <code>tidy_plus_plus(mod, tidy_fun = function(x, ...) mice::pool(x) %&gt;% mice::tidy(...))</code></p>
+</div></td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"><p><code>nnet::multinom()</code></p>
+</div></td>
+      <td class="gt_row gt_left" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"></div></td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_striped" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"><p><code>ordinal::clm()</code></p>
+</div></td>
+      <td class="gt_row gt_left gt_striped" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"><p>Limited support for models with nominal predictors.</p>
+</div></td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"><p><code>ordinal::clmm()</code></p>
 </div></td>
       <td class="gt_row gt_left" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"><p>Limited support for models with nominal predictors.</p>
 </div></td>
     </tr>
     <tr>
-      <td class="gt_row gt_left gt_striped" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"><p><code>ordinal::clmm()</code></p>
+      <td class="gt_row gt_left gt_striped" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"><p><code>rstanarm::stan_glm()</code></p>
 </div></td>
-      <td class="gt_row gt_left gt_striped" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"><p>Limited support for models with nominal predictors.</p>
+      <td class="gt_row gt_left gt_striped" style="vertical-align: top; font-size:  12px;"><div class="gt_from_md"><p><code>broom.mixed</code> package required</p>
 </div></td>
     </tr>
     <tr>

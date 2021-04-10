@@ -52,6 +52,13 @@ test_that("tidy_add_coefficients_type() works for common models", {
   expect_equivalent(attr(res, "coefficients_type"), "relative_risk")
   expect_equivalent(attr(res, "coefficients_label"), "RR")
 
+  mod <- glm(response ~ age + grade * trt, gtsummary::trial, family = binomial(cloglog))
+  res <- mod %>%
+    tidy_and_attach(exponentiate = TRUE) %>%
+    tidy_add_coefficients_type()
+  expect_equivalent(attr(res, "coefficients_type"), "prop_hazard")
+  expect_equivalent(attr(res, "coefficients_label"), "HR")
+
   mod <- glm(response ~ age + grade * trt, gtsummary::trial, family = poisson)
   res <- mod %>%
     tidy_and_attach() %>%
@@ -66,7 +73,7 @@ test_that("tidy_add_coefficients_type() works for common models", {
 
   mod <- glm(response ~ age + grade * trt, gtsummary::trial, family = poisson("identity"))
   res <- mod %>%
-    tidy_and_attach() %>%
+    tidy_and_attach(conf.int = FALSE) %>%
     tidy_add_coefficients_type()
   expect_equivalent(attr(res, "coefficients_type"), "generic")
   expect_equivalent(attr(res, "coefficients_label"), "Beta")
@@ -200,7 +207,7 @@ test_that("tidy_plus_plus() works with survey::svyolr", {
 })
 
 test_that("model_get_coefficients_type() works with ordinal::clm", {
-  mod <- ordinal::clm(rating ~ temp * contact, data = ordinal::wine, nominal = ~contact)
+  mod <- ordinal::clm(rating ~ temp * contact, data = ordinal::wine)
   res <- mod %>% model_get_coefficients_type()
   expect_equivalent(res, "logistic")
 })
