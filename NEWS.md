@@ -1,3 +1,21 @@
+# broom.helpers 1.4.0
+
+**New supported models**
+
+- Support for `glmmTMB::glmmTMB()` models (#119)
+
+**New features**
+
+- Function arguments that accept formula-list values now have more flexible inputs. (#121)
+  - The passed list may now be a combination of named lists and lists of formulas, e.g. `list(trt ~ 1, all_continuous() ~ 2)`.
+  - The shortcut `~ <value>` may be now used to indicate `everything() ~ <value>`
+
+**Bug fixes**
+
+- Bug fix for computing n for some binomial models computed 
+  with `lme4::glmer()` (#116)
+- Populating **effect** column when adding reference rows (#117)
+
 # broom.helpers 1.3.0
 
 **New supported models**

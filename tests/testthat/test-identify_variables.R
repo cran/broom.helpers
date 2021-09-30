@@ -357,6 +357,7 @@ test_that("model_identify_variables() works with nnet::multinom", {
 })
 
 test_that("model_identify_variables() works with survey::svyglm", {
+  skip_if_not_installed("survey")
   df <- survey::svydesign(~1, weights = ~1, data = gtsummary::trial)
   mod <- survey::svyglm(response ~ age + grade * trt, df, family = quasibinomial)
   res <- mod %>% model_identify_variables()
@@ -522,3 +523,31 @@ test_that("model_identify_variables() message when failure", {
   )
 })
 
+
+test_that("model_identify_variables() works with glmmTMB::glmmTMB", {
+  skip_if_not_installed("glmmTMB")
+  skip_if_not_installed("broom.mixed")
+  skip_on_cran()
+
+  mod <- glmmTMB::glmmTMB(count ~ mined + spp,
+                          ziformula = ~ mined + site,
+                          family = poisson,
+                          data = glmmTMB::Salamanders)
+
+
+
+  res <- mod %>% model_identify_variables()
+  expect_equivalent(
+    res$variable,
+    c(NA, "mined", "spp", "spp", "spp", "spp", "spp", "spp", "site",
+      "site", "site", "site", "site", "site", "site", "site", "site",
+      "site", "site", "site", "site", "site", "site", "site", "site",
+      "site", "site", "site", "site", "site")
+  )
+  expect_error(
+    mod %>%
+      tidy_and_attach(tidy_fun = broom.mixed::tidy) %>%
+      tidy_identify_variables(),
+    NA
+  )
+})
