@@ -1,6 +1,6 @@
 Package: broom.helpers
 Title: Helpers for Model Coefficients Tibbles
-Version: 1.4.0
+Version: 1.5.0
 Authors@R: 
     c(person(given = "Joseph",
              family = "Larmarange",
@@ -32,9 +32,9 @@ Encoding: UTF-8
 RoxygenNote: 7.1.2
 Language: en-US
 NeedsCompilation: no
-Packaged: 2021-09-30 09:48:33 UTC; josep
+Packaged: 2021-12-07 11:31:54 UTC; josep
 Author: Joseph Larmarange [aut, cre] (<https://orcid.org/0000-0001-7097-700X>),
   Daniel D. Sjoberg [aut] (<https://orcid.org/0000-0003-0862-2018>)
 Maintainer: Joseph Larmarange <joseph@larmarange.net>
 Repository: CRAN
-Date/Publication: 2021-09-30 10:20:11 UTC
+Date/Publication: 2021-12-07 12:00:04 UTC

@@ -42,7 +42,9 @@ model_get_model_matrix.default <- function(model, ...) {
 # the identification of variables
 model_get_model_matrix.multinom <- function(model, ...) {
   mm <- stats::model.matrix(model, ...)
-  colnames(mm) <- colnames(stats::coef(model))
+  co <- stats::coef(model)
+  if (is.matrix(co)) colnames(mm) <- colnames(co)
+  else colnames(mm) <- names(co)
   mm
 }
 
@@ -66,8 +68,7 @@ model_get_model_matrix.brmsfit <- function(model, ...) {
 #' restricted model matrix, please refer to [glmmTMB::model.matrix.glmmTMB()].
 model_get_model_matrix.glmmTMB <- function(model, ...) {
   # load lme4 if available
-  if (!requireNamespace("lme4", quietly = TRUE))
-      stop("'lme4' package is required for glmmTMB model.") # nocov
+  .assert_package("lme4", fn = "broom.helpers::model_get_model_matrix.glmmTMB()")
 
   stats::model.matrix(
     lme4::nobars(model$modelInfo$allForm$combForm),

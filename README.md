@@ -10,7 +10,7 @@ stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://
 [![R build
 status](https://github.com/larmarange/broom.helpers/workflows/R-CMD-check/badge.svg)](https://github.com/larmarange/broom.helpers/actions)
 [![Codecov test
-coverage](https://codecov.io/gh/larmarange/broom.helpers/branch/master/graph/badge.svg)](https://codecov.io/gh/larmarange/broom.helpers?branch=master)
+coverage](https://codecov.io/gh/larmarange/broom.helpers/branch/main/graph/badge.svg)](https://app.codecov.io/gh/larmarange/broom.helpers?branch=main)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/broom.helpers)](https://CRAN.R-project.org/package=broom.helpers)
 [![DOI](https://zenodo.org/badge/286680847.svg)](https://zenodo.org/badge/latestdoi/286680847)
@@ -25,9 +25,9 @@ add variable labels, and more.
 
 `broom.helpers` is used, in particular, by `gtsummary::tbl_regression()`
 for producing [nice formatted tables of model
-coefficients](http://www.danieldsjoberg.com/gtsummary/articles/tbl_regression.html)
+coefficients](https://www.danieldsjoberg.com/gtsummary/articles/tbl_regression.html)
 and by `GGally::ggcoef_model()` for [plotting model
-coefficients](http://ggobi.github.io/ggally/articles/ggcoef_model.html).
+coefficients](https://ggobi.github.io/ggally/articles/ggcoef_model.html).
 
 ## Installation
 
@@ -82,6 +82,7 @@ dplyr::glimpse(ex1)
 #> $ p.value        <dbl> 4.187340e-12, NA, 3.478232e-26, 2.094475e-42
 #> $ conf.low       <dbl> 0.5933983, NA, 1.2371791, 1.7491525
 #> $ conf.high      <dbl> 1.013723, NA, 1.680307, 2.144481
+
 mod2 <- glm(
   response ~ poly(age, 3) + stage + grade * trt,
   na.omit(gtsummary::trial),
@@ -189,6 +190,7 @@ dplyr::glimpse(ex3)
 #> $ p.value        <dbl> 4.187340e-12, NA, 3.478232e-26, 2.094475e-42
 #> $ conf.low       <dbl> 0.5933983, NA, 1.2371791, 1.7491525
 #> $ conf.high      <dbl> 1.013723, NA, 1.680307, 2.144481
+
 ex4 <- mod2 %>%
   # perform initial tidying of model
   tidy_and_attach(exponentiate = TRUE) %>%

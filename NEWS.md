@@ -1,3 +1,23 @@
+# broom.helpers 1.5.0
+
+**New features**
+
+- New method `model_get_coefficients_type.tidycrr()` (#128)
+- Updated error messaging about using `broom.helpers::tidy_parameters()`
+  to include the package prefix. This message sometimes appears while
+  running `gtsummary::tbl_regression()` where some users may not be
+  aware where the `tidy_paramters()` function lives. (#129)
+- `.formula_list_to_named_list()` improvement: it is now possible to add
+  a type check (#132)
+- New functions `.assert_package()` and `.get_min_version_required()` to 
+  check for a package's installation status and whether the installed
+  version meets the minimum required version from the DESCRIPTION file (#134)
+
+**Bug fixes**
+
+- Bug fix for identifying the levels of a logical variable (#125)
+- Bug fix for `nnet::multinom()` models with a binary outcome (#130)
+
 # broom.helpers 1.4.0
 
 **New supported models**
@@ -6,9 +26,11 @@
 
 **New features**
 
-- Function arguments that accept formula-list values now have more flexible inputs. (#121)
-  - The passed list may now be a combination of named lists and lists of formulas, e.g. `list(trt ~ 1, all_continuous() ~ 2)`.
-  - The shortcut `~ <value>` may be now used to indicate `everything() ~ <value>`
+- Function arguments that accept formula-list values now have more flexible 
+  inputs. (#121)
+    - The passed list may now be a combination of named lists and lists of 
+      formulas, e.g. `list(trt ~ 1, all_continuous() ~ 2)`.
+    - The shortcut `~ <value>` may be now used to indicate `everything() ~ <value>`
 
 **Bug fixes**
 
