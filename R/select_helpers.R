@@ -7,7 +7,11 @@
 #' - `all_dichotomous()` selects only type `"dichotomous"`
 #' - `all_interaction()` selects interaction terms from a regression model
 #' - `all_intercepts()` selects intercept terms from a regression model
-#' - `all_contrasts()` selects variables in regression model based on their type of contrast
+#' - `all_contrasts()` selects variables in regression model based on their type
+#'   of contrast
+#' - `all_ran_pars()` and `all_ran_vals()` for random-effect parameters and
+#'   values from a mixed model
+#'   (see `vignette("broom_mixed_intro", package = "broom.mixed")`)
 #' @name select_helpers
 #' @rdname select_helpers
 #' @param dichotomous Logical indicating whether to include dichotomous variables.

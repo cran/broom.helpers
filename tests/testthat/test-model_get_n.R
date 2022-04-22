@@ -189,6 +189,7 @@ test_that("model_get_n() works with stats::poly()", {
 
 test_that("model_get_n() works with lme4::lmer", {
   skip_on_cran()
+  skip_if_not_installed("lme4")
   df <- gtsummary::trial
   df$stage <- as.character(df$stage)
   df$group <- rep.int(1:2, 100)
@@ -200,6 +201,7 @@ test_that("model_get_n() works with lme4::lmer", {
 
 test_that("model_get_n() works with lme4::glmer", {
   skip_on_cran()
+  skip_if_not_installed("lme4")
   df <- gtsummary::trial
   df$stage <- as.character(df$stage)
   df$group <- rep.int(1:2, 100)
@@ -358,3 +360,32 @@ test_that("model_get_n() works with lavaan::lavaan", {
   expect_null(mod %>% model_compute_terms_contributions())
 })
 
+test_that("model_get_n() works with tidycmprsk::crr", {
+  skip_on_cran()
+  skip_if_not_installed("tidycmprsk")
+
+  mod <- tidycmprsk::crr(Surv(ttdeath, death_cr) ~ age + grade, tidycmprsk::trial)
+  res <- mod %>% tidy_plus_plus()
+  expect_equivalent(
+    res$n_event,
+    c(52, 16, 15, 21)
+  )
+})
+
+test_that("tidy_add_n() does not duplicates rows with gam model", {
+  skip_on_cran()
+  skip_if_not_installed("mgcv")
+  skip_if_not_installed("gtsummary")
+
+  mod <- mgcv::gam(
+    marker ~ s(age, bs = 'ad', k = -1) + grade + ti(age, by = grade, bs ='fs'),
+    data = gtsummary::trial,
+    method = 'REML',
+    family = gaussian
+  )
+
+  res <- mod %>%
+    tidy_and_attach(tidy_fun = gtsummary::tidy_gam) %>%
+    tidy_add_n()
+  expect_equal(nrow(res), 7L)
+})
