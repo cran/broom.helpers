@@ -28,18 +28,20 @@ model_get_coefficients_type.default <- function(model) {
 #' @export
 #' @rdname model_get_coefficients_type
 model_get_coefficients_type.glm <- function(model) {
-  if (model$family$family == "binomial" && model$family$link == "logit")
-    return("logistic")
-  if (model$family$family == "binomial" && model$family$link == "log")
-    return("relative_risk")
-  if (model$family$family == "binomial" && model$family$link == "cloglog")
-    return("prop_hazard")
-  if (model$family$family == "poisson" && model$family$link == "log")
-    return("poisson")
-  if (model$family$family == "quasibinomial" && model$family$link == "logit")
-    return("logistic")
-  if (model$family$family == "quasipoisson" && model$family$link == "log")
-    return("poisson")
+  if (!is.null(model$family)) {
+    if (model$family$family == "binomial" && model$family$link == "logit")
+      return("logistic")
+    if (model$family$family == "binomial" && model$family$link == "log")
+      return("relative_risk")
+    if (model$family$family == "binomial" && model$family$link == "cloglog")
+      return("prop_hazard")
+    if (model$family$family == "poisson" && model$family$link == "log")
+      return("poisson")
+    if (model$family$family == "quasibinomial" && model$family$link == "logit")
+      return("logistic")
+    if (model$family$family == "quasipoisson" && model$family$link == "log")
+      return("poisson")
+  }
   "generic"
 }
 
@@ -52,6 +54,14 @@ model_get_coefficients_type.negbin <- function(model) {
 #' @export
 #' @rdname model_get_coefficients_type
 model_get_coefficients_type.geeglm <- model_get_coefficients_type.glm
+
+#' @export
+#' @rdname model_get_coefficients_type
+model_get_coefficients_type.fixest <- model_get_coefficients_type.glm
+
+#' @export
+#' @rdname model_get_coefficients_type
+model_get_coefficients_type.biglm <- model_get_coefficients_type.glm
 
 #' @export
 #' @rdname model_get_coefficients_type
@@ -123,4 +133,10 @@ model_get_coefficients_type.crr <- function(model) {
 #' @rdname model_get_coefficients_type
 model_get_coefficients_type.tidycrr <- function(model) {
   "prop_hazard"
+}
+
+#' @export
+#' @rdname model_get_coefficients_type
+model_get_coefficients_type.model_fit <- function(model) {
+  model_get_coefficients_type(model$fit)
 }

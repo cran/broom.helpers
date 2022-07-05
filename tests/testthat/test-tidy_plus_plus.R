@@ -570,3 +570,87 @@ test_that("tidy_plus_plus() works with plm::plm", {
     NA
   )
 })
+
+
+test_that("tidy_plus_plus() works with biglm::bigglm", {
+  skip_on_cran()
+  skip_if_not_installed("biglm")
+  skip_if(compareVersion(as.character(getRversion()), "3.6") < 0)
+
+  mod <- biglm::bigglm(
+    response ~ age + trt,
+    data = as.data.frame(gtsummary::trial),
+    family = binomial()
+  )
+
+  expect_error(
+    res <- mod %>% tidy_plus_plus(),
+    NA
+  )
+
+  # check that reference rows are properly added
+  expect_equal(
+    res %>% dplyr::filter(variable == "trt") %>% purrr::pluck("reference_row"),
+    c(TRUE, FALSE)
+  )
+})
+
+test_that("tidy_plus_plus() works with biglmm::bigglm", {
+  skip_on_cran()
+  skip_if_not_installed("biglmm")
+  skip_if(compareVersion(as.character(getRversion()), "3.6") < 0)
+
+  mod <- biglmm::bigglm(
+    response ~ age + trt,
+    data = as.data.frame(gtsummary::trial),
+    family = binomial()
+  )
+
+  expect_error(
+    res <- mod %>% tidy_plus_plus(),
+    NA
+  )
+
+  # check that reference rows are properly added
+  expect_equal(
+    res %>% dplyr::filter(variable == "trt") %>% purrr::pluck("reference_row"),
+    c(TRUE, FALSE)
+  )
+})
+
+test_that("tidy_plus_plus() works with parsnip::model_fit object", {
+  skip_on_cran()
+  skip_if_not_installed("parsnip")
+
+  d <- gtsummary::trial
+  d$response <- as.factor(d$response)
+  mod1 <- glm(response ~ stage + grade + trt, d, family = binomial)
+  mod2 <- parsnip::logistic_reg() %>%
+    parsnip::set_engine("glm") %>%
+    parsnip::fit(response ~ stage + grade + trt, data = d)
+
+  res1 <- mod1 %>% tidy_plus_plus(exponentiate = TRUE)
+  expect_error(
+    res2 <- mod2 %>% tidy_plus_plus(exponentiate = TRUE),
+    NA
+  )
+  expect_equivalent(res1, res2)
+})
+
+test_that("tidy_plus_plus() works with fixest models", {
+  skip_on_cran()
+  skip_if_not_installed("fixest")
+  skip_if(compareVersion(as.character(getRversion()), "4.1") < 0)
+
+  mod <- fixest::feols(fml = mpg ~ am + factor(carb), data = mtcars)
+  expect_error(
+    res <- mod %>% tidy_plus_plus(),
+    NA
+  )
+
+  mod <- fixest::feglm(Sepal.Length ~ Sepal.Width + Petal.Length | Species, iris, "poisson")
+  expect_error(
+    res <- mod %>% tidy_plus_plus(),
+    NA
+  )
+})

@@ -6,6 +6,8 @@
 \alias{model_get_coefficients_type.glm}
 \alias{model_get_coefficients_type.negbin}
 \alias{model_get_coefficients_type.geeglm}
+\alias{model_get_coefficients_type.fixest}
+\alias{model_get_coefficients_type.biglm}
 \alias{model_get_coefficients_type.glmerMod}
 \alias{model_get_coefficients_type.clogit}
 \alias{model_get_coefficients_type.polr}
@@ -16,6 +18,7 @@
 \alias{model_get_coefficients_type.coxph}
 \alias{model_get_coefficients_type.crr}
 \alias{model_get_coefficients_type.tidycrr}
+\alias{model_get_coefficients_type.model_fit}
 \title{Get coefficient type}
 \usage{
 model_get_coefficients_type(model)
@@ -27,6 +30,10 @@ model_get_coefficients_type(model)
 \method{model_get_coefficients_type}{negbin}(model)
 
 \method{model_get_coefficients_type}{geeglm}(model)
+
+\method{model_get_coefficients_type}{fixest}(model)
+
+\method{model_get_coefficients_type}{biglm}(model)
 
 \method{model_get_coefficients_type}{glmerMod}(model)
 
@@ -47,6 +54,8 @@ model_get_coefficients_type(model)
 \method{model_get_coefficients_type}{crr}(model)
 
 \method{model_get_coefficients_type}{tidycrr}(model)
+
+\method{model_get_coefficients_type}{model_fit}(model)
 }
 \arguments{
 \item{model}{a model object}
