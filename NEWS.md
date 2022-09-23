@@ -1,3 +1,18 @@
+# broom.helpers 1.9.0
+
+**New features**
+
+- New function `.get_package_dependencies()` listing all dependencies, including
+  minimum version required, of a package. (#171)
+- Improvement of `.assert_package()` now taking into account the comparison
+  operator (> or >=) when a minimum version is required (#171)
+  
+**Bug fixes and improvements**
+
+- Compatibility with upcoming `tidyselect` v1.2.0 (#173)
+- Avoid an unwanted warning for some `mgcv::gam()` models (#175)
+
+
 # broom.helpers 1.8.0
 
 **New supported models**

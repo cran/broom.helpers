@@ -18,7 +18,7 @@
 #'
 #' @export
 #' @family model_helpers
-#' @examplesIf .assert_package("gtsummary", boolean = TRUE)
+#' @examplesIf interactive() && .assert_package("gtsummary", boolean = TRUE)
 #' Titanic %>%
 #'   dplyr::as_tibble() %>%
 #'   dplyr::mutate(Survived = factor(Survived, c("No", "Yes"))) %>%
@@ -191,5 +191,5 @@ model_list_variables.lavaan <- function(model, labels = NULL, only_variable = FA
       TRUE ~ .data$variable
     )
   ) %>%
-    dplyr::select(-.data$var_custom_label)
+    dplyr::select(-dplyr::all_of("var_custom_label"))
 }

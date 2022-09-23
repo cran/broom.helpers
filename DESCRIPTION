@@ -1,6 +1,6 @@
 Package: broom.helpers
 Title: Helpers for Model Coefficients Tibbles
-Version: 1.8.0
+Version: 1.9.0
 Authors@R: c(
     person("Joseph", "Larmarange", , "joseph@larmarange.net", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-7097-700X")),
@@ -28,11 +28,11 @@ RdMacros: lifecycle
 Encoding: UTF-8
 Language: en-US
 LazyData: true
-RoxygenNote: 7.2.0
+RoxygenNote: 7.2.1
 NeedsCompilation: no
-Packaged: 2022-07-05 17:23:25 UTC; josep
+Packaged: 2022-09-23 18:31:24 UTC; josep
 Author: Joseph Larmarange [aut, cre] (<https://orcid.org/0000-0001-7097-700X>),
   Daniel D. Sjoberg [aut] (<https://orcid.org/0000-0003-0862-2018>)
 Maintainer: Joseph Larmarange <joseph@larmarange.net>
 Repository: CRAN
-Date/Publication: 2022-07-05 22:40:09 UTC
+Date/Publication: 2022-09-23 20:00:09 UTC

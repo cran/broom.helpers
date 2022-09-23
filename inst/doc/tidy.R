@@ -5,6 +5,11 @@ knitr::opts_chunk$set(
   rows.print = 25
 )
 
+# one of the functions below needs emmeans, so dont evaluate code check in vignette on old R versions where emmeans is not available
+if (!rlang::is_installed("emmeans")) {
+  knitr::opts_chunk$set(eval = FALSE)
+}
+
 ## ----setup, warning=FALSE, message=FALSE--------------------------------------
 library(broom.helpers)
 library(gtsummary)

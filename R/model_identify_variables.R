@@ -71,14 +71,13 @@ model_identify_variables.default <- function(model) {
     ) %>%
     dplyr::left_join(
       model_list_variables(model) %>%
-        dplyr::select(.data$variable, .data$var_class),
+        dplyr::select("variable", "var_class"),
       by = "variable"
     ) %>%
     dplyr::left_join(
       model_get_nlevels(model),
       by = "variable"
     ) %>%
-
     .compute_var_type()
 }
 
@@ -164,9 +163,10 @@ model_identify_variables.clmm <- model_identify_variables.clm
 model_identify_variables.gam <- function(model) {
   model_identify_variables.default(model) %>%
     dplyr::bind_rows(
-      broom::tidy(model, parametric = FALSE) %>%
+      # suppressWarnings to avoid a warning when the result is an empty tibble
+      suppressWarnings(broom::tidy(model, parametric = FALSE)) %>%
         dplyr::bind_rows(tibble::tibble(term = character(0))) %>%
-        dplyr::select(.data$term) %>%
+        dplyr::select(dplyr::all_of("term")) %>%
         dplyr::mutate(variable = .data$term, var_type = "continuous")
     )
 }
@@ -176,7 +176,6 @@ model_identify_variables.gam <- function(model) {
 model_identify_variables.model_fit <- function(model) {
   model_identify_variables(model$fit)
 }
-
 
 ## model_identify_variables() helpers --------------------------
 
