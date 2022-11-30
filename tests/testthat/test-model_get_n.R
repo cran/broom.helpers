@@ -343,6 +343,7 @@ test_that("model_get_n() works with geepack::geeglm", {
 
 
 test_that("model_get_n() works with gam::gam", {
+  skip_if_not_installed("gam")
   data(kyphosis, package = "gam")
   mod <- gam::gam(Kyphosis ~ gam::s(Age, 4) + Number, family = binomial, data = kyphosis)
   expect_error(res <- mod %>% model_get_n(), NA)
@@ -387,9 +388,9 @@ test_that("tidy_add_n() does not duplicates rows with gam model", {
   skip_if_not_installed("gtsummary")
 
   mod <- mgcv::gam(
-    marker ~ s(age, bs = 'ad', k = -1) + grade + ti(age, by = grade, bs ='fs'),
+    marker ~ s(age, bs = "ad", k = -1) + grade + ti(age, by = grade, bs = "fs"),
     data = gtsummary::trial,
-    method = 'REML',
+    method = "REML",
     family = gaussian
   )
 

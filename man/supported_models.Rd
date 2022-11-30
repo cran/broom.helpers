@@ -36,10 +36,13 @@ Listing of Supported Models
    \code{lme4::glmer()} \tab \code{broom.mixed} package required \cr
    \code{lme4::glmer.nb()} \tab \code{broom.mixed} package required \cr
    \code{lme4::lmer()} \tab \code{broom.mixed} package required \cr
+   \code{logitr::logitr()} \tab Requires logitr >= 0.8.0 \cr
    \code{MASS::glm.nb()} \tab  \cr
    \code{MASS::polr()} \tab  \cr
    \code{mgcv::gam()} \tab Use default tidier \code{broom::tidy()} for smooth terms only, or \code{gtsummary::tidy_gam()} to include parametric terms \cr
    \code{mice::mira} \tab Limited support. If \code{mod} is a \code{mira} object, use \code{tidy_plus_plus(mod, tidy_fun = function(x, ...) mice::pool(x) \%>\% mice::tidy(...))} \cr
+   \code{multgee::nomLORgee()} \tab Experimental support. Use \code{tidy_multgee()} as \code{tidy_fun}. \cr
+   \code{multgee::ordLORgee()} \tab Experimental support. Use \code{tidy_multgee()} as \code{tidy_fun}. \cr
    \code{nnet::multinom()} \tab  \cr
    \code{ordinal::clm()} \tab Limited support for models with nominal predictors. \cr
    \code{ordinal::clmm()} \tab Limited support for models with nominal predictors. \cr

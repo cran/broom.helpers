@@ -1,3 +1,23 @@
+# broom.helpers 1.10.0
+
+**New features**
+
+- `tidy_select_variables()` now sorts the variables according to `include` (#183)
+
+**New supported models**
+
+- Support for `logitr::logitr()` models (#179)
+- Experimental support for `multgee::nomLORgee()` and `multgee::ordLORgee()`
+  models (#185)
+
+**Bug fixes and improvements**
+
+- Improvement of `.get_package_dependencies()` to be more efficient. It now 
+  looks only at a single package description file (#178)
+- New function `.get_all_packages_dependencies()` to list all dependencies of
+  all packages (#178)
+- Bug fix in `.get_min_version_required()` (#181)
+
 # broom.helpers 1.9.0
 
 **New features**
