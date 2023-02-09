@@ -16,6 +16,8 @@
 #' @param keep_model_terms keep terms from the model?
 #' @param pairwise_reverse determines whether to use `"pairwise"` (if `TRUE`)
 #' or `"revpairwise"` (if `FALSE`), see [emmeans::contrast()]
+#' @param contrasts_adjust optional adjustment method when computing contrasts,
+#' see [emmeans::contrast()] (if `NULL`, use `emmeans` default)
 #' @param conf.level confidence level, if `NULL` use the value indicated
 #' previously in [tidy_and_attach()]
 #' @param model the corresponding model, if not attached to `x`
@@ -37,6 +39,10 @@
 #'     tidy_and_attach() %>%
 #'     tidy_add_pairwise_contrasts(keep_model_terms = TRUE)
 #'
+#'   mod1 %>%
+#'     tidy_and_attach() %>%
+#'     tidy_add_pairwise_contrasts(contrasts_adjust = "none")
+#'
 #'   if (.assert_package("gtsummary", boolean = TRUE)) {
 #'     mod2 <- glm(
 #'       response ~ age + trt + grade,
@@ -53,13 +59,17 @@ tidy_add_pairwise_contrasts <- function(
   variables = all_categorical(),
   keep_model_terms = FALSE,
   pairwise_reverse = TRUE,
+  contrasts_adjust = NULL,
   conf.level = NULL,
   emmeans_args = list(),
   model = tidy_get_model(x),
   quiet = FALSE
 ) {
   if (is.null(model)) {
-    stop("'model' is not provided. You need to pass it or to use 'tidy_and_attach()'.")
+    cli::cli_abort(c(
+      "{.arg model} is not provided.",
+      "You need to pass it or to use {.fn tidy_and_attach}."
+    ))
   }
 
   if (!"contrasts" %in% names(x)) {
@@ -68,18 +78,14 @@ tidy_add_pairwise_contrasts <- function(
 
   .attributes <- .save_attributes(x)
 
-  if (isTRUE(.attributes$coefficients_type == "average_marginal_effects"))
-    cli::cli_abort("Pairwise contrasts are not compatible with Average Marginal Effects.") # nolint
-  if (isTRUE(.attributes$coefficients_type == "marginal_effects"))
-    cli::cli_abort("Pairwise contrasts are not compatible with Marginal Effects.") # nolint
-  if (isTRUE(.attributes$coefficients_type == "conditional_effects"))
-    cli::cli_abort("Pairwise contrasts are not compatible with Conditional Effects.") # nolint
+  if (isTRUE(stringr::str_starts(.attributes$coefficients_type, "marginal")))
+    cli::cli_abort("Pairwise contrasts are not compatible with marginal effects / contrasts / means / predictions.") # nolint
 
   if (is.null(conf.level))
     conf.level <- .attributes$conf.level
 
   if (is.null(conf.level))
-    stop("Please specify conf.level")
+    cli::cli_abort("Please specify {.arg conf.level}")
 
   # obtain character vector of selected variables
   variables <- .select_to_varnames(
@@ -95,6 +101,7 @@ tidy_add_pairwise_contrasts <- function(
     model = model,
     variables = variables,
     pairwise_reverse = pairwise_reverse,
+    contrasts_adjust = contrasts_adjust,
     conf.level = conf.level,
     emmeans_args = emmeans_args
   )

@@ -55,11 +55,14 @@ tidy_add_term_labels <- function(x,
                                  quiet = FALSE,
                                  strict = FALSE) {
   if (is.null(model)) {
-    stop("'model' is not provided. You need to pass it or to use 'tidy_and_attach()'.")
+    cli::cli_abort(c(
+      "{.arg model} is not provided.",
+      "You need to pass it or to use {.fn tidy_and_attach}."
+    ))
   }
 
   if ("header_row" %in% names(x)) {
-    stop("`tidy_add_term_labels()` cannot be applied after `tidy_add_header_rows().`")
+    cli::cli_abort("{.fn tidy_add_term_labels} cannot be applied after {.fn tidy_add_header_rows}.")
   }
 
   .attributes <- .save_attributes(x)
@@ -185,7 +188,7 @@ tidy_add_term_labels <- function(x,
     cli_alert_danger("{.code {not_found}} terms have not been found in {.code x}.")
   }
   if (length(not_found) > 0 && strict) {
-    stop("Incorrect call with `labels=`. Quitting execution.", call. = FALSE)
+    cli::cli_abort("Incorrect call with `labels=`. Quitting execution.", call = NULL)
   }
 
   # labels for polynomial terms
@@ -217,17 +220,12 @@ tidy_add_term_labels <- function(x,
     interaction_terms %>%
     strsplit(":")
 
-  # in the case of marginal/conditional effects
+  # in some cases (e.g. marginal predictions)
   # interaction terms are not prefixed by variable names
   # => need to identify them from interaction_terms directly
-  if (
-    isTRUE(.attributes$coefficients_type == "marginal_effects") ||
-    isTRUE(.attributes$coefficients_type == "conditional_effects")
-  ) {
-    missing_terms <- setdiff(
-      unique(unname(interaction_terms[interaction_terms != ""])),
-      names(term_labels)
-    )
+  if (isTRUE(.attributes$find_missing_interaction_terms)) {
+    it <- unname(unlist(interaction_terms))
+    missing_terms <- setdiff(it[it != ""], names(term_labels))
     if (length(missing_terms) > 0) {
       names(missing_terms) <- missing_terms
       term_labels <- term_labels %>%

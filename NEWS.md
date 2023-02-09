@@ -1,3 +1,29 @@
+# broom.helpers 1.12.0
+
+**New features**
+
+- Set of functions to support marginal predictions, contrasts and slopes /
+  effects (#202):
+    - A dedicated article presenting the concepts and the different functions
+      has been added to the package documentation website
+    - Several tidiers are provided to tidy results in a way that it could be 
+      used by `broom.helpers` functions.
+    - **Marginal Predictions:** `tidy_marginal_predictions()`,
+      `plot_marginal_predictions()`, `tidy_all_effects()`, and `tidy_ggpredict()`
+    - **Marginal Means:** `tidy_marginal_means()`
+    - **Marginal Contrasts:** `tidy_avg_comparisons()` and
+      `tidy_marginal_contrasts()`
+    - **Marginal Effects:** `tidy_avg_slopes()` and `tidy_margins()`
+- New method `model_list_higher_order_variables()` to list the highest order
+  combinations of variables (#202)
+- New method `model_get_response_variable()` to get the name of the response
+  variable (#202)
+- New helper function `seq_range()` to generate a sequence of values between
+  the minimum and the maximum of a vector (#202)
+- New argument `contrasts_adjust` in `tidy_plus_plus()`,
+  `tidy_add_pairwise_contrasts()` and `model_get_pairwise_contrasts()` allowing
+  to change the adjustment method used to compute pairwise contrasts (#204)
+
 # broom.helpers 1.11.0
 
 **New features**
@@ -6,8 +32,8 @@
   to compute pairwise contrasts of categorical variables with `emmeans`,
   and corresponding new arguments in `tidy_plus_plus()` (#192)
 - New tidier `tidy_margins()` to display Average Marginal Effects (#195)
-- New tidier `tidy_all_effects()` to display Marginal Effects (#195)
-- New tidier `tidy_ggpredict()` to display Conditional Effects (#195)
+- New tidier `tidy_all_effects()` to display Marginal Predictions (#195)
+- New tidier `tidy_ggpredict()` to display Conditional Predictions (#195)
 
 **Bug fixes and improvements**
 

@@ -35,8 +35,8 @@ tidy_attach_model <- function(x, model, .attributes = NULL) {
   class(x) <- c("broom.helpers", class(x))
   model <- model_get_model(model)
 
-  # if average_marginal_effects, force contr.treatment contrasts
-  if (isTRUE(attr(x, "coefficients_type") == "average_marginal_effects")) {
+  # if force_contr.treatment
+  if (isTRUE(attr(x, "force_contr.treatment"))) {
     for (v in names(model$contrasts))
       model$contrasts[[v]] <- "contr.treatment"
   }
@@ -58,7 +58,7 @@ tidy_and_attach <- function(
   # exponentiate cannot be used with lm models
   # but broom will not produce an error and will return unexponentiated estimates
   if (identical(class(model), "lm") && exponentiate)
-    stop("`exponentiate = TRUE` is not valid for this type of model.")
+    cli::cli_abort("{.code exponentiate = TRUE} is not valid for this type of model.")
 
   tidy_args <- list(...)
   tidy_args$x <- model
@@ -109,7 +109,7 @@ tidy_and_attach <- function(
           ) %>%
             stringr::str_wrap() %>%
             cli_alert_danger()
-          stop(as.character(e), call. = FALSE)
+          cli::cli_abort(as.character(e), call = NULL)
         })
       }
     )

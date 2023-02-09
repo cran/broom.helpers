@@ -8,6 +8,7 @@ model_get_pairwise_contrasts(
   model,
   variables,
   pairwise_reverse = TRUE,
+  contrasts_adjust = NULL,
   conf.level = 0.95,
   emmeans_args = list()
 )
@@ -19,6 +20,9 @@ model_get_pairwise_contrasts(
 
 \item{pairwise_reverse}{determines whether to use \code{"pairwise"} (if \code{TRUE})
 or \code{"revpairwise"} (if \code{FALSE}), see \code{\link[emmeans:contrast]{emmeans::contrast()}}}
+
+\item{contrasts_adjust}{optional adjustment method when computing contrasts,
+see \code{\link[emmeans:contrast]{emmeans::contrast()}} (if \code{NULL}, use \code{emmeans} default)}
 
 \item{conf.level}{level of confidence for confidence intervals}
 
@@ -33,6 +37,7 @@ It is computed with \code{\link[emmeans:emmeans]{emmeans::emmeans()}}.
 if (.assert_package("emmeans", boolean = TRUE)) {
   mod <- lm(Sepal.Length ~ Species, data = iris)
   mod \%>\% model_get_pairwise_contrasts(variables = "Species")
+  mod \%>\% model_get_pairwise_contrasts(variables = "Species", contrasts_adjust = "none")
 }
 \dontshow{\}) # examplesIf}
 }
@@ -48,12 +53,14 @@ Other model_helpers:
 \code{\link{model_get_nlevels}()},
 \code{\link{model_get_n}()},
 \code{\link{model_get_offset}()},
+\code{\link{model_get_response_variable}()},
 \code{\link{model_get_response}()},
 \code{\link{model_get_terms}()},
 \code{\link{model_get_weights}()},
 \code{\link{model_get_xlevels}()},
 \code{\link{model_identify_variables}()},
 \code{\link{model_list_contrasts}()},
+\code{\link{model_list_higher_order_variables}()},
 \code{\link{model_list_terms_levels}()},
 \code{\link{model_list_variables}()}
 }

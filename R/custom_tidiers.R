@@ -68,6 +68,15 @@ tidy_with_broom_or_parameters <- function(x, conf.int = TRUE, conf.level = .95, 
   tidy_args$conf.int <- conf.int
   if (conf.int) tidy_args$conf.level <- conf.level
 
+  # class of models known for tidy() not supporting exponentiate argument
+  # and for ignoring it
+  if (any(c("fixest", "plm", "felm", "lavaan", "nls", "survreg") %in% class(x))) {
+    if (isFALSE(tidy_args$exponentiate))
+      tidy_args$exponentiate <- NULL
+    else
+      cli::cli_abort("'exponentiate = TRUE' is not valid for this type of model.")
+  }
+
   res <- tryCatch(
     do.call(tidy_broom, tidy_args),
     error = function(e) {
@@ -86,7 +95,7 @@ tidy_with_broom_or_parameters <- function(x, conf.int = TRUE, conf.level = .95, 
       }
     )
     if (!is.null(res) && !is.null(tidy_args$exponentiate) && tidy_args$exponentiate) {
-      # changing to FALSE is managed by tidy_and_attch()
+      # changing to FALSE is managed by tidy_and_attach()
       cli::cli_abort("'exponentiate = TRUE' is not valid for this type of model.")
     }
   }
@@ -102,7 +111,7 @@ tidy_with_broom_or_parameters <- function(x, conf.int = TRUE, conf.level = .95, 
       }
     )
     if (is.null(res)) {
-      stop("Unable to tidy `x`.")
+      cli::cli_abort("Unable to tidy {.arg x}.")
     } else {
       # success of parameters
       cli::cli_alert_success("{.code tidy_parameters()} used instead.")
@@ -191,143 +200,4 @@ tidy_multgee <- function(x, conf.int = TRUE, conf.level = .95, ...) {
     res$term <- c(b, t)
     return(res)
   }
-}
-
-#' Average Marginal Effects Estimation
-#'
-#' Use `margins::margins()` to estimate "average marginal effects" and return a
-#' tibble tidied in a way that could be used by `broom.helpers`functions. See
-#' `margins::margins()` for a list of supported models.
-#' @note When applying `margins::margins()`, custom contrasts are ignored.
-#' Treatment contrasts (`stats::contr.treatment()`) are applied to all
-#' categorical variables. Interactions are also ignored.
-#' @param x a model
-#' @param conf.int logical indicating whether or not to include a confidence
-#' interval in the tidied output
-#' @param conf.level the confidence level to use for the confidence interval
-#' @param ... additional parameters passed to `margins::margins()`
-#' @family custom_tieders
-#' @seealso `margins::margins()`
-#' @export
-#' @examples
-#' df <- Titanic %>%
-#'   dplyr::as_tibble() %>%
-#'   dplyr::mutate(Survived = factor(Survived, c("No", "Yes")))
-#' mod <- glm(
-#'   Survived ~ Class + Age + Sex,
-#'   data = df, weights = df$n, family = binomial
-#' )
-#' tidy_margins(mod)
-#' tidy_plus_plus(mod, tidy_fun = tidy_margins)
-tidy_margins <- function(x, conf.int = TRUE, conf.level = 0.95, ...) {
-  .assert_package("margins")
-
-  dots <- rlang::dots_list(...)
-  if (isTRUE(dots$exponentiate))
-    cli::cli_abort("{.arg exponentiate = TRUE} is not relevant for {.fun broom.helpers::tidy_margins}.") # nolint
-
-  res <- broom::tidy(
-    margins::margins(x, ...),
-    conf.int = conf.int,
-    conf.level = conf.level
-  )
-  attr(res, "coefficients_type") <- "average_marginal_effects"
-  res
-}
-
-#' Marginal Effects Estimation
-#'
-#' Use `effects::allEffects()` to estimate "marginal effects" and return a
-#' tibble tidied in a way that could be used by `broom.helpers`functions.
-#' See `vignette("functions-supported-by-effects", package = "effects")` for
-#' a list of supported models.
-#' @param x a model
-#' @param conf.int logical indicating whether or not to include a confidence
-#' interval in the tidied output
-#' @param conf.level the confidence level to use for the confidence interval
-#' @param ... additional parameters passed to `effects::allEffects()`
-#' @family custom_tieders
-#' @seealso `effects::allEffects()`
-#' @export
-#' @examples
-#' df <- Titanic %>%
-#'   dplyr::as_tibble() %>%
-#'   dplyr::mutate(Survived = factor(Survived, c("No", "Yes")))
-#' mod <- glm(
-#'   Survived ~ Class + Age + Sex,
-#'   data = df, weights = df$n, family = binomial
-#' )
-#' tidy_all_effects(mod)
-#' tidy_plus_plus(mod, tidy_fun = tidy_all_effects)
-tidy_all_effects <- function(x, conf.int = TRUE, conf.level = .95, ...) {
-  .assert_package("effects")
-
-  dots <- rlang::dots_list(...)
-  if (isTRUE(dots$exponentiate))
-    cli::cli_abort("{.arg exponentiate = TRUE} is not relevant for {.fun broom.helpers::tidy_all_effects}.") # nolint
-
-  .clean <- function(x) {
-    # merge first columns if interaction
-    x <- tidyr::unite(x, "term", 1:(ncol(x) - 4), sep = ":")
-    names(x) <- c("term", "estimate", "std.error", "conf.low", "conf.high")
-    x$term <- as.character(x$term)
-    rownames(x) <- NULL
-    x
-  }
-  res <- x %>%
-    effects::allEffects(se = conf.int, level = conf.level, ...) %>%
-    as.data.frame() %>%
-    purrr::map(.clean) %>%
-    dplyr::bind_rows(.id = "variable")
-  attr(res, "coefficients_type") <- "marginal_effects"
-  res
-}
-
-#' Conditional Effects Estimation
-#'
-#' Use `ggeffects::ggpredict()` to estimate "conditional effects" and return a
-#' tibble tidied in a way that could be used by `broom.helpers`functions.
-#' See <https://strengejacke.github.io/ggeffects/> for a list of supported
-#' models.
-#' @param x a model
-#' @param conf.int logical indicating whether or not to include a confidence
-#' interval in the tidied output
-#' @param conf.level the confidence level to use for the confidence interval
-#' @param ... additional parameters passed to `ggeffects::ggpredict()`
-#' @family custom_tieders
-#' @seealso `ggeffects::ggpredict()`
-#' @export
-#' @examples
-#' df <- Titanic %>%
-#'   dplyr::as_tibble() %>%
-#'   dplyr::mutate(Survived = factor(Survived, c("No", "Yes")))
-#' mod <- glm(
-#'   Survived ~ Class + Age + Sex,
-#'   data = df, weights = df$n, family = binomial
-#' )
-#' tidy_ggpredict(mod)
-#' tidy_plus_plus(mod, tidy_fun = tidy_ggpredict)
-tidy_ggpredict <- function(x, conf.int = TRUE, conf.level = .95, ...) {
-  .assert_package("ggeffects")
-
-  dots <- rlang::dots_list(...)
-  if (isTRUE(dots$exponentiate))
-    cli::cli_abort("{.arg exponentiate = TRUE} is not relevant for {.fun broom.helpers::tidy_ggpredict}.") # nolint
-
-  if (isFALSE(conf.int)) conf.level <- NA
-  res <- x %>%
-    ggeffects::ggpredict(ci.lvl = conf.level, ...) %>%
-    purrr::map(
-      ~ .x %>%
-        dplyr::as_tibble() %>%
-        dplyr::mutate(x = as.character(.data$x))
-    ) %>%
-    dplyr::bind_rows() %>%
-    dplyr::rename(
-      variable = "group",
-      term = "x",
-      estimate = "predicted"
-    )
-  attr(res, "coefficients_type") <- "conditional_effects"
-  res
 }
