@@ -63,6 +63,11 @@ test_that("tidy_add_estimate_to_reference_rows() works for basic models", {
     sum(res$estimate[!res$reference_row & res$variable == "trt"], na.rm = TRUE) * -1
   )
 
+  # p-values and confidence intervals should be populated
+  expect_false(any(is.na(res$p.value)))
+  expect_false(any(is.na(res$conf.low)))
+  expect_false(any(is.na(res$conf.high)))
+
   res2 <- mod %>%
     tidy_and_attach(exponentiate = TRUE) %>%
     tidy_add_estimate_to_reference_rows()
@@ -102,6 +107,34 @@ test_that("tidy_add_estimate_to_reference_rows() works for basic models", {
     res$estimate[res$reference_row & res$variable == "trt" & !is.na(res$reference_row)],
     sum(res$estimate[!res$reference_row & res$variable == "trt"], na.rm = TRUE) * -1
   )
+
+  skip_on_cran()
+  mod <- lm(
+    Petal.Length ~ Petal.Width + Species,
+    data = iris,
+    contrasts = list(Species = contr.sum)
+  )
+
+  expect_error(
+    res <- mod %>%
+      tidy_and_attach() %>%
+      tidy_add_estimate_to_reference_rows(),
+    NA
+  )
+  expect_error(
+    res2 <- mod %>%
+      tidy_and_attach(conf.level = .8) %>%
+      tidy_add_estimate_to_reference_rows(),
+    NA
+  )
+  expect_error(
+    res3 <- mod %>%
+      tidy_and_attach() %>%
+      tidy_add_estimate_to_reference_rows(conf.level = .8),
+    NA
+  )
+  expect_false(res$conf.low[5] == res2$conf.low[5])
+  expect_true(res2$conf.low[5] == res3$conf.low[5])
 })
 
 

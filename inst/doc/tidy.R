@@ -252,7 +252,6 @@ tibble::tribble(
 ## ---- echo=FALSE--------------------------------------------------------------
 supported_models %>%
   dplyr::rename_with(stringr::str_to_title) %>%
-  dplyr::arrange(Model) %>%
   gt::gt() %>%
   gt::fmt_markdown(columns = everything()) %>%
   gt::tab_options(column_labels.font.weight = "bold") %>%
