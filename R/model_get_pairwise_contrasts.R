@@ -11,34 +11,42 @@
 #' @param conf.level level of confidence for confidence intervals
 #' @param emmeans_args list of additional parameter to pass to
 #' [emmeans::emmeans()] when computing pairwise contrasts
+#' @details
+#' `r lifecycle::badge("experimental")`
+#' For `pscl::zeroinfl()` and `pscl::hurdle()` models, pairwise contrasts are
+#' computed separately for each component, using `mode = "count"` and
+#' `mode = "zero"` (see documentation of `emmeans`) and a component column
+#' is added to the results. This support is still experimental.
 #' @family model_helpers
 #' @export
 #' @examplesIf interactive()
 #' if (.assert_package("emmeans", boolean = TRUE)) {
 #'   mod <- lm(Sepal.Length ~ Species, data = iris)
 #'   mod %>% model_get_pairwise_contrasts(variables = "Species")
-#'   mod %>% model_get_pairwise_contrasts(variables = "Species", contrasts_adjust = "none")
+#'   mod %>%
+#'     model_get_pairwise_contrasts(
+#'       variables = "Species",
+#'       contrasts_adjust = "none"
+#'     )
 #' }
 model_get_pairwise_contrasts <- function(
-  model,
-  variables,
-  pairwise_reverse = TRUE,
-  contrasts_adjust = NULL,
-  conf.level = .95,
-  emmeans_args = list()
-) {
+    model,
+    variables,
+    pairwise_reverse = TRUE,
+    contrasts_adjust = NULL,
+    conf.level = .95,
+    emmeans_args = list()) {
   UseMethod("model_get_pairwise_contrasts")
 }
 
 #' @export
 model_get_pairwise_contrasts.default <- function(
-  model,
-  variables,
-  pairwise_reverse = TRUE,
-  contrasts_adjust = NULL,
-  conf.level = .95,
-  emmeans_args = list()
-) {
+    model,
+    variables,
+    pairwise_reverse = TRUE,
+    contrasts_adjust = NULL,
+    conf.level = .95,
+    emmeans_args = list()) {
   purrr::map_df(
     variables,
     .get_pairwise_contrasts_one_var,
@@ -51,13 +59,12 @@ model_get_pairwise_contrasts.default <- function(
 }
 
 .get_pairwise_contrasts_one_var <- function(
-  model,
-  variable,
-  pairwise_reverse = TRUE,
-  contrasts_adjust = NULL,
-  conf.level = .95,
-  emmeans_args = list()
-) {
+    model,
+    variable,
+    pairwise_reverse = TRUE,
+    contrasts_adjust = NULL,
+    conf.level = .95,
+    emmeans_args = list()) {
   .assert_package(
     "emmeans",
     fn = "broom.helpers::model_get_pairwise_contrasts()"
@@ -66,12 +73,13 @@ model_get_pairwise_contrasts.default <- function(
   emmeans_args$specs <- variable
   e <- do.call(emmeans::emmeans, emmeans_args)
 
-  if (is.null(contrasts_adjust))
+  if (is.null(contrasts_adjust)) {
     e <- e %>%
       graphics::pairs(reverse = pairwise_reverse)
-  else
+  } else {
     e <- e %>%
       graphics::pairs(reverse = pairwise_reverse, adjust = contrasts_adjust)
+  }
 
   r <- e %>%
     dplyr::as_tibble()
@@ -99,3 +107,17 @@ model_get_pairwise_contrasts.default <- function(
   r$contrasts_type <- "pairwise"
   r %>% dplyr::relocate(dplyr::all_of("variable"))
 }
+
+#' @export
+model_get_pairwise_contrasts.zeroinfl <- function(model, ...) {
+  cli::cli_abort(c(
+    "Pairwise contrasts are not supported for multi-components model.",
+    "Use directly {.fn emmeans::emmeans}."
+  ))
+}
+
+#' @export
+model_get_pairwise_contrasts.hurdle <- model_get_pairwise_contrasts.zeroinfl
+
+#' @export
+model_get_pairwise_contrasts.betareg <- model_get_pairwise_contrasts.zeroinfl

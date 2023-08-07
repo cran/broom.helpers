@@ -22,7 +22,7 @@ model_get_xlevels.default <- function(model) {
   if (is.null(xlevels)) {
     xlevels <- tryCatch(
       stats::.getXlevels(
-        stats::terms(model),
+        model %>% model_get_terms(),
         model %>% model_get_model_frame()
       ),
       error = function(e) {
@@ -39,8 +39,9 @@ model_get_xlevels.default <- function(model) {
     dplyr::filter(.data$var_class == "logical") %>%
     purrr::pluck("variable")
 
-  for (v in setdiff(log_vars, names(xlevels)))
+  for (v in setdiff(log_vars, names(xlevels))) {
     xlevels[[v]] <- c("FALSE", "TRUE")
+  }
 
   xlevels
 }

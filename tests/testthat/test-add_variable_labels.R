@@ -79,7 +79,9 @@ test_that("tidy_add_variable_labels() works for basic models", {
 
   # model with only an interaction term
   mod <- lm(age ~ factor(response):marker, gtsummary::trial)
-  res <- mod %>% tidy_and_attach() %>% tidy_add_variable_labels()
+  res <- mod %>%
+    tidy_and_attach() %>%
+    tidy_add_variable_labels()
   expect_equivalent(
     res$var_label,
     c(
@@ -96,8 +98,10 @@ test_that("tidy_add_variable_labels() works for basic models", {
     tidy_add_variable_labels(labels = c("grade:trt" = "custom label"))
   expect_equivalent(
     res$var_label,
-    c("(Intercept)", "Age", "Grade", "Grade", "Chemotherapy Treatment",
-      "custom label", "custom label")
+    c(
+      "(Intercept)", "Age", "Grade", "Grade", "Chemotherapy Treatment",
+      "custom label", "custom label"
+    )
   )
 })
 
@@ -215,8 +219,8 @@ test_that("tidy_add_variable_labels() works with lme4::glmer", {
   )
   expect_error(
     mod %>%
-      tidy_and_attach(tidy_fun = broom.mixed::tidy)
-    %>% tidy_add_variable_labels(),
+      tidy_and_attach(tidy_fun = broom.mixed::tidy) %>%
+      tidy_add_variable_labels(),
     NA
   )
 })
@@ -263,6 +267,7 @@ test_that("tidy_add_variable_labels() works with survival::survreg", {
 })
 
 test_that("tidy_add_variable_labels() works with nnet::multinom", {
+  skip_if_not_installed("nnet")
   mod <- nnet::multinom(grade ~ stage + marker + age, data = gtsummary::trial, trace = FALSE)
   expect_error(mod %>% tidy_and_attach() %>% tidy_add_variable_labels(), NA)
 })
@@ -293,7 +298,7 @@ test_that("tidy_add_variable_labels() works with MASS::polr", {
 
 
 test_that("tidy_add_variable_labels() works with geepack::geeglm", {
-  skip_if(packageVersion("geepack") < 1.3)
+  skip_if(packageVersion("geepack") < "1.3")
 
   df <- geepack::dietox
   df$Cu <- as.factor(df$Cu)

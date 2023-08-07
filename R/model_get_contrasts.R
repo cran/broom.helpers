@@ -19,10 +19,12 @@ model_get_contrasts <- function(model) {
 model_get_contrasts.default <- function(model) {
   # we try 3 different approaches in a row
   mc <- model_get_contrasts_1(model)
-  if (is.null(mc))
+  if (is.null(mc)) {
     mc <- model_get_contrasts_2(model)
-  if (is.null(mc))
+  }
+  if (is.null(mc)) {
     mc <- model_get_contrasts_3(model)
+  }
   mc
 }
 
@@ -57,4 +59,28 @@ model_get_contrasts_3 <- function(model) {
 #' @rdname model_get_contrasts
 model_get_contrasts.model_fit <- function(model) {
   model_get_contrasts(model$fit)
+}
+
+#' @export
+#' @rdname model_get_contrasts
+model_get_contrasts.zeroinfl <- function(model) {
+  mc <- model_get_contrasts_1(model)
+  res <- mc$count
+  # merging/combining the two lists
+  for (v in names(mc$zero)) res[[v]] <- mc$zero[[v]]
+  res
+}
+
+#' @export
+#' @rdname model_get_contrasts
+model_get_contrasts.hurdle <- model_get_contrasts.zeroinfl
+
+#' @export
+#' @rdname model_get_contrasts
+model_get_contrasts.betareg <- function(model) {
+  mc <- model_get_contrasts_1(model)
+  res <- mc$mean
+  # merging/combining the two lists
+  for (v in names(mc$precision)) res[[v]] <- mc$precision[[v]]
+  res
 }

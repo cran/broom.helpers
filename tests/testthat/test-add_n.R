@@ -188,6 +188,7 @@ test_that("tidy_add_n() works with survival::survreg", {
 })
 
 test_that("tidy_add_n() works with nnet::multinom", {
+  skip_if_not_installed("nnet")
   skip_on_cran()
   mod <- nnet::multinom(grade ~ stage + marker + age, data = gtsummary::trial, trace = FALSE)
   expect_error(mod %>% tidy_and_attach() %>% tidy_add_n(), NA)
@@ -216,7 +217,6 @@ test_that("tidy_add_n() works with nnet::multinom", {
     mod %>% tidy_and_attach() %>% tidy_add_n(),
     NA
   )
-
 })
 
 test_that("tidy_add_n() works with survey::svyglm", {
@@ -245,7 +245,7 @@ test_that("tidy_add_n() works with MASS::polr", {
 
 
 test_that("tidy_add_n() works with geepack::geeglm", {
-  skip_if(packageVersion("geepack") < 1.3)
+  skip_if(packageVersion("geepack") < "1.3")
 
   df <- geepack::dietox
   df$Cu <- as.factor(df$Cu)

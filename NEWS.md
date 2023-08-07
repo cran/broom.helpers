@@ -1,3 +1,15 @@
+# broom.helpers 1.14.0
+
+**New features**
+
+- support for `MASS::contr.sdif()` contrasts (#230)
+- support for `pscl::zeroinfl()` and `pscl::hurdle()` models (#232)
+- support for `betareg::betareg()` models (#234)
+
+**Fix**
+
+- input of `packageVersion()` should be a character string (#225)
+
 # broom.helpers 1.13.0
 
 **New features**

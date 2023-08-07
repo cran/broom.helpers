@@ -72,8 +72,10 @@ test_that("tidy_add_term_labels() works for basic models", {
   )
 
   # model with an interaction term only
-  mod <- lm(age ~ factor(response) : marker, gtsummary::trial)
-  res <- mod %>% tidy_and_attach() %>% tidy_add_term_labels()
+  mod <- lm(age ~ factor(response):marker, gtsummary::trial)
+  res <- mod %>%
+    tidy_and_attach() %>%
+    tidy_add_term_labels()
   expect_equivalent(
     res$label,
     c("(Intercept)", "0 * Marker Level (ng/mL)", "1 * Marker Level (ng/mL)")
@@ -146,9 +148,11 @@ test_that("tidy_add_term_labels() correctly manages interaction terms", {
     tidy_add_term_labels()
   expect_equivalent(
     res$label,
-    c("(Intercept)", "T1", "T2", "T3", "T4", "T1 * Months to Death/Censor",
+    c(
+      "(Intercept)", "T1", "T2", "T3", "T4", "T1 * Months to Death/Censor",
       "T2 * Months to Death/Censor", "T3 * Months to Death/Censor",
-      "T4 * Months to Death/Censor")
+      "T4 * Months to Death/Censor"
+    )
   )
 
   # complex case: model with no intercept and sum contrasts
@@ -163,8 +167,10 @@ test_that("tidy_add_term_labels() correctly manages interaction terms", {
     tidy_add_term_labels()
   expect_equivalent(
     res$label,
-    c("setosa", "versicolor", "virginica", "Petal.Width",
-      "setosa * Petal.Width", "versicolor * Petal.Width")
+    c(
+      "setosa", "versicolor", "virginica", "Petal.Width",
+      "setosa * Petal.Width", "versicolor * Petal.Width"
+    )
   )
 })
 
@@ -182,6 +188,44 @@ test_that("tidy_add_term_labels() works with poly or helmert contrasts", {
   )
 })
 
+test_that("tidy_add_term_labels() works with sdif contrasts", {
+  skip_if_not_installed("MASS")
+  mod <- glm(
+    response ~ stage + grade,
+    gtsummary::trial,
+    family = binomial,
+    contrasts = list(stage = MASS::contr.sdif, grade = MASS::contr.sdif)
+  )
+  # should not produce an error
+  expect_error(
+    res <- mod %>% tidy_and_attach() %>% tidy_add_term_labels(),
+    NA
+  )
+  expect_equivalent(
+    res$label,
+    c(
+      `(Intercept)` = "(Intercept)", `stageT2-T1` = "T2 - T1",
+      `stageT3-T2` = "T3 - T2", `stageT4-T3` = "T4 - T3",
+      `gradeII-I` = "II - I", `gradeIII-II` = "III - II"
+    )
+  )
+  # should not produce an error
+  expect_error(
+    res <- mod %>%
+      tidy_and_attach(exponentiate = TRUE) %>%
+      tidy_add_term_labels(),
+    NA
+  )
+  expect_equivalent(
+    res$label,
+    c(
+      `(Intercept)` = "(Intercept)", `stageT2-T1` = "T2 / T1",
+      `stageT3-T2` = "T3 / T2", `stageT4-T3` = "T4 / T3",
+      `gradeII-I` = "II / I", `gradeIII-II` = "III / II"
+    )
+  )
+})
+
 
 test_that("tidy_add_term_labels() works with variables having non standard name", {
   skip_on_cran()
@@ -196,14 +240,18 @@ test_that("tidy_add_term_labels() works with variables having non standard name"
     tidy_add_term_labels()
   expect_equivalent(
     res$label,
-    c("(Intercept)", "Marker Level (ng/mL)", "I", "II", "III", "0",
-      "1", "Marker Level (ng/mL) * II", "Marker Level (ng/mL) * III")
+    c(
+      "(Intercept)", "Marker Level (ng/mL)", "I", "II", "III", "0",
+      "1", "Marker Level (ng/mL) * II", "Marker Level (ng/mL) * III"
+    )
   )
   expect_equivalent(
     res$variable,
-    c("(Intercept)", "marker", "grade of kids...", "grade of kids...", "grade of kids...",
+    c(
+      "(Intercept)", "marker", "grade of kids...", "grade of kids...", "grade of kids...",
       "factor(`?? treatment ++ response ...`)", "factor(`?? treatment ++ response ...`)",
-      "marker:grade of kids...", "marker:grade of kids...")
+      "marker:grade of kids...", "marker:grade of kids..."
+    )
   )
 
   res <- gtsummary::trial %>%
@@ -312,7 +360,7 @@ test_that("tidy_add_term_labels() works with MASS::polr", {
 
 test_that("tidy_add_term_labels() works with geepack::geeglm", {
   skip_on_cran()
-  skip_if(packageVersion("geepack") < 1.3)
+  skip_if(packageVersion("geepack") < "1.3")
 
   df <- geepack::dietox
   df$Cu <- as.factor(df$Cu)

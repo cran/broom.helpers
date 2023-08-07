@@ -7,7 +7,7 @@ test_that("model_get_n() works for basic models", {
   )
 
   mod <- lm(
-    Sepal.Length ~ log(Sepal.Width) + Petal.Length ^2,
+    Sepal.Length ~ log(Sepal.Width) + Petal.Length^2,
     iris
   )
   res <- mod %>% model_get_n()
@@ -29,7 +29,8 @@ test_that("model_get_n() works for basic models", {
   )
 
   mod <- glm(
-    Survived ~ Class * Age + Sex, data = Titanic %>% as.data.frame(),
+    Survived ~ Class * Age + Sex,
+    data = Titanic %>% as.data.frame(),
     weights = Freq, family = binomial
   )
   res <- mod %>% model_get_n()
@@ -50,7 +51,8 @@ test_that("model_get_n() works for basic models", {
       n_dead = sum(n * (Survived == "No"))
     )
   mod <- glm(
-    cbind(n_survived, n_dead) ~ Class * Age + Sex, data = d,
+    cbind(n_survived, n_dead) ~ Class * Age + Sex,
+    data = d,
     family = binomial,
     y = FALSE # should work even if y is not returned
   )
@@ -103,7 +105,8 @@ test_that("model_get_n() works for basic models", {
 
   # interaction only terms
   mod <- glm(
-    Survived ~ Class : Age, data = Titanic %>% as.data.frame(),
+    Survived ~ Class:Age,
+    data = Titanic %>% as.data.frame(),
     weights = Freq, family = binomial
   )
   res <- mod %>% model_get_n()
@@ -143,15 +146,19 @@ test_that("model_get_n() works with different contrasts", {
   if ("stage2" %in% names(coef(mod))) {
     expect_equivalent(
       res$term,
-      c("(Intercept)", "stage2", "stage3", "stage4", "grade1", "grade2",
-        "trt1", "grade1:trt1", "grade2:trt1", "stage1", "grade3", "trt2")
+      c(
+        "(Intercept)", "stage2", "stage3", "stage4", "grade1", "grade2",
+        "trt1", "grade1:trt1", "grade2:trt1", "stage1", "grade3", "trt2"
+      )
     )
   } else {
     expect_equivalent(
       res$term,
-      c("(Intercept)", "stageT2", "stageT3", "stageT4", "gradeI", "gradeII",
+      c(
+        "(Intercept)", "stageT2", "stageT3", "stageT4", "gradeI", "gradeII",
         "trtDrug A", "gradeI:trtDrug A", "gradeII:trtDrug A", "stageT1",
-        "gradeIII", "trtDrug B")
+        "gradeIII", "trtDrug B"
+      )
     )
   }
   expect_equivalent(
@@ -169,8 +176,10 @@ test_that("model_get_n() works with different contrasts", {
   expect_equivalent(names(res), c("term", "n_obs", "n_event"))
   expect_equivalent(
     res$term,
-    c("(Intercept)", "stage.L", "stage.Q", "stage.C", "grade1", "grade2",
-      "trt1", "grade1:trt1", "grade2:trt1", "trt2")
+    c(
+      "(Intercept)", "stage.L", "stage.Q", "stage.C", "grade1", "grade2",
+      "trt1", "grade1:trt1", "grade2:trt1", "trt2"
+    )
   )
   expect_equivalent(
     res$n_obs,
@@ -186,9 +195,11 @@ test_that("model_get_n() works with stats::poly()", {
   expect_equivalent(names(res), c("term", "n_obs"))
   expect_equivalent(
     res$term,
-    c("(Intercept)", "poly(Sepal.Width, 3)1", "poly(Sepal.Width, 3)2",
+    c(
+      "(Intercept)", "poly(Sepal.Width, 3)1", "poly(Sepal.Width, 3)2",
       "poly(Sepal.Width, 3)3", "poly(Petal.Length, 2)1",
-      "poly(Petal.Length, 2)2")
+      "poly(Petal.Length, 2)2"
+    )
   )
   expect_equivalent(
     res$n_obs,
@@ -257,14 +268,17 @@ test_that("model_get_n() works with survival::survreg", {
 })
 
 test_that("model_get_n() works with nnet::multinom", {
+  skip_if_not_installed("nnet")
   skip_on_cran()
   mod <- nnet::multinom(grade ~ stage + marker + age, data = gtsummary::trial, trace = FALSE)
   expect_error(res <- mod %>% model_get_n(), NA)
   expect_equivalent(names(res), c("y.level", "term", "n_obs", "n_event"))
   expect_equivalent(
     res$y.level,
-    c("II", "II", "II", "II", "II", "II", "II", "III", "III", "III",
-      "III", "III", "III", "III")
+    c(
+      "II", "II", "II", "II", "II", "II", "II", "III", "III", "III",
+      "III", "III", "III", "III"
+    )
   )
   expect_equivalent(
     res$n_obs,
@@ -293,7 +307,8 @@ test_that("model_get_n() works with survey::svyglm", {
   expect_equivalent(names(res), c("term", "n_obs", "n_event", "exposure"))
 
   df <- survey::svydesign(
-    ~ 1, weights = ~ Freq,
+    ~1,
+    weights = ~Freq,
     data = as.data.frame(Titanic) %>% dplyr::filter(Freq > 0)
   )
   mod <- survey::svyglm(Survived ~ Class + Age * Sex, df, family = quasibinomial)
@@ -332,7 +347,7 @@ test_that("model_get_n() works with MASS::polr", {
 
 test_that("model_get_n() works with geepack::geeglm", {
   skip_on_cran()
-  skip_if(packageVersion("geepack") < 1.3)
+  skip_if(packageVersion("geepack") < "1.3")
 
   df <- geepack::dietox
   df$Cu <- as.factor(df$Cu)

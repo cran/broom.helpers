@@ -19,7 +19,7 @@ library(dplyr)
 
 # paged_table() was introduced only in rmarkdwon v1.2
 print_table <- function(tab) {
-  if (packageVersion("rmarkdown") >= 1.2) {
+  if (packageVersion("rmarkdown") >= "1.2") {
     rmarkdown::paged_table(tab)
   } else {
     knitr::kable(tab)
@@ -204,13 +204,13 @@ model_logit %>%
 # nolint start
 tibble::tribble(
   ~Column, ~Function, ~Description,
-  "original_term", "`tidy_disambiguate_terms()`", "Original term before disambiguation. This columns is added only when disambiguation is needed (i.e. for mixed models). Also used for \"multgee\" models.",
+  "original_term", "`tidy_disambiguate_terms()`, `tidy_multgee()` or `tidy_zeroinfl()`", "Original term before disambiguation. This columns is added only when disambiguation is needed (i.e. for mixed models). Also used for \"multgee\", \"zeroinfl\" and \"hurdle\" models.",
   "variable", "`tidy_identify_variables()`", "String of variable names from the model. For categorical variables and polynomial terms defined with `stats::poly()`, terms belonging to the variable are identified.",
   "var_class", "`tidy_identify_variables()`", "Class of the variable.",
   "var_type", "`tidy_identify_variables()`", "One of \"intercept\", \"continuous\", \"dichotomous\", \"categorical\", \"interaction\", \"ran_pars\" or \"ran_vals\"",
   "var_nlevels", "`tidy_identify_variables()`", "Number of original levels for categorical variables",
   "contrasts", "`tidy_add_contrasts()`", "Contrasts used for categorical variables.<br /><em>Require \"variable\" column. If needed, will automatically apply `tidy_identify_variables()`.</em>",
-  "contrasts_type", "`tidy_add_contrasts()`", "Type of contrasts (\"treatment\", \"sum\", \"poly\", \"helmert\", \"other\" or \"no.contrast\"). \"pairwise\ is used for pairwise contrasts computed with `tidy_add_pairwise_contrasts()`.",
+  "contrasts_type", "`tidy_add_contrasts()`", "Type of contrasts (\"treatment\", \"sum\", \"poly\", \"helmert\", \"sdif\", \"other\" or \"no.contrast\"). \"pairwise\ is used for pairwise contrasts computed with `tidy_add_pairwise_contrasts()`.",
   "reference_row", "`tidy_add_reference_rows()`", "Logical indicating if a row is a reference row for categorical variables using a treatment or a sum contrast. Is equal to `NA` for variables who do not have a reference row.<br /><em>Require \"contrasts\" column. If needed, will automatically apply `tidy_add_contrasts()`.<br />`tidy_add_reference_rows()` will not populate the label of the reference term. It is therefore better to apply `tidy_add_term_labels()` after `tidy_add_reference_rows()` rather than before.</em>",
   "var_label", "`tidy_add_variable_labels()`", "String of variable labels from the model. Columns labelled with the `labelled` package are retained. It is possible to pass a custom label for an interaction term with the `labels` argument. <br /><em>Require \"variable\" column. If needed, will automatically apply `tidy_identify_variables()`.",
   "label", "`tidy_add_term_labels()`", "String of term labels based on (1) labels provided in `labels` argument if provided; (2) factor levels for categorical variables coded with treatment, SAS or sum contrasts; (3) variable labels when there is only one term per variable; and (4) term name otherwise.<br /><em>Require \"variable_label\" column. If needed, will automatically apply `tidy_add_variable_labels()`.<br />Require \"contrasts\" column. If needed, will automatically apply `tidy_add_contrasts()`.</em>",
@@ -219,7 +219,7 @@ tibble::tribble(
   "n_event", "`tidy_add_n()`", "Number of events (for binomial and multinomial logistic models, Poisson and Cox models)",
   "exposure", "`tidy_add_n()`", "Exposure time (for Poisson and Cox models)"
 ) %>%
-    gt::gt() %>%
+  gt::gt() %>%
   gt::fmt_markdown(columns = everything()) %>%
   gt::tab_options(
     column_labels.font.weight = "bold"
@@ -241,9 +241,10 @@ tibble::tribble(
   "Custom term labels passed to `tidy_add_term_labels()`",
   "N_obs", "`tidy_add_n()`", "Total number of observations",
   "N_event", "`tidy_add_n()`", "Total number of events",
-  "Exposure", "`tidy_add_n()`", "Total of exposure time"
+  "Exposure", "`tidy_add_n()`", "Total of exposure time",
+  "component", "`tidy_zeroinfl()`", "`component` argument passed to `tidy_zeroinfl()`"
 ) %>%
-    gt::gt() %>%
+  gt::gt() %>%
   gt::fmt_markdown(columns = everything()) %>%
   gt::tab_options(column_labels.font.weight = "bold") %>%
   gt::opt_row_striping() %>%

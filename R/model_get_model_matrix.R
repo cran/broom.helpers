@@ -43,8 +43,11 @@ model_get_model_matrix.default <- function(model, ...) {
 model_get_model_matrix.multinom <- function(model, ...) {
   mm <- stats::model.matrix(model, ...)
   co <- stats::coef(model)
-  if (is.matrix(co)) colnames(mm) <- colnames(co)
-  else colnames(mm) <- names(co)
+  if (is.matrix(co)) {
+    colnames(mm) <- colnames(co)
+  } else {
+    colnames(mm) <- names(co)
+  }
   mm
 }
 
@@ -57,7 +60,9 @@ model_get_model_matrix.clm <- function(model, ...) {
 #' @export
 #' @rdname model_get_model_matrix
 model_get_model_matrix.brmsfit <- function(model, ...) {
-  model %>% brms::standata() %>% purrr::pluck("X")
+  model %>%
+    brms::standata() %>%
+    purrr::pluck("X")
 }
 
 #' @export
@@ -114,5 +119,14 @@ model_get_model_matrix.LORgee <- function(model, ...) {
   stats::model.matrix.default(
     model,
     data = stats::model.frame(model)
+  )
+}
+
+#' @export
+#' @rdname model_get_model_matrix
+model_get_model_matrix.betareg <- function(model, ...) {
+  stats::model.matrix.default(
+    model %>% model_get_terms(),
+    data = model %>% model_get_model_frame()
   )
 }

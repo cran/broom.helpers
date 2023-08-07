@@ -12,8 +12,10 @@ test_that("tidy_add_contrast() works for basic models", {
   )
   expect_equivalent(
     res$contrasts_type,
-    c(NA, "treatment", "treatment", "treatment", "treatment", "treatment",
-      "treatment")
+    c(
+      NA, "treatment", "treatment", "treatment", "treatment", "treatment",
+      "treatment"
+    )
   )
 
   mod <- glm(response ~ stage + grade + trt, gtsummary::trial,
@@ -68,14 +70,18 @@ test_that("tidy_add_contrast() works for basic models", {
     tidy_add_contrasts()
   expect_equivalent(
     res$contrasts,
-    c(NA, "contr.treatment(base=3)", "contr.treatment(base=3)", "contr.treatment(base=3)",
+    c(
+      NA, "contr.treatment(base=3)", "contr.treatment(base=3)", "contr.treatment(base=3)",
       "contr.treatment(base=2)", "contr.treatment(base=2)", "contr.SAS",
-      "custom")
+      "custom"
+    )
   )
   expect_equivalent(
     res$contrasts_type,
-    c(NA, "treatment", "treatment", "treatment", "treatment", "treatment",
-      "treatment", "other")
+    c(
+      NA, "treatment", "treatment", "treatment", "treatment", "treatment",
+      "treatment", "other"
+    )
   )
 
   mod <- glm(response ~ stage + grade + trt, gtsummary::trial,
@@ -96,6 +102,32 @@ test_that("tidy_add_contrast() works for basic models", {
     res$contrasts_type,
     c(NA, "sum", "sum", "sum", "helmert", "helmert", "treatment")
   )
+
+
+  skip_if_not_installed("MASS")
+  library(MASS)
+  mod <- glm(
+    response ~ stage + grade + trt,
+    gtsummary::trial,
+    family = binomial,
+    contrasts = list(
+      stage = contr.sdif,
+      grade = contr.sdif(3),
+      trt = "contr.sdif"
+    )
+  )
+  res <- mod %>%
+    tidy_and_attach() %>%
+    tidy_add_contrasts()
+  expect_equivalent(
+    res$contrasts,
+    c(NA, "contr.sdif", "contr.sdif", "contr.sdif", "contr.sdif",
+      "contr.sdif", "contr.sdif")
+  )
+  expect_equivalent(
+    res$contrasts_type,
+    c(NA, "sdif", "sdif", "sdif", "sdif", "sdif", "sdif")
+  )
 })
 
 test_that("test tidy_add_contrasts() checks", {
@@ -114,11 +146,15 @@ test_that("test tidy_add_contrasts() checks", {
 
 test_that("tidy_add_contrasts() works with no intercept models", {
   mod <- glm(response ~ stage + grade - 1, data = gtsummary::trial, family = binomial)
-  res <- mod %>% tidy_and_attach() %>% tidy_add_contrasts()
+  res <- mod %>%
+    tidy_and_attach() %>%
+    tidy_add_contrasts()
   expect_equivalent(
     res$contrasts_type,
-    c("no.contrast", "no.contrast", "no.contrast", "no.contrast",
-      "treatment", "treatment")
+    c(
+      "no.contrast", "no.contrast", "no.contrast", "no.contrast",
+      "treatment", "treatment"
+    )
   )
 })
 
@@ -193,6 +229,7 @@ test_that("tidy_add_contrasts() works with survival::survreg", {
 })
 
 test_that("tidy_add_contrasts() works with nnet::multinom", {
+  skip_if_not_installed("nnet")
   mod <- nnet::multinom(grade ~ stage + marker + age, data = gtsummary::trial, trace = FALSE)
   expect_error(mod %>% tidy_and_attach() %>% tidy_add_contrasts(), NA)
 
@@ -240,7 +277,7 @@ test_that("tidy_add_contrasts() works with MASS::polr", {
 
 
 test_that("tidy_add_contrasts() works with geepack::geeglm", {
-  skip_if(packageVersion("geepack") < 1.3)
+  skip_if(packageVersion("geepack") < "1.3")
 
   df <- geepack::dietox
   df$Cu <- as.factor(df$Cu)
