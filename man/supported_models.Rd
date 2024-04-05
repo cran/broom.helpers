@@ -20,7 +20,7 @@ Listing of Supported Models
 \section{Supported models}{
 \tabular{ll}{
    model \tab notes \cr
-   \code{betareg::betareg()} \tab Use \code{tidy_parameters()} as \code{tidy_fun} with \code{component} argument to control with coefficients to return. \verb{broom::tidy() does not support the }exponentiate\verb{argument for betareg models, use}tidy_parameters() instead.` \cr
+   \code{betareg::betareg()} \tab Use \code{tidy_parameters()} as \code{tidy_fun} with \code{component} argument to control with coefficients to return. \code{broom::tidy()} does not support the \code{exponentiate} argument for betareg models, use \code{tidy_parameters()} instead. \cr
    \code{biglm::bigglm()} \tab  \cr
    \code{biglmm::bigglm()} \tab  \cr
    \code{brms::brm()} \tab \code{broom.mixed} package required \cr
@@ -41,7 +41,8 @@ Listing of Supported Models
    \code{MASS::glm.nb()} \tab  \cr
    \code{MASS::polr()} \tab  \cr
    \code{mgcv::gam()} \tab Use default tidier \code{broom::tidy()} for smooth terms only, or \code{gtsummary::tidy_gam()} to include parametric terms \cr
-   \code{mice::mira} \tab Limited support. If \code{mod} is a \code{mira} object, use \code{tidy_plus_plus(mod, tidy_fun = function(x, ...) mice::pool(x) \%>\% mice::tidy(...))} \cr
+   \code{mice::mira} \tab Limited support. If \code{mod} is a \code{mira} object, use \code{tidy_fun = function(x, ...) {mice::pool(x) \%>\% mice::tidy(...)}} \cr
+   \code{mmrm::mmrm()} \tab  \cr
    \code{multgee::nomLORgee()} \tab Experimental support. Use \code{tidy_multgee()} as \code{tidy_fun}. \cr
    \code{multgee::ordLORgee()} \tab Experimental support. Use \code{tidy_multgee()} as \code{tidy_fun}. \cr
    \code{nnet::multinom()} \tab  \cr
@@ -59,6 +60,7 @@ Listing of Supported Models
    \code{survey::svycoxph()} \tab  \cr
    \code{survey::svyglm()} \tab  \cr
    \code{survey::svyolr()} \tab  \cr
+   \code{survival::cch()} \tab `Experimental support. \cr
    \code{survival::clogit()} \tab  \cr
    \code{survival::coxph()} \tab  \cr
    \code{survival::survreg()} \tab  \cr

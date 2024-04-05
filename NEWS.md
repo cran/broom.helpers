@@ -1,3 +1,22 @@
+# broom.helpers 1.15.0
+
+**New supported models**
+
+- support for `mmrm::mmrm()` models (#228)
+- support for `survival::cch()` models (#242)
+
+**New features**
+
+- new `tidy_post_fun` argument in `tidy_plus_plus()` (#235)
+
+**Fix**
+
+- fix the order of the levels of categorical variables in the results of
+  `tidy_marginal_predictions()` (#245)
+- fix in `supported_models`
+- bug fix when using `tidy_parameters()` for mixed models (#238)
+- bug fix for `survey::svyglm()` models with replicate weights (#240)
+
 # broom.helpers 1.14.0
 
 **New features**

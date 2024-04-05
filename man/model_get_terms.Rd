@@ -20,6 +20,8 @@ model_get_terms(model)
 \method{model_get_terms}{model_fit}(model)
 
 \method{model_get_terms}{betareg}(model)
+
+\method{model_get_terms}{betareg}(model)
 }
 \arguments{
 \item{model}{a model object}
@@ -45,15 +47,15 @@ Other model_helpers:
 \code{\link{model_get_assign}()},
 \code{\link{model_get_coefficients_type}()},
 \code{\link{model_get_contrasts}()},
+\code{\link{model_get_model}()},
 \code{\link{model_get_model_frame}()},
 \code{\link{model_get_model_matrix}()},
-\code{\link{model_get_model}()},
-\code{\link{model_get_nlevels}()},
 \code{\link{model_get_n}()},
+\code{\link{model_get_nlevels}()},
 \code{\link{model_get_offset}()},
 \code{\link{model_get_pairwise_contrasts}()},
-\code{\link{model_get_response_variable}()},
 \code{\link{model_get_response}()},
+\code{\link{model_get_response_variable}()},
 \code{\link{model_get_weights}()},
 \code{\link{model_get_xlevels}()},
 \code{\link{model_identify_variables}()},

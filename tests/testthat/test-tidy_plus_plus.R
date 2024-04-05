@@ -178,6 +178,10 @@ test_that("tidy_plus_plus() works with lme4::lmer", {
     res <- mod %>% tidy_plus_plus(),
     NA
   )
+  expect_error(
+    res <- mod %>% tidy_plus_plus(tidy_fun = tidy_parameters),
+    NA
+  )
 })
 
 
@@ -309,6 +313,17 @@ test_that("tidy_plus_plus() works with survey::svyglm", {
   mod <- survey::svyglm(response ~ age + grade * trt, df, family = quasibinomial)
   expect_error(
     res <- mod %>% tidy_plus_plus(),
+    NA
+  )
+
+  df_rep <- survey::as.svrepdesign(df)
+  mod_rep <- survey::svyglm(
+    response ~ age + grade * trt,
+    df_rep,
+    family = quasibinomial
+  )
+  expect_error(
+    res <- mod_rep %>% tidy_plus_plus(),
     NA
   )
 })
@@ -895,3 +910,62 @@ test_that("tidy_plus_plus() works with betareg::betareg() models", {
   )
   expect_equal(nrow(res), 24)
 })
+
+test_that("tidy_plus_plus() works with mmrm::mmrm() models", {
+  skip_on_cran()
+  skip_if_not_installed("mmrm")
+
+  m1 <- mmrm::mmrm(FEV1 ~ SEX + ARMCD + AVISIT + us(AVISIT | USUBJID), data = mmrm::fev_data)
+  m2 <- mmrm::mmrm(FEV1 ~ SEX + ARMCD * AVISIT + us(AVISIT | USUBJID), data = mmrm::fev_data)
+
+  expect_error(
+    res <- m1 %>% tidy_plus_plus(intercept = TRUE),
+    NA
+  )
+  expect_equal(nrow(res), 9)
+
+  expect_error(
+    res <- m1 %>% tidy_plus_plus(add_header_rows = TRUE),
+    NA
+  )
+  expect_equal(nrow(res), 11)
+
+  expect_error(
+    res <- m2 %>% tidy_plus_plus(intercept = TRUE),
+    NA
+  )
+  expect_equal(nrow(res), 12)
+
+  expect_error(
+    res <- m2 %>% tidy_plus_plus(add_header_rows = TRUE),
+    NA
+  )
+  expect_equal(nrow(res), 15)
+})
+
+test_that("tidy_post_fun argument of `tidy_plus_plus()`", {
+  mod <- lm(Petal.Length ~ Petal.Width + Species, iris)
+
+  add_titi <- function(x) {
+    x$titi <- "titi"
+    x
+  }
+  expect_error(
+    res <- tidy_plus_plus(mod, tidy_post_fun = add_titi),
+    NA
+  )
+  expect_true("titi" %in% names(res))
+  expect_true(res$titi[1] == "titi")
+
+  keep_2_rows <- function(res) {
+    head(res, n = 2)
+  }
+  expect_error(
+    res <- tidy_plus_plus(mod, tidy_post_fun = keep_2_rows),
+    NA
+  )
+  expect_equal(nrow(res), 2L)
+})
+
+# test for survival::cch() not working, model.frame() not working
+# in the test_that environment for this type of model

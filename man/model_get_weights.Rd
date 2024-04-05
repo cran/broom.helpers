@@ -4,6 +4,7 @@
 \alias{model_get_weights}
 \alias{model_get_weights.default}
 \alias{model_get_weights.svyglm}
+\alias{model_get_weights.svrepglm}
 \alias{model_get_weights.model_fit}
 \title{Get sampling weights used by a model}
 \usage{
@@ -13,6 +14,8 @@ model_get_weights(model)
 
 \method{model_get_weights}{svyglm}(model)
 
+\method{model_get_weights}{svrepglm}(model)
+
 \method{model_get_weights}{model_fit}(model)
 }
 \arguments{
@@ -20,6 +23,11 @@ model_get_weights(model)
 }
 \description{
 This function does not cover \code{lavaan} models (\code{NULL} is returned).
+}
+\note{
+For class \code{svrepglm} objects (GLM on a survey object with replicate weights),
+it will return the original sampling weights of the data, not the replicate
+weights.
 }
 \examples{
 mod <- lm(Sepal.Length ~ Sepal.Width, iris)
@@ -58,15 +66,15 @@ Other model_helpers:
 \code{\link{model_get_assign}()},
 \code{\link{model_get_coefficients_type}()},
 \code{\link{model_get_contrasts}()},
+\code{\link{model_get_model}()},
 \code{\link{model_get_model_frame}()},
 \code{\link{model_get_model_matrix}()},
-\code{\link{model_get_model}()},
-\code{\link{model_get_nlevels}()},
 \code{\link{model_get_n}()},
+\code{\link{model_get_nlevels}()},
 \code{\link{model_get_offset}()},
 \code{\link{model_get_pairwise_contrasts}()},
-\code{\link{model_get_response_variable}()},
 \code{\link{model_get_response}()},
+\code{\link{model_get_response_variable}()},
 \code{\link{model_get_terms}()},
 \code{\link{model_get_xlevels}()},
 \code{\link{model_identify_variables}()},

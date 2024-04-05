@@ -1,4 +1,4 @@
-## ---- include = FALSE---------------------------------------------------------
+## ----include = FALSE----------------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -45,7 +45,7 @@ tidy_forest <-
   tidy_remove_intercept()
 tidy_forest
 
-## ---- warning=FALSE-----------------------------------------------------------
+## ----warning=FALSE------------------------------------------------------------
 tidy_forest %>%
   mutate(
     plot_label = paste(var_label, label, sep = ":") %>%
@@ -200,7 +200,7 @@ model_logit %>%
   tidy_add_pairwise_contrasts(keep_model_terms = TRUE) %>%
   print_table()
 
-## ---- echo=FALSE--------------------------------------------------------------
+## ----echo=FALSE---------------------------------------------------------------
 # nolint start
 tibble::tribble(
   ~Column, ~Function, ~Description,
@@ -228,7 +228,7 @@ tibble::tribble(
   gt::tab_style("vertical-align:top; font-size: 12px;", gt::cells_body())
 # nolint end
 
-## ---- echo=FALSE--------------------------------------------------------------
+## ----echo=FALSE---------------------------------------------------------------
 tibble::tribble(
   ~Attribute, ~Function, ~Description,
   "exponentiate", "`tidy_and_attach()`", "Indicates if estimates were exponentiated",
@@ -250,7 +250,7 @@ tibble::tribble(
   gt::opt_row_striping() %>%
   gt::tab_style("vertical-align:top; font-size: 12px;", gt::cells_body())
 
-## ---- echo=FALSE--------------------------------------------------------------
+## ----echo=FALSE---------------------------------------------------------------
 supported_models %>%
   dplyr::rename_with(stringr::str_to_title) %>%
   gt::gt() %>%
