@@ -53,10 +53,11 @@ as \code{glm(y ~ x + offset(log(z)), family = poisson)}). Observed rates could b
 obtained with \code{n_event / exposure}.
 
 For Cox models (\code{\link[survival:coxph]{survival::coxph()}}), an individual could be coded
-with several observations (several rows). \code{n_obs} will correspond to the weighted
-number of observations which could be different from the number of
-individuals. \code{tidy_add_n()} will also compute a (weighted) number of events
-(\code{n_event}) according to the definition of the \code{\link[survival:Surv]{survival::Surv()}} object.
+with several observations (several rows). \code{n_obs} will correspond to the
+weighted number of observations which could be different from the number of
+individuals \code{n_ind}. \code{tidy_add_n()} will also compute a (weighted) number of
+events (\code{n_event}) according to the definition of the \code{\link[survival:Surv]{survival::Surv()}}
+object.
 Exposure time is also returned in \code{exposure} column. It is equal to the
 (weighted) sum of the time variable if only one variable time is passed to
 \code{\link[survival:Surv]{survival::Surv()}}, and to the (weighted) sum of \code{time2 - time} if two time
@@ -65,60 +66,58 @@ variables are defined in \code{\link[survival:Surv]{survival::Surv()}}.
 For competing risk regression models (\code{\link[tidycmprsk:crr]{tidycmprsk::crr()}}), \code{n_event} takes
 into account only the event of interest defined by \code{failcode.}
 
-The (weighted) total number of observations (\code{N_obs}), of events (\code{N_event}) and
-of exposure time (\code{Exposure}) are stored as attributes of the returned
-tibble.
+The (weighted) total number of observations (\code{N_obs}), of individuals
+(\code{N_ind}), of events (\code{N_event}) and of exposure time (\code{Exposure}) are
+stored as attributes of the returned tibble.
 }
 \examples{
 \dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-lm(Petal.Length ~ ., data = iris) \%>\%
-  tidy_and_attach() \%>\%
+lm(Petal.Length ~ ., data = iris) |>
+  tidy_and_attach() |>
   tidy_add_n()
 
-lm(Petal.Length ~ ., data = iris, contrasts = list(Species = contr.sum)) \%>\%
-  tidy_and_attach() \%>\%
+lm(Petal.Length ~ ., data = iris, contrasts = list(Species = contr.sum)) |>
+  tidy_and_attach() |>
   tidy_add_n()
 
-lm(Petal.Length ~ ., data = iris, contrasts = list(Species = contr.poly)) \%>\%
-  tidy_and_attach() \%>\%
+lm(Petal.Length ~ ., data = iris, contrasts = list(Species = contr.poly)) |>
+  tidy_and_attach() |>
   tidy_add_n()
 
-lm(Petal.Length ~ poly(Sepal.Length, 2), data = iris) \%>\%
-  tidy_and_attach() \%>\%
+lm(Petal.Length ~ poly(Sepal.Length, 2), data = iris) |>
+  tidy_and_attach() |>
   tidy_add_n()
 
-df <- Titanic \%>\%
-  dplyr::as_tibble() \%>\%
+df <- Titanic |>
+  dplyr::as_tibble() |>
   dplyr::mutate(Survived = factor(Survived, c("No", "Yes")))
 
-df \%>\%
-  glm(
-    Survived ~ Class + Age + Sex,
-    data = ., weights = .$n, family = binomial,
-    contrasts = list(Age = contr.sum, Class = "contr.helmert")
-  ) \%>\%
-  tidy_and_attach() \%>\%
+glm(
+  Survived ~ Class + Age + Sex,
+  data = df, weights = df$n, family = binomial,
+  contrasts = list(Age = contr.sum, Class = "contr.helmert")
+) |>
+  tidy_and_attach() |>
   tidy_add_n()
 
-df \%>\%
-  glm(
-    Survived ~ Class * (Age:Sex),
-    data = ., weights = .$n, family = binomial,
-    contrasts = list(Age = contr.sum, Class = "contr.helmert")
-  ) \%>\%
-  tidy_and_attach() \%>\%
+glm(
+  Survived ~ Class * (Age:Sex),
+  data = df, weights = df$n, family = binomial,
+  contrasts = list(Age = contr.sum, Class = "contr.helmert")
+) |>
+  tidy_and_attach() |>
   tidy_add_n()
 
-glm(response ~ age + grade * trt, gtsummary::trial, family = poisson) \%>\%
-  tidy_and_attach() \%>\%
+glm(response ~ age + grade * trt, gtsummary::trial, family = poisson) |>
+  tidy_and_attach() |>
   tidy_add_n()
 
 glm(
   response ~ trt * grade + offset(log(ttdeath)),
   gtsummary::trial,
   family = poisson
-) \%>\%
-  tidy_and_attach() \%>\%
+) |>
+  tidy_and_attach() |>
   tidy_add_n()
 \dontshow{\}) # examplesIf}
 }

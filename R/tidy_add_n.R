@@ -40,10 +40,11 @@
 #' obtained with `n_event / exposure`.
 #'
 #' For Cox models ([survival::coxph()]), an individual could be coded
-#' with several observations (several rows). `n_obs` will correspond to the weighted
-#' number of observations which could be different from the number of
-#' individuals. `tidy_add_n()` will also compute a (weighted) number of events
-#' (`n_event`) according to the definition of the [survival::Surv()] object.
+#' with several observations (several rows). `n_obs` will correspond to the
+#' weighted number of observations which could be different from the number of
+#' individuals `n_ind`. `tidy_add_n()` will also compute a (weighted) number of
+#' events (`n_event`) according to the definition of the [survival::Surv()]
+#' object.
 #' Exposure time is also returned in `exposure` column. It is equal to the
 #' (weighted) sum of the time variable if only one variable time is passed to
 #' [survival::Surv()], and to the (weighted) sum of `time2 - time` if two time
@@ -52,63 +53,61 @@
 #' For competing risk regression models ([tidycmprsk::crr()]), `n_event` takes
 #' into account only the event of interest defined by `failcode.`
 #'
-#' The (weighted) total number of observations (`N_obs`), of events (`N_event`) and
-#' of exposure time (`Exposure`) are stored as attributes of the returned
-#' tibble.
+#' The (weighted) total number of observations (`N_obs`), of individuals
+#' (`N_ind`), of events (`N_event`) and of exposure time (`Exposure`) are
+#' stored as attributes of the returned tibble.
 #'
 #' @param x a tidy tibble
 #' @param model the corresponding model, if not attached to `x`
 #' @export
 #' @family tidy_helpers
 #' @examplesIf interactive()
-#' lm(Petal.Length ~ ., data = iris) %>%
-#'   tidy_and_attach() %>%
+#' lm(Petal.Length ~ ., data = iris) |>
+#'   tidy_and_attach() |>
 #'   tidy_add_n()
 #'
-#' lm(Petal.Length ~ ., data = iris, contrasts = list(Species = contr.sum)) %>%
-#'   tidy_and_attach() %>%
+#' lm(Petal.Length ~ ., data = iris, contrasts = list(Species = contr.sum)) |>
+#'   tidy_and_attach() |>
 #'   tidy_add_n()
 #'
-#' lm(Petal.Length ~ ., data = iris, contrasts = list(Species = contr.poly)) %>%
-#'   tidy_and_attach() %>%
+#' lm(Petal.Length ~ ., data = iris, contrasts = list(Species = contr.poly)) |>
+#'   tidy_and_attach() |>
 #'   tidy_add_n()
 #'
-#' lm(Petal.Length ~ poly(Sepal.Length, 2), data = iris) %>%
-#'   tidy_and_attach() %>%
+#' lm(Petal.Length ~ poly(Sepal.Length, 2), data = iris) |>
+#'   tidy_and_attach() |>
 #'   tidy_add_n()
 #'
-#' df <- Titanic %>%
-#'   dplyr::as_tibble() %>%
+#' df <- Titanic |>
+#'   dplyr::as_tibble() |>
 #'   dplyr::mutate(Survived = factor(Survived, c("No", "Yes")))
 #'
-#' df %>%
-#'   glm(
-#'     Survived ~ Class + Age + Sex,
-#'     data = ., weights = .$n, family = binomial,
-#'     contrasts = list(Age = contr.sum, Class = "contr.helmert")
-#'   ) %>%
-#'   tidy_and_attach() %>%
+#' glm(
+#'   Survived ~ Class + Age + Sex,
+#'   data = df, weights = df$n, family = binomial,
+#'   contrasts = list(Age = contr.sum, Class = "contr.helmert")
+#' ) |>
+#'   tidy_and_attach() |>
 #'   tidy_add_n()
 #'
-#' df %>%
-#'   glm(
-#'     Survived ~ Class * (Age:Sex),
-#'     data = ., weights = .$n, family = binomial,
-#'     contrasts = list(Age = contr.sum, Class = "contr.helmert")
-#'   ) %>%
-#'   tidy_and_attach() %>%
+#' glm(
+#'   Survived ~ Class * (Age:Sex),
+#'   data = df, weights = df$n, family = binomial,
+#'   contrasts = list(Age = contr.sum, Class = "contr.helmert")
+#' ) |>
+#'   tidy_and_attach() |>
 #'   tidy_add_n()
 #'
-#' glm(response ~ age + grade * trt, gtsummary::trial, family = poisson) %>%
-#'   tidy_and_attach() %>%
+#' glm(response ~ age + grade * trt, gtsummary::trial, family = poisson) |>
+#'   tidy_and_attach() |>
 #'   tidy_add_n()
 #'
 #' glm(
 #'   response ~ trt * grade + offset(log(ttdeath)),
 #'   gtsummary::trial,
 #'   family = poisson
-#' ) %>%
-#'   tidy_and_attach() %>%
+#' ) |>
+#'   tidy_and_attach() |>
 #'   tidy_add_n()
 tidy_add_n <- function(x, model = tidy_get_model(x)) {
   if (is.null(model)) {
@@ -121,24 +120,27 @@ tidy_add_n <- function(x, model = tidy_get_model(x)) {
   .attributes <- .save_attributes(x)
 
   if (any(c("n_obs", "n_event", "exposure") %in% names(x))) {
-    x <- x %>% dplyr::select(-dplyr::any_of(c("n_obs", "n_event", "exposure")))
+    x <- x |> dplyr::select(-dplyr::any_of(c("n_obs", "n_event", "exposure")))
   }
 
-  n <- model %>% model_get_n()
+  n <- model |> model_get_n()
   if (is.null(n)) {
     x$n <- NA_real_
   } else {
     if ("y.level" %in% names(n)) {
-      x <- x %>%
+      x <- x |>
         dplyr::left_join(n, by = c("y.level", "term"))
     } else {
-      x <- x %>%
+      x <- x |>
         dplyr::left_join(n, by = "term")
     }
   }
 
   if (!is.null(attr(n, "N_obs"))) {
     .attributes$N_obs <- attr(n, "N_obs")
+  }
+  if (!is.null(attr(n, "N_ind"))) {
+    .attributes$N_ind <- attr(n, "N_ind")
   }
   if (!is.null(attr(n, "N_event"))) {
     .attributes$N_event <- attr(n, "N_event")
@@ -147,6 +149,6 @@ tidy_add_n <- function(x, model = tidy_get_model(x)) {
     .attributes$Exposure <- attr(n, "Exposure")
   }
 
-  x %>%
+  x |>
     tidy_attach_model(model = model, .attributes = .attributes)
 }

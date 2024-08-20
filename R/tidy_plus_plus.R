@@ -24,6 +24,9 @@
 #' @param exponentiate logical indicating whether or not to exponentiate the
 #' coefficient estimates. This is typical for logistic, Poisson and Cox models,
 #' but a bad idea if there is no log or logit link; defaults to `FALSE`.
+#' @param model_matrix_attr logical indicating whether model frame and model
+#' matrix should be added as attributes of `model` (respectively named
+#' `"model_frame"` and `"model_matrix"`) and passed through
 #' @param variable_labels a named list or a named vector of custom variable labels
 #' @param term_labels a named list or a named vector of custom term labels
 #' @param interaction_sep separator for interaction terms
@@ -74,15 +77,15 @@
 #' within `tidy_fun` if, for any reason, you need to access the source model.
 #' @family tidy_helpers
 #' @examplesIf interactive()
-#' ex1 <- lm(Sepal.Length ~ Sepal.Width + Species, data = iris) %>%
+#' ex1 <- lm(Sepal.Length ~ Sepal.Width + Species, data = iris) |>
 #'   tidy_plus_plus()
 #' ex1
 #'
-#' df <- Titanic %>%
-#'   dplyr::as_tibble() %>%
+#' df <- Titanic |>
+#'   dplyr::as_tibble() |>
 #'   dplyr::mutate(
 #'     Survived = factor(Survived, c("No", "Yes"))
-#'   ) %>%
+#'   ) |>
 #'   labelled::set_variable_labels(
 #'     Class = "Passenger's class",
 #'     Sex = "Gender"
@@ -91,7 +94,7 @@
 #'   Survived ~ Class + Age * Sex,
 #'   data = df, weights = df$n,
 #'   family = binomial
-#' ) %>%
+#' ) |>
 #'   tidy_plus_plus(
 #'     exponentiate = TRUE,
 #'     add_reference_rows = FALSE,
@@ -109,7 +112,7 @@
 #'         stage = contr.treatment(4, base = 3),
 #'         grade = contr.sum
 #'       )
-#'     ) %>%
+#'     ) |>
 #'     tidy_plus_plus(
 #'       exponentiate = TRUE,
 #'       variable_labels = c(age = "Age (in years)"),
@@ -126,6 +129,7 @@ tidy_plus_plus <- function(model,
                            conf.int = TRUE,
                            conf.level = .95,
                            exponentiate = FALSE,
+                           model_matrix_attr = TRUE,
                            variable_labels = NULL,
                            term_labels = NULL,
                            interaction_sep = " * ",
@@ -151,33 +155,34 @@ tidy_plus_plus <- function(model,
                            quiet = FALSE,
                            strict = FALSE,
                            ...) {
-  res <- model %>%
+  res <- model |>
     tidy_and_attach(
       tidy_fun = tidy_fun,
       conf.int = conf.int,
       conf.level = conf.level,
       exponentiate = exponentiate,
+      model_matrix_attr = model_matrix_attr,
       ...
     )
 
   if (disambiguate_terms) {
-    res <- res %>%
+    res <- res |>
       tidy_disambiguate_terms(sep = disambiguate_sep, quiet = quiet)
   }
 
-  res <- res %>%
-    tidy_identify_variables(quiet = quiet) %>%
+  res <- res |>
+    tidy_identify_variables(quiet = quiet) |>
     tidy_add_contrasts()
 
   if (add_reference_rows) {
-    res <- res %>% tidy_add_reference_rows(
+    res <- res |> tidy_add_reference_rows(
       no_reference_row = {{ no_reference_row }},
       quiet = quiet
     )
   }
 
   if (add_pairwise_contrasts) {
-    res <- res %>%
+    res <- res |>
       tidy_add_pairwise_contrasts(
         variables = {{ pairwise_variables }},
         keep_model_terms = keep_model_terms,
@@ -188,16 +193,16 @@ tidy_plus_plus <- function(model,
   }
 
   if (add_reference_rows && add_estimate_to_reference_rows) {
-    res <- res %>%
+    res <- res |>
       tidy_add_estimate_to_reference_rows(exponentiate = exponentiate, quiet = quiet)
   }
 
-  res <- res %>%
+  res <- res |>
     tidy_add_variable_labels(
       labels = variable_labels,
       interaction_sep = interaction_sep,
       quiet = quiet
-    ) %>%
+    ) |>
     tidy_add_term_labels(
       labels = term_labels,
       interaction_sep = interaction_sep,
@@ -206,7 +211,7 @@ tidy_plus_plus <- function(model,
     )
 
   if (add_header_rows) {
-    res <- res %>%
+    res <- res |>
       tidy_add_header_rows(
         show_single_row = {{ show_single_row }},
         strict = strict, quiet = quiet
@@ -214,24 +219,24 @@ tidy_plus_plus <- function(model,
   }
 
   if (add_n) {
-    res <- res %>% tidy_add_n()
+    res <- res |> tidy_add_n()
   }
 
   if (!intercept) {
-    res <- res %>% tidy_remove_intercept()
+    res <- res |> tidy_remove_intercept()
   }
 
-  res <- res %>%
+  res <- res |>
     tidy_select_variables(
       include = {{ include }},
-    ) %>%
+    ) |>
     tidy_add_coefficients_type()
 
   if (!is.null(tidy_post_fun))
-    res <- res %>% tidy_post_fun()
+    res <- res |> tidy_post_fun()
 
   if (!keep_model) {
-    res <- res %>% tidy_detach_model()
+    res <- res |> tidy_detach_model()
   }
 
   res

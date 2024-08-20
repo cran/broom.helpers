@@ -18,19 +18,22 @@
 #' @param exponentiate logical indicating whether or not to exponentiate the
 #' coefficient estimates. This is typical for logistic, Poisson and Cox models,
 #' but a bad idea if there is no log or logit link; defaults to `FALSE`
+#' @param model_matrix_attr logical indicating whether model frame and model
+#' matrix should be added as attributes of `model` (respectively named
+#' `"model_frame"` and `"model_matrix"`) and passed through
 #' @param .attributes named list of additional attributes to be attached to `x`
 #' @param ... other arguments passed to `tidy_fun()`
 #' @family tidy_helpers
 #' @examples
 #' mod <- lm(Sepal.Length ~ Sepal.Width + Species, data = iris)
-#' tt <- mod %>%
+#' tt <- mod |>
 #'   tidy_and_attach(conf.int = TRUE)
 #' tt
 #' tidy_get_model(tt)
 #' @export
 tidy_attach_model <- function(x, model, .attributes = NULL) {
-  x <- x %>%
-    dplyr::as_tibble() %>%
+  x <- x |>
+    dplyr::as_tibble() |>
     .order_tidy_columns()
   class(x) <- c("broom.helpers", class(x))
   model <- model_get_model(model)
@@ -55,7 +58,8 @@ tidy_attach_model <- function(x, model, .attributes = NULL) {
 #' @export
 tidy_and_attach <- function(
     model, tidy_fun = tidy_with_broom_or_parameters,
-    conf.int = TRUE, conf.level = .95, exponentiate = FALSE, ...) {
+    conf.int = TRUE, conf.level = .95, exponentiate = FALSE,
+    model_matrix_attr = TRUE, ...) {
   # exponentiate cannot be used with lm models
   # but broom will not produce an error and will return unexponentiated estimates
   if (identical(class(model), "lm") && exponentiate) {
@@ -64,6 +68,12 @@ tidy_and_attach <- function(
 
   tidy_args <- list(...)
   tidy_args$x <- model
+
+  if (model_matrix_attr) {
+    attr(model, "model_frame") <- model |> model_get_model_frame()
+    attr(model, "model_matrix") <- model |> model_get_model_matrix()
+  }
+
   tidy_args$conf.int <- conf.int
   if (conf.int) tidy_args$conf.level <- conf.level
   tidy_args$exponentiate <- exponentiate
@@ -71,7 +81,7 @@ tidy_and_attach <- function(
   # test if exponentiate can be passed to tidy_fun, and if tidy_fun runs without error
   result <-
     tryCatch(
-      do.call(tidy_fun, tidy_args) %>%
+      do.call(tidy_fun, tidy_args) |>
         tidy_attach_model(
           model,
           .attributes = list(
@@ -90,7 +100,7 @@ tidy_and_attach <- function(
           {
             tidy_args$exponentiate <- NULL
             xx <-
-              do.call(tidy_fun, tidy_args) %>%
+              do.call(tidy_fun, tidy_args) |>
               tidy_attach_model(
                 model,
                 .attributes = list(exponentiate = FALSE, conf.level = conf.level)
@@ -110,8 +120,8 @@ tidy_and_attach <- function(
               "was misspelled, does not exist, is not compatible with your object, ",
               "or was missing necessary arguments (e.g. {.code conf.level=} ",
               "or {.code conf.int=}). See error message below."
-            ) %>%
-              stringr::str_wrap() %>%
+            ) |>
+              stringr::str_wrap() |>
               cli_alert_danger()
             cli::cli_abort(as.character(e), call = NULL)
           }

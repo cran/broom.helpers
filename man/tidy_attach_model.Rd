@@ -15,6 +15,7 @@ tidy_and_attach(
   conf.int = TRUE,
   conf.level = 0.95,
   exponentiate = FALSE,
+  model_matrix_attr = TRUE,
   ...
 )
 
@@ -40,6 +41,10 @@ interval in the tidied output}
 coefficient estimates. This is typical for logistic, Poisson and Cox models,
 but a bad idea if there is no log or logit link; defaults to \code{FALSE}}
 
+\item{model_matrix_attr}{logical indicating whether model frame and model
+matrix should be added as attributes of \code{model} (respectively named
+\code{"model_frame"} and \code{"model_matrix"}) and passed through}
+
 \item{...}{other arguments passed to \code{tidy_fun()}}
 }
 \description{
@@ -56,7 +61,7 @@ Use \code{tidy_get_model()} to get the model attached to the tibble and
 }
 \examples{
 mod <- lm(Sepal.Length ~ Sepal.Width + Species, data = iris)
-tt <- mod \%>\%
+tt <- mod |>
   tidy_and_attach(conf.int = TRUE)
 tt
 tidy_get_model(tt)

@@ -10,6 +10,7 @@ tidy_plus_plus(
   conf.int = TRUE,
   conf.level = 0.95,
   exponentiate = FALSE,
+  model_matrix_attr = TRUE,
   variable_labels = NULL,
   term_labels = NULL,
   interaction_sep = " * ",
@@ -49,6 +50,10 @@ tidy_plus_plus(
 \item{exponentiate}{logical indicating whether or not to exponentiate the
 coefficient estimates. This is typical for logistic, Poisson and Cox models,
 but a bad idea if there is no log or logit link; defaults to \code{FALSE}.}
+
+\item{model_matrix_attr}{logical indicating whether model frame and model
+matrix should be added as attributes of \code{model} (respectively named
+\code{"model_frame"} and \code{"model_matrix"}) and passed through}
 
 \item{variable_labels}{a named list or a named vector of custom variable labels}
 
@@ -149,15 +154,15 @@ within \code{tidy_fun} if, for any reason, you need to access the source model.
 }
 \examples{
 \dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-ex1 <- lm(Sepal.Length ~ Sepal.Width + Species, data = iris) \%>\%
+ex1 <- lm(Sepal.Length ~ Sepal.Width + Species, data = iris) |>
   tidy_plus_plus()
 ex1
 
-df <- Titanic \%>\%
-  dplyr::as_tibble() \%>\%
+df <- Titanic |>
+  dplyr::as_tibble() |>
   dplyr::mutate(
     Survived = factor(Survived, c("No", "Yes"))
-  ) \%>\%
+  ) |>
   labelled::set_variable_labels(
     Class = "Passenger's class",
     Sex = "Gender"
@@ -166,7 +171,7 @@ ex2 <- glm(
   Survived ~ Class + Age * Sex,
   data = df, weights = df$n,
   family = binomial
-) \%>\%
+) |>
   tidy_plus_plus(
     exponentiate = TRUE,
     add_reference_rows = FALSE,
@@ -184,7 +189,7 @@ if (.assert_package("gtsummary", boolean = TRUE)) {
         stage = contr.treatment(4, base = 3),
         grade = contr.sum
       )
-    ) \%>\%
+    ) |>
     tidy_plus_plus(
       exponentiate = TRUE,
       variable_labels = c(age = "Age (in years)"),
