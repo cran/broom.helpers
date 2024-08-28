@@ -6,7 +6,8 @@
 #' with the same data structure or `NULL` if it is not possible
 #' to compute model frame from `model`.
 #'
-#' @param model a model object
+#' @param model (a model object, e.g. `glm`)\cr
+#' A model object.
 #' @export
 #' @family model_helpers
 #' @seealso [stats::model.frame()]
@@ -34,12 +35,25 @@ model_get_model_frame.default <- function(model) {
 #' @export
 #' @rdname model_get_model_frame
 model_get_model_frame.coxph <- function(model) {
-  tryCatch(
-    stats::model.frame.default(model),
+  # variable labels not available, but accessible through model.frame.default()
+  # however, model.frame.default() does not return (id) and the correct number
+  # of lines
+  res <- tryCatch(
+    stats::model.frame(model),
     error = function(e) {
       NULL
     }
   )
+
+  if (!is.null(res)) {
+    res <- res |>
+      labelled::copy_labels_from(
+        stats::model.frame.default(model),
+        .strict = FALSE
+      )
+  }
+
+  res
 }
 
 #' @export

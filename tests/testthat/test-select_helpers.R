@@ -1,44 +1,3 @@
-test_that("select_helpers: .select_to_varnames", {
-  expect_error(
-    .select_to_varnames(mpg)
-  )
-
-  expect_equal(
-    .select_to_varnames(select = vars(hp, mpg), data = mtcars),
-    dplyr::select(mtcars, hp, mpg) |> colnames()
-  )
-
-  expect_equal(
-    .select_to_varnames(select = mpg, data = mtcars),
-    dplyr::select(mtcars, mpg) |> colnames()
-  )
-
-  expect_equal(
-    .select_to_varnames(select = "mpg", data = mtcars),
-    dplyr::select(mtcars, "mpg") |> colnames()
-  )
-
-  expect_equal(
-    .select_to_varnames(select = c("hp", "mpg"), data = mtcars),
-    dplyr::select(mtcars, c("hp", "mpg")) |> colnames()
-  )
-
-  expect_equal(
-    .select_to_varnames(select = c(hp, mpg), data = mtcars),
-    dplyr::select(mtcars, c(hp, mpg)) |> colnames()
-  )
-
-  expect_equal(
-    .select_to_varnames(select = NULL, data = mtcars),
-    NULL
-  )
-
-  expect_equal(
-    .select_to_varnames(select = vars(dplyr::everything(), -mpg), data = mtcars),
-    dplyr::select(mtcars, dplyr::everything(), -mpg) |> colnames()
-  )
-})
-
 test_that("select_helpers: all_*()", {
   mod <- glm(response ~ age * trt + grade, gtsummary::trial, family = binomial)
   mod_tidy <- tidy_and_attach(mod)
@@ -256,191 +215,44 @@ test_that("select_helpers: tidy_add_variable_labels", {
   )
 })
 
-test_that("select_helpers: .select_to_varnames", {
-  expect_error(
-    .select_to_varnames(c(mpg, hp), data = mtcars, select_single = TRUE)
-  )
-})
+test_that("select helpers are consistent with gtsummary", {
+  skip_on_cran()
+  skip_if_not_installed("gtsummary")
 
-test_that("select_helpers: .generic_selector ", {
   mod <- glm(response ~ age * trt + grade, gtsummary::trial, family = binomial)
+  x <- mod |>
+    tidy_and_attach() |>
+    tidy_identify_variables() |>
+    tidy_add_contrasts() |>
+    scope_tidy()
 
-  expect_error(
-    tidy_and_attach(mod) |>
-      tidy_identify_variables() |>
-      tidy_add_variable_labels(labels = all_contrasts("helmert") ~ "HELMERT!")
-  )
-
-  expect_error(
-    all_continuous()
+  expect_equal(
+    x |> dplyr::select(broom.helpers::all_categorical()) |> colnames(),
+    x |> dplyr::select(gtsummary::all_categorical()) |> colnames()
   )
 
   expect_equal(
-    .var_info_to_df(letters) |> names(),
-    letters
-  )
-})
-
-test_that("select_helpers: .formula_list_to_named_list ", {
-  mod <- glm(response ~ age * trt + grade, gtsummary::trial, family = binomial)
-  tidy_mod <- tidy_plus_plus(mod)
-
-  expect_error(
-    .formula_list_to_named_list(list(age ~ "Age", TRUE), var_info = tidy_mod)
-  )
-
-  expect_error(
-    .formula_list_to_named_list(list(age ~ "Age"),
-      var_info = tidy_mod,
-      type_check = is.character
-    ),
-    NA
-  )
-  expect_error(
-    .formula_list_to_named_list(list(age ~ "Age"),
-      var_info = tidy_mod,
-      type_check = is.logical
-    )
-  )
-  expect_error(
-    .formula_list_to_named_list(letters,
-      var_info = tidy_mod,
-      type_check = is.logical
-    )
+    x |> dplyr::select(broom.helpers::all_continuous()) |> colnames(),
+    x |> dplyr::select(gtsummary::all_continuous()) |> colnames()
   )
 
   expect_equal(
-    .formula_list_to_named_list(age ~ "Age", var_info = tidy_mod),
-    list(age = "Age")
+    x |> dplyr::select(broom.helpers::all_contrasts("treatment")) |> colnames(),
+    x |> dplyr::select(gtsummary::all_contrasts("treatment")) |> colnames()
   )
 
   expect_equal(
-    .formula_list_to_named_list(~"Age", var_info = tidy_mod),
-    list(age = "Age", trt = "Age", grade = "Age", `age:trt` = "Age")
+    x |> dplyr::select(broom.helpers::all_dichotomous()) |> colnames(),
+    x |> dplyr::select(gtsummary::all_dichotomous()) |> colnames()
   )
+
   expect_equal(
-    .formula_list_to_named_list(list(~"Age", `age:trt` = "interact"), var_info = tidy_mod),
-    list(age = "Age", trt = "Age", grade = "Age", `age:trt` = "interact")
+    x |> dplyr::select(broom.helpers::all_interaction()) |> colnames(),
+    x |> dplyr::select(gtsummary::all_interaction()) |> colnames()
   )
 
-  expect_error(
-    .formula_list_to_named_list(list(age ~ "Age"),
-      var_info = tidy_mod, type_check = is.logical,
-      arg_name = "label"
-    )
-  )
-  expect_error(
-    .formula_list_to_named_list(list(age ~ "Age"),
-      var_info = tidy_mod,
-      type_check = is.logical, arg_name = "label",
-      type_check_msg = "Age msg error"
-    ),
-    "Age msg error"
-  )
-  expect_error(
-    .formula_list_to_named_list("Age",
-      var_info = tidy_mod,
-      type_check = rlang::is_string,
-      arg_name = "label"
-    ),
-    "Did you mean `everything"
-  )
-  expect_error(
-    .formula_list_to_named_list("Age",
-      var_info = tidy_mod,
-      type_check = rlang::is_string,
-      arg_name = "label"
-    ),
-    "Age"
-  )
-  expect_error(
-    .formula_list_to_named_list(~"Age",
-      var_info = tidy_mod,
-      type_check = rlang::is_string,
-      arg_name = "label"
-    ),
-    NA
-  )
-
-  expect_error(
-    .formula_list_to_named_list(list(age ~ NULL),
-      var_info = tidy_mod,
-      type_check = is.logical
-    ),
-    NA
-  )
-  expect_error(
-    .formula_list_to_named_list(list(age ~ NULL),
-      var_info = tidy_mod,
-      type_check = is.logical, null_allowed = FALSE
-    )
-  )
-  expect_error(
-    select_test <-
-      .formula_list_to_named_list(
-        list(response = "Response", dplyr::contains("age") ~ "?AGE?", trt = NULL),
-        data = gtsummary::trial,
-        arg_name = "label",
-        type_check = rlang::is_string,
-        type_check_msg = NULL,
-        null_allowed = TRUE
-      ),
-    NA
-  )
   expect_equal(
-    select_test,
-    list(response = "Response", age = "?AGE?", stage = "?AGE?", trt = NULL)
-  )
-
-  expect_error(
-    .formula_list_to_named_list(
-      list(response = "Response", dplyr::contains("age") ~ "?AGE?", trt = NULL),
-      data = gtsummary::trial,
-      arg_name = "label",
-      type_check = rlang::is_string,
-      type_check_msg = NULL,
-      null_allowed = FALSE
-    )
-  )
-
-  expect_error(
-    .formula_list_to_named_list(
-      list(response = "Response", dplyr::contains("age") ~ "?AGE?", trt = NULL),
-      data = gtsummary::trial,
-      arg_name = "label",
-      select_single = TRUE
-    )
-  )
-  expect_error(
-    .formula_list_to_named_list(
-      list(response = "Response", dplyr::contains("age") ~ "?AGE?", trt = NULL),
-      data = gtsummary::trial,
-      select_single = TRUE
-    )
-  )
-})
-
-
-test_that("select_helpers: .scope_var_info", {
-  mod_tidy <- lm(mpg ~ hp, mtcars) |> tidy_and_attach()
-
-  # can scope a data frame with no variable
-  expect_error(
-    .scope_var_info(mod_tidy |> tidy_identify_variables()), NA
-  )
-
-  # no error when non-data frame is scoped
-  expect_error(
-    .scope_var_info(mod_tidy$term), NA
-  )
-})
-
-
-test_that("select_helpers: .var_info_to_df ", {
-  mod_tidy <- lm(mpg ~ hp, mtcars) |> tidy_and_attach()
-
-  # can convert a tibble without a var_class column
-  expect_error(
-    .var_info_to_df(mod_tidy |> tidy_identify_variables() |> dplyr::select(-var_class)), NA
+    x |> dplyr::select(broom.helpers::all_intercepts()) |> colnames(),
+    x |> dplyr::select(gtsummary::all_intercepts()) |> colnames()
   )
 })
