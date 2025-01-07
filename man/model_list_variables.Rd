@@ -11,28 +11,32 @@ model_list_variables(
   model,
   labels = NULL,
   only_variable = FALSE,
-  add_var_type = FALSE
+  add_var_type = FALSE,
+  instrumental_suffix = " (instrumental)"
 )
 
 \method{model_list_variables}{default}(
   model,
   labels = NULL,
   only_variable = FALSE,
-  add_var_type = FALSE
+  add_var_type = FALSE,
+  instrumental_suffix = " (instrumental)"
 )
 
 \method{model_list_variables}{lavaan}(
   model,
   labels = NULL,
   only_variable = FALSE,
-  add_var_type = FALSE
+  add_var_type = FALSE,
+  instrumental_suffix = " (instrumental)"
 )
 
 \method{model_list_variables}{logitr}(
   model,
   labels = NULL,
   only_variable = FALSE,
-  add_var_type = FALSE
+  add_var_type = FALSE,
+  instrumental_suffix = " (instrumental)"
 )
 }
 \arguments{
@@ -48,6 +52,10 @@ If \code{TRUE}, will return only "variable" column.}
 
 \item{add_var_type}{(\code{logical})\cr
 If \code{TRUE}, add \code{var_nlevels} and \code{var_type} columns.}
+
+\item{instrumental_suffix}{(\code{string})\cr
+Suffix added to variable labels for instrumental variables (\code{fixest} models).
+\code{NULL} to add nothing.}
 }
 \value{
 A tibble with three columns:
@@ -84,20 +92,19 @@ if (.assert_package("gtsummary", boolean = TRUE)) {
   ) |>
   model_list_variables()
 
-  iris |>
-    lm(
-      Sepal.Length ~ poly(Sepal.Width, 2) + Species,
-      data = _,
-      contrasts = list(Species = contr.sum)
-    ) |>
-    model_list_variables()
-
-  glm(
-    response ~ poly(age, 3) + stage + grade * trt,
-    na.omit(gtsummary::trial),
-    family = binomial,
+lm(
+   Sepal.Length ~ poly(Sepal.Width, 2) + Species,
+   data = iris,
+   contrasts = list(Species = contr.sum)
   ) |>
-    model_list_variables()
+  model_list_variables()
+
+glm(
+  response ~ poly(age, 3) + stage + grade * trt,
+  na.omit(gtsummary::trial),
+  family = binomial,
+) |>
+  model_list_variables()
 }
 \dontshow{\}) # examplesIf}
 }

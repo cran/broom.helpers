@@ -331,7 +331,10 @@ test_that("tidy_plus_plus() works with survey::svyglm", {
 test_that("tidy_plus_plus() works with survey::svycoxph", {
   skip_on_cran()
   skip_if_not_installed("survey")
-  dpbc <- survey::svydesign(id = ~1, prob = ~1, strata = ~edema, data = survival::pbc)
+  skip_if_not_installed("labelled")
+  d <- survival::pbc
+  labelled::var_label(d$albumin) <- "Custom label"
+  dpbc <- survey::svydesign(id = ~1, prob = ~1, strata = ~edema, data = d)
   mod <- survey::svycoxph(
     Surv(time, status > 0) ~ log(bili) + protime + albumin,
     design = dpbc
@@ -339,6 +342,10 @@ test_that("tidy_plus_plus() works with survey::svycoxph", {
   expect_error(
     res <- mod |> tidy_plus_plus(),
     NA
+  )
+  expect_equivalent(
+    res[res$term == "albumin", "var_label"][[1]][1],
+    "Custom label"
   )
 })
 
@@ -686,6 +693,25 @@ test_that("tidy_plus_plus() works with fixest models", {
     res <- mod |> tidy_plus_plus(),
     NA
   )
+
+  mod <- fixest::feols(mpg ~ disp | cyl | wt ~ qsec, data = mtcars)
+  expect_error(
+    res <- mod |> tidy_plus_plus(),
+    NA
+  )
+  expect_equal(nrow(res), 2L)
+  expect_true(res$instrumental[res$term == "wt"])
+  res <- mod |> tidy_plus_plus(instrumental_suffix = NULL)
+  expect_equivalent(res$var_label[res$term == "wt"], "wt")
+  res <- mod |> tidy_plus_plus(instrumental_suffix = " (IV)")
+  expect_equivalent(res$var_label[res$term == "wt"], "wt (IV)")
+
+  mod <- fixest::feols(mpg ~ disp | 1 | factor(cyl) ~ qsec, data = mtcars)
+  expect_error(
+    res <- mod |> tidy_plus_plus(),
+    NA
+  )
+  expect_equal(nrow(res[res$instrumental, ]), 3L)
 })
 
 test_that("tidy_plus_plus() works with logitr models", {
@@ -953,3 +979,23 @@ test_that("tidy_post_fun argument of `tidy_plus_plus()`", {
 
 # test for survival::cch() not working, model.frame() not working
 # in the test_that environment for this type of model
+
+test_that("tidy_plus_plus() works with glmtoolbox::glmgee() models", {
+  skip_on_cran()
+  skip_if_not_installed("glmtoolbox")
+
+  data("spruces", package = "glmtoolbox")
+
+  mod <- glmtoolbox::glmgee(
+    size ~ poly(days, 4) + treat,
+    id = tree,
+    family = Gamma(log),
+    corstr = "AR-M-dependent(1)",
+    data = spruces
+  )
+  expect_error(
+    res <- mod |> tidy_plus_plus(),
+    NA
+  )
+  expect_equal(nrow(res), 6)
+})
