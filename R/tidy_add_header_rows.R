@@ -28,8 +28,8 @@
 #' @inheritParams tidy_plus_plus
 #' @export
 #' @family tidy_helpers
-#' @examplesIf interactive()
-#' if (.assert_package("gtsummary", boolean = TRUE)) {
+#' @examplesIf .assert_package("gtsummary", boolean = TRUE)
+#' \donttest{
 #'   df <- Titanic |>
 #'     dplyr::as_tibble() |>
 #'     dplyr::mutate(Survived = factor(Survived, c("No", "Yes")))
@@ -103,11 +103,7 @@ tidy_add_header_rows <- function(x,
   }
 
   xx <- x
-  if (
-    "y.level" %in% names(x) &&
-      # specific case for multinomial models
-      (inherits(model, "multinom") || inherits(model, "LORgee"))
-  ) {
+  if ("y.level" %in% names(x)) {
     xx <- xx |>
       dplyr::filter(.data$y.level == x$y.level[1])
   }
@@ -209,11 +205,7 @@ tidy_add_header_rows <- function(x,
       rank = seq_len(dplyr::n()) # for sorting table at the end
     )
 
-  if (
-    "y.level" %in% names(x) &&
-      # specific case for multinomial models
-      (inherits(model, "multinom") || inherits(model, "LORgee"))
-  ) {
+  if ("y.level" %in% names(x)) {
     header_rows <- x |>
       dplyr::filter(!is.na(.data$variable) & !.data$variable %in% show_single_row)
 

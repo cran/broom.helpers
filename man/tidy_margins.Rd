@@ -45,7 +45,8 @@ Treatment contrasts (\code{stats::contr.treatment()}) are applied to all
 categorical variables. Interactions are also ignored.
 }
 \examples{
-\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (.assert_package("margins", boolean = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\donttest{
 df <- Titanic |>
   dplyr::as_tibble() |>
   tidyr::uncount(n) |>
@@ -56,6 +57,7 @@ mod <- glm(
 )
 tidy_margins(mod)
 tidy_plus_plus(mod, tidy_fun = tidy_margins)
+}
 \dontshow{\}) # examplesIf}
 }
 \seealso{

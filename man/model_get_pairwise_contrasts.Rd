@@ -44,8 +44,8 @@ computed separately for each component, using \code{mode = "count"} and
 is added to the results.
 }
 \examples{
-\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-if (.assert_package("emmeans", boolean = TRUE)) {
+\dontshow{if (.assert_package("emmeans", boolean = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\donttest{
   mod <- lm(Sepal.Length ~ Species, data = iris)
   mod |> model_get_pairwise_contrasts(variables = "Species")
   mod |>

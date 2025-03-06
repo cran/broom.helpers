@@ -14,6 +14,7 @@
 #' * [tidy_add_n()]
 #' * [tidy_remove_intercept()]
 #' * [tidy_select_variables()]
+#' * [tidy_group_by()]
 #' * [tidy_add_coefficients_type()]
 #' * [tidy_detach_model()]
 #'
@@ -82,6 +83,7 @@
 #' @param intercept (`logical`)\cr
 #' Should the intercept(s) be included?
 #' @inheritParams tidy_select_variables
+#' @inheritParams tidy_group_by
 #' @param keep_model (`logical`)\cr
 #' Should the model be kept as an attribute of the final result?
 #' @param tidy_post_fun (`function`)\cr
@@ -101,7 +103,8 @@
 #' if `keep_model = FALSE`. Therefore, it is possible to use [tidy_get_model()]
 #' within `tidy_fun` if, for any reason, you need to access the source model.
 #' @family tidy_helpers
-#' @examplesIf interactive()
+#' @examples
+#' \donttest{
 #' ex1 <- lm(Sepal.Length ~ Sepal.Width + Species, data = iris) |>
 #'   tidy_plus_plus()
 #' ex1
@@ -127,26 +130,28 @@
 #'     add_n = TRUE
 #'   )
 #' ex2
-#' if (.assert_package("gtsummary", boolean = TRUE)) {
-#'   ex3 <-
-#'     glm(
-#'       response ~ poly(age, 3) + stage + grade * trt,
-#'       na.omit(gtsummary::trial),
-#'       family = binomial,
-#'       contrasts = list(
-#'         stage = contr.treatment(4, base = 3),
-#'         grade = contr.sum
-#'       )
-#'     ) |>
-#'     tidy_plus_plus(
-#'       exponentiate = TRUE,
-#'       variable_labels = c(age = "Age (in years)"),
-#'       add_header_rows = TRUE,
-#'       show_single_row = all_dichotomous(),
-#'       term_labels = c("poly(age, 3)3" = "Cubic age"),
-#'       keep_model = TRUE
+#' }
+#' @examplesIf require("gtsummary") && require("emmeans")
+#' \donttest{
+#' ex3 <-
+#'   glm(
+#'     response ~ poly(age, 3) + stage + grade * trt,
+#'     na.omit(gtsummary::trial),
+#'     family = binomial,
+#'     contrasts = list(
+#'       stage = contr.treatment(4, base = 3),
+#'       grade = contr.sum
 #'     )
-#'   ex3
+#'   ) |>
+#'   tidy_plus_plus(
+#'     exponentiate = TRUE,
+#'     variable_labels = c(age = "Age (in years)"),
+#'     add_header_rows = TRUE,
+#'     show_single_row = all_dichotomous(),
+#'     term_labels = c("poly(age, 3)3" = "Cubic age"),
+#'     keep_model = TRUE
+#'   )
+#' ex3
 #' }
 #' @export
 tidy_plus_plus <- function(model,
@@ -176,6 +181,8 @@ tidy_plus_plus <- function(model,
                            add_n = TRUE,
                            intercept = FALSE,
                            include = everything(),
+                           group_by = auto_group_by(),
+                           group_labels = NULL,
                            keep_model = FALSE,
                            tidy_post_fun = NULL,
                            quiet = FALSE,
@@ -256,6 +263,10 @@ tidy_plus_plus <- function(model,
   res <- res |>
     tidy_select_variables(
       include = {{ include }},
+    ) |>
+    tidy_group_by(
+      group_by = {{ group_by }},
+      group_labels = group_labels
     ) |>
     tidy_add_coefficients_type()
 

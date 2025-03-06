@@ -31,8 +31,8 @@
 #'
 #' @export
 #' @family model_helpers
-#' @examplesIf interactive()
-#' if (.assert_package("gtsummary", boolean = TRUE)) {
+#' @examplesIf .assert_package("gtsummary", boolean = TRUE)
+#' \donttest{
 #'   df <- Titanic |>
 #'     dplyr::as_tibble() |>
 #'     dplyr::mutate(Survived = factor(Survived, c("No", "Yes")))
@@ -266,7 +266,7 @@ model_list_variables.logitr <- function(model,
   if (is.numeric(x)) {
     return("numeric")
   }
-  return("other")
+  "other"
 }
 
 .compute_var_label <- function(x, labels = NULL) {

@@ -54,8 +54,8 @@ If the \code{reference_row} column is not yet available in \code{x},
 \code{\link[=tidy_add_reference_rows]{tidy_add_reference_rows()}} will be automatically applied.
 }
 \examples{
-\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-if (.assert_package("gtsummary", boolean = TRUE) && .assert_package("emmeans", boolean = TRUE)) {
+\dontshow{if (require("gtsummary") && require("emmeans")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\donttest{
   df <- Titanic |>
     dplyr::as_tibble() |>
     dplyr::mutate(dplyr::across(where(is.character), factor))
@@ -97,6 +97,7 @@ Other tidy_helpers:
 \code{\link{tidy_add_variable_labels}()},
 \code{\link{tidy_attach_model}()},
 \code{\link{tidy_disambiguate_terms}()},
+\code{\link{tidy_group_by}()},
 \code{\link{tidy_identify_variables}()},
 \code{\link{tidy_plus_plus}()},
 \code{\link{tidy_remove_intercept}()},

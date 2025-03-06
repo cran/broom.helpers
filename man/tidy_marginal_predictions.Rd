@@ -109,7 +109,10 @@ plots that could be combined with \code{patchwork::wrap_plots()} (see examples).
 For more information, see \code{vignette("marginal_tidiers", "broom.helpers")}.
 }
 \examples{
-\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (.assert_package("marginaleffects", boolean = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+# example code
+
+\donttest{
 # Average Marginal Predictions
 df <- Titanic |>
   dplyr::as_tibble() |>
@@ -175,6 +178,7 @@ tidy_marginal_predictions(mod, newdata = "mean")
 if (require("patchwork")) {
   plot_marginal_predictions(mod, newdata = "mean") |>
     patchwork::wrap_plots()
+}
 }
 \dontshow{\}) # examplesIf}
 }

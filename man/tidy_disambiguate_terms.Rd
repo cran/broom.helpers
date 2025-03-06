@@ -29,7 +29,7 @@ any term if there is no \code{group} column in \code{x}. The original term value
 is kept in a new column \code{original_term}.
 }
 \examples{
-\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\donttest{
 if (
   .assert_package("lme4", boolean = TRUE) &&
     .assert_package("broom.mixed", boolean = TRUE) &&
@@ -40,7 +40,7 @@ if (
     tidy_and_attach() |>
     tidy_disambiguate_terms()
 }
-\dontshow{\}) # examplesIf}
+}
 }
 \seealso{
 Other tidy_helpers: 
@@ -54,6 +54,7 @@ Other tidy_helpers:
 \code{\link{tidy_add_term_labels}()},
 \code{\link{tidy_add_variable_labels}()},
 \code{\link{tidy_attach_model}()},
+\code{\link{tidy_group_by}()},
 \code{\link{tidy_identify_variables}()},
 \code{\link{tidy_plus_plus}()},
 \code{\link{tidy_remove_intercept}()},

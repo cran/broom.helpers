@@ -29,8 +29,8 @@
 #' @inheritParams tidy_plus_plus
 #' @export
 #' @family tidy_helpers
-#' @examplesIf interactive()
-#' if (.assert_package("gtsummary", boolean = TRUE)) {
+#' @examplesIf .assert_package("gtsummary", boolean = TRUE)
+#' \donttest{
 #'   df <- Titanic |>
 #'     dplyr::as_tibble() |>
 #'     dplyr::mutate(Survived = factor(Survived, c("No", "Yes")))
@@ -175,11 +175,7 @@ tidy_add_reference_rows <- function(
   if ("component" %in% names(x)) {
     group <- "component"
   }
-  if (
-    "y.level" %in% names(x) &&
-      # specific case for multinomial models
-      (inherits(model, "multinom") || inherits(model, "LORgee"))
-  ) {
+  if ("y.level" %in% names(x)) {
     group <- "y.level"
   }
   if (!is.null(group)) {

@@ -32,8 +32,8 @@
 #' @inheritParams tidy_plus_plus
 #' @export
 #' @family tidy_helpers
-#' @examplesIf interactive()
-#' if (.assert_package("emmeans", boolean = TRUE)) {
+#' @examplesIf .assert_package("emmeans", boolean = TRUE)
+#' \donttest{
 #'   mod1 <- lm(Sepal.Length ~ Species, data = iris)
 #'   mod1 |>
 #'     tidy_and_attach() |>

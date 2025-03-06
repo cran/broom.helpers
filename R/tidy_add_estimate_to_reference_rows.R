@@ -34,8 +34,8 @@
 #' @inheritParams tidy_plus_plus
 #' @export
 #' @family tidy_helpers
-#' @examplesIf interactive()
-#' if (.assert_package("gtsummary", boolean = TRUE) && .assert_package("emmeans", boolean = TRUE)) {
+#' @examplesIf require("gtsummary") && require("emmeans")
+#' \donttest{
 #'   df <- Titanic |>
 #'     dplyr::as_tibble() |>
 #'     dplyr::mutate(dplyr::across(where(is.character), factor))

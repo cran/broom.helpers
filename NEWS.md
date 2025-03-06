@@ -1,3 +1,20 @@
+# broom.helpers 1.20.0
+
+**New supported models**
+
+- improved support for `VGAM::vglm()` and `VGAM::vgam()` models, see the
+  experimental tidier `tidy_vgam()` (#253)
+
+**New features**
+
+- new `tidy_group_by()` function to indicate how to group results (#288)
+- new arguments `group_by` and `group_labels` for `tidy_plus_plus()` (#288)
+
+**Deprecated functions**
+
+- `.select_to_varnames()`, `.formula_list_to_named_list()`,
+  `.generic_selector()` and `.is_selector_scoped()` are now hard deprecated.
+
 # broom.helpers 1.19.0
 
 **Deprecated function**
