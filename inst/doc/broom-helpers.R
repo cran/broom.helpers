@@ -107,6 +107,18 @@ model_poly |>
   print_table()
 
 ## -----------------------------------------------------------------------------
+model_poly2 <- glm(response ~ poly(age, 3, raw = TRUE) + ttdeath, na.omit(trial), family = binomial)
+
+model_poly2 |>
+  tidy_plus_plus(
+    exponentiate = TRUE,
+    add_header_rows = TRUE,
+    variable_labels = c(age = "Age in years"),
+    relabel_poly = TRUE
+  ) |>
+  print_table()
+
+## -----------------------------------------------------------------------------
 model_1 <- glm(
   response ~ stage + grade * trt,
   gtsummary::trial,

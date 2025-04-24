@@ -67,7 +67,7 @@ model_identify_variables.default <- function(model) {
   ) |>
     # specific case of polynomial terms defined with poly()
     dplyr::mutate(
-      variable = stringr::str_replace(.data$variable, "^poly\\((.*),(.*)\\)$", "\\1")
+      variable = stringr::str_replace(.data$variable, "^poly\\(([^,]*),(.*)\\)$", "\\1")
     ) |>
     dplyr::left_join(
       model_list_variables(model) |>
@@ -213,4 +213,10 @@ model_identify_variables.logitr <- function(model) {
         is.na(.data$var_class) & stringr::str_detect(.data$variable, ":") ~ "interaction"
       )
     )
+}
+
+#' @export
+#' @rdname model_identify_variables
+model_identify_variables.svy_vglm <- function(model) {
+  model_identify_variables(model$fit)
 }

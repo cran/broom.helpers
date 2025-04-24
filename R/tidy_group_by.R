@@ -60,7 +60,7 @@ tidy_group_by <- function(
       if (is.null(names(group_labels)) || any(names(group_labels) == ""))
         cli::cli_abort("All elements of {.arg group_labels} should be named.")
       keep <- names(group_labels) %in% levels(x$group_by)
-      drop <- group_labels[!keep]
+      drop <- names(group_labels[!keep])
       if (length(drop) > 0) {
         cli::cli_alert_warning(c(
           "Problem in {.arg group_labels}:\n",
@@ -75,10 +75,10 @@ tidy_group_by <- function(
     }
   }
   if (length(group_vars) == 0 && "group_by" %in% names(x))
-    x <- x |> dplyr::select(-.data$group_by)
+    x <- x |> dplyr::select(-dplyr::all_of("group_by"))
   # sometimes, group_by not relevant after tidy_select_variable
   if ("group_by" %in% names(x) && all(x$group_by == ""))
-    x <- x |> dplyr::select(-.data$group_by)
+    x <- x |> dplyr::select(-dplyr::all_of("group_by"))
   x |>
     tidy_attach_model(model = model, .attributes = .attributes)
 }

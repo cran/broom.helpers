@@ -1,6 +1,6 @@
 Package: broom.helpers
 Title: Helpers for Model Coefficients Tibbles
-Version: 1.20.0
+Version: 1.21.0
 Authors@R: c(
     person("Joseph", "Larmarange", , "joseph@larmarange.net", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-7097-700X")),
@@ -27,7 +27,8 @@ Suggests: betareg, biglm, brms (>= 2.13.0), broom.mixed, cmprsk, covr,
         marginaleffects (>= 0.21.0), margins, MASS, mgcv, mice, mmrm
         (>= 0.3.6), multgee, nnet, ordinal, parameters, parsnip,
         patchwork, plm, pscl, rmarkdown, rstanarm, scales, spelling,
-        survey, survival, testthat (>= 3.0.0), tidycmprsk, VGAM
+        survey, survival, testthat (>= 3.0.0), tidycmprsk, VGAM,
+        svyVGAM
 VignetteBuilder: knitr
 RdMacros: lifecycle
 Encoding: UTF-8
@@ -36,9 +37,9 @@ LazyData: true
 RoxygenNote: 7.3.2
 Config/testthat/edition: 3
 NeedsCompilation: no
-Packaged: 2025-03-06 10:17:03 UTC; josep
+Packaged: 2025-04-24 08:04:30 UTC; josep
 Author: Joseph Larmarange [aut, cre] (<https://orcid.org/0000-0001-7097-700X>),
   Daniel D. Sjoberg [aut] (<https://orcid.org/0000-0003-0862-2018>)
 Maintainer: Joseph Larmarange <joseph@larmarange.net>
 Repository: CRAN
-Date/Publication: 2025-03-06 11:00:02 UTC
+Date/Publication: 2025-04-24 08:50:02 UTC
